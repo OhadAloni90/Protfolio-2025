@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { useLocation } from "react-router";
 import { Selection } from "@react-three/postprocessing";
 import { useProgress } from "@react-three/drei";
-import PhysicsCartoonHead from "../Physics/PhysicsCartoonHead";
+import PhysicsCartoonHead, { PhysicsCartoonHeadHandle } from "../Physics/PhysicsCartoonHead";
 import ProfolioLoader from "../../pages/Loader/Loader";
 import HeadController from "../HeadController";
 import PushButton from "../../components/3DButton/PushButton";
@@ -45,7 +45,7 @@ export const bioDialogContent = (
   interface MainSceneProps {
     onMarioEnter: () => void;
     onHeadHover: (hovering: boolean) => void;
-    headRef: React.MutableRefObject<THREE.Group | null>;
+    headRef: React.MutableRefObject<PhysicsCartoonHeadHandle | null>;
   }
   
   const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRef }) => {
@@ -66,7 +66,7 @@ export const bioDialogContent = (
         setDialogOpen(!dialogOpen);
         // Handle button collision, etc.
       } else if (e.body.userData?.type === "vertical" || e.body.userData?.type === "wreckingBall") {
-        if (headRef.current) {
+        if (headRef && headRef.current) {
           const currentPos = headRef.current.position.clone();
           const floorY = -1;
           const bounceTarget = new THREE.Vector3(
@@ -123,9 +123,7 @@ export const bioDialogContent = (
 
         <PhysicsCartoonHead
           ref={headRef}
-          shorten={shorten}
           onHoverChange={onHeadHover}
-          targetPosition={headTargetPosition}
           onCollide={handleHeadCollide}
           position={[0, 0, 0]}
         />

@@ -29,7 +29,7 @@ const Goomba: React.FC<GoombaProps> = ({ position = [0, -1.8, 0], headRef }) => 
   
   // Create a kinematic physics body for collision detection.
   const [boxRef, api] = useBox(() => ({
-    type: "Kinematic",
+    type: "Dynamic",
     args: [1, 1, 1], // adjust as necessary for your model
     position,
     userData: { type: "goomba" },

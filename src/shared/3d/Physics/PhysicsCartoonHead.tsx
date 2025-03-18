@@ -1,55 +1,120 @@
-import React, { forwardRef, useRef, useEffect, useLayoutEffect, useState } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
+import React, { forwardRef, useRef, useEffect, useImperativeHandle, useState } from "react";
 import { useBox } from "@react-three/cannon";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 
 export interface PhysicsCartoonHeadProps {
-  shorten: boolean;
   onHoverChange: (hovering: boolean) => void;
-  targetPosition: THREE.Vector3 | null; // if provided, head travels in a parabolic arc to this position
-  onCollide?: (e: any) => void; // physics collision callback
-  position?: [number, number, number]; // initial position
-  disableDrift?: boolean
+  onCollide?: (e: any) => void;
+  position?: [number, number, number];
+  disableDrift?: boolean;
 }
 
-const PhysicsCartoonHead = forwardRef<THREE.Group, PhysicsCartoonHeadProps>(
-  ({ shorten, onHoverChange, targetPosition, onCollide, position = [0, 0, 0] ,      disableDrift
-  }, ref) => {
+export interface PhysicsCartoonHeadHandle extends THREE.Group {
+  setMoveInput: (input: MoveInput) => void;
+}
+
+export type MoveInput = {
+  left?: boolean;
+  right?: boolean;
+  jump?: boolean;
+  up?: boolean;
+  down?: boolean;
+};
+
+const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHeadProps>(
+  ({ onHoverChange, onCollide, position = [0, 0, 0], disableDrift }, ref) => {
     // Create a dynamic physics body for the head
     const [bodyRef, api] = useBox(() => ({
       type: "Dynamic",
+      mass: 1,
       args: [1, 2, 1],
       position,
+      friction: 1,
       collisionFilterGroup: 3,
-      collisionFilterMask: 3,
-      onCollide: (e) => {
-        if (e.body.userData?.type === "marioBrick") {
-          if (e.contact && typeof e.contact.ni[1] === "number") {
-            // When the head lands on top, the contact normal's y should be high.
-            if (e.contact.ni[1] > 0.5) {
-              const brickTop = e.body.position.y + 0.5;
-              // Defer state updates so they occur after the current render.
-              setTimeout(() => {
-                setIsOnBrick(true);
-                api.velocity.set(0, 0, 0);
-              }, 0);
-            }
-          }
-        }
-        // Also, you can call any additional onCollide passed in.
-        onCollide && onCollide(e);
-      },
+      collisionFilterMask: 3 | 2,
       userData: { type: "head" },
+      onCollide: (e) => {
+        if (onCollide) onCollide(e);
+      }
     }));
-    const [isOnBrick, setIsOnBrick] = useState(false);
-    const [brickTop, setBrickTop] = useState<number | null>(null);
 
-    // We'll use a group for the visual head
-    const groupRef = useRef<THREE.Group>(null);
     const gltf = useLoader(GLTFLoader, "/models/Head3.glb");
+    const [facing, setFacing] = useState<"left" | "right" | "up" | "down" | "jump">("right");
 
-    // Enable shadows on the loaded model
+    // Create a ref to store the current velocity.
+    const velocityRef = useRef<[number, number, number]>([0, 0, 0]);
+    useEffect(() => {
+      const unsubscribe = api.velocity.subscribe((v) => {
+        velocityRef.current = v;
+      });
+      return unsubscribe;
+    }, [api.velocity]);
+
+    // Update movement based on user input.
+ const setMoveInput = (input: MoveInput) => {
+    const [vx, vy, vz] = velocityRef.current;
+    let newVx = vx;
+    let newVy = vy;
+    let newVz = vz;
+    if (disableDrift) {
+      // Horizontal movement on X
+      newVx = 0;
+      if (input.left) {
+        newVx = -5;
+        setFacing("left");
+      } else if (input.right) {
+        newVx = 5;
+        setFacing("right");
+      }
+
+      // Jump (up or jump key)
+      if ((input.jump || input.up) && Math.abs(vy) < 0.01) {
+        newVy = 8;
+        setFacing("jump");
+      }
+      // No movement on Z
+      newVz = 0;
+    } else {
+      // "topDown" mode
+      // Move on X/Z plane, no jump by default
+      newVx = 0;
+      newVz = 0;
+      if (input.left) {
+        newVx = -5;
+        setFacing("left");
+      } else if (input.right) {
+        newVx = 5;
+        setFacing("right");
+      }
+      if (input.up) {
+        newVz = -5; // forward is negative Z, or you can invert
+        setFacing("up");
+      } else if (input.down) {
+        newVz = 5; // backward is positive Z
+        setFacing("down");
+      }
+      // No jump in topDown mode (unless you want it).
+      newVy = vy;
+    }
+
+    // Finally, set velocity
+    api.velocity.set(newVx, newVy, newVz);
+  };
+    // Expose setMoveInput on our ref
+    useImperativeHandle(ref, () => {
+      const group = bodyRef.current as THREE.Group;
+      (group as any).setMoveInput = setMoveInput;
+      return group as PhysicsCartoonHeadHandle;
+    });
+
+    useFrame(() => {
+      if (!bodyRef.current) return;
+      const obj = bodyRef.current;
+      obj.rotation.y = THREE.MathUtils.lerp(obj.rotation.y, facing === "left" ? 0 : Math.PI, 0.1);
+    });
+
     useEffect(() => {
       gltf.scene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
@@ -58,109 +123,16 @@ const PhysicsCartoonHead = forwardRef<THREE.Group, PhysicsCartoonHeadProps>(
         }
       });
     }, [gltf]);
-    useEffect(() => {
-      if (targetPosition) {
-        setIsOnBrick(false);
-        setBrickTop(null);
-      }
-    }, [targetPosition]);
 
-    useLayoutEffect(() => {
-      if (groupRef.current) {
-        const pos = groupRef.current.position;
-        api.position.set(pos.x, pos.y, pos.z);
-      }
-    }, []);
-
-    // --- Parabolic (jump) movement state ---
-    const startPosition = useRef<THREE.Vector3 | null>(null);
-    const endPosition = useRef<THREE.Vector3 | null>(null);
-    const travelProgress = useRef(0);
-    const travelDuration = 1; // Adjust duration of the jump here
-
-    // When a new targetPosition comes in, start the jump.
-    useEffect(() => {
-      if (groupRef.current && targetPosition) {
-        // (Optional: reject jump if target is too far, e.g. z >= 20)
-        if (targetPosition.z >= 20) return;
-        startPosition.current = groupRef.current.position.clone();
-        endPosition.current = targetPosition.clone();
-        travelProgress.current = 0;
-      }
-    }, [targetPosition]);
-
-    useFrame((state, delta) => {
-      if (!groupRef.current) return;
-    
-      if (startPosition.current && endPosition.current) {
-        // --- Jump movement (parabolic arc) ---
-        travelProgress.current = Math.min(travelProgress.current + delta / travelDuration, 1);
-        const t = travelProgress.current;
-    
-        // Lerp X and Z from start to end
-        const newX = THREE.MathUtils.lerp(startPosition.current.x, endPosition.current.x, t);
-        const newZ = THREE.MathUtils.lerp(startPosition.current.z, endPosition.current.z, t);
-        // Lerp Y then add a parabolic offset (bounce)
-        const baseY = THREE.MathUtils.lerp(startPosition.current.y, endPosition.current.y, t);
-        const totalDist = startPosition.current.distanceTo(endPosition.current);
-        const amplitude = totalDist * 0.2; // adjust bounce amplitude as needed
-        const yOffset = 10 * amplitude * t * (1 - t);
-        groupRef.current.position.set(newX, baseY + yOffset, newZ);
-    
-        // Compute the natural angle from start to end
-        const deltaX = endPosition.current.x - newX;
-        const deltaZ = endPosition.current.z - newZ;
-        let angle = Math.atan2(deltaX, deltaZ);
-        // If disableDrift (Mario mode), override angle with fixed profile orientation.
-        if (disableDrift) {
-          angle = -Math.PI / 2; // adjust as needed (e.g., Math.PI/2 for the opposite profile)
-        }
-        groupRef.current.rotation.set(0, angle, 0);
-    
-        // End jump when finished
-        if (travelProgress.current >= 1) {
-          startPosition.current = null;
-          endPosition.current = null;
-          travelProgress.current = 0;
-        }
-      } else if (!disableDrift) {
-        // --- Continuous "walking" / drift movement (like in CartoonHead) ---
-        const driftFactor = 0.1; // tweak this factor for sensitivity
-        const mouseOffset = new THREE.Vector3(state.mouse.x, state.mouse.y, 0);
-        // Compute a target position offset from the current one
-        const currentPos = groupRef.current.position.clone();
-        const driftTarget = currentPos.add(mouseOffset.multiplyScalar(driftFactor));
-        // Lerp toward the drift target so the head moves gradually
-        groupRef.current.position.lerp(driftTarget, delta * 2);
-        // Rotate the head based on mouse input
-        groupRef.current.rotation.y = THREE.MathUtils.lerp(
-          groupRef.current.rotation.y,
-          state.mouse.x * 0.5,
-          delta * 2
-        );
-        groupRef.current.rotation.x = THREE.MathUtils.lerp(
-          groupRef.current.rotation.x,
-          -state.mouse.y * 0.5,
-          delta * 2
-        );
-      } else {
-        // If disableDrift is true and we're not jumping, force a fixed profile rotation.
-        groupRef.current.rotation.y = -Math.PI / 2;
-      }
-    
-      // Always sync the physics body to the group's position
-      const pos = groupRef.current.position;
-      api.position.set(pos.x, pos.y, pos.z);
-    });
-    
-    // Expose the group's ref to parent components
-    React.useImperativeHandle(ref, () => groupRef.current as THREE.Group);
     return (
-      <group ref={groupRef} position={position} onPointerOver={() => onHoverChange(true)} onPointerOut={() => onHoverChange(false)}>
+      <group
+        ref={bodyRef}
+        onPointerOver={() => onHoverChange(true)}
+        onPointerOut={() => onHoverChange(false)}
+      >
         <primitive object={gltf.scene} />
       </group>
     );
-    
   }
 );
 

@@ -3,11 +3,12 @@ import { OrthographicCamera, useFBX } from "@react-three/drei";
 import { Debug, usePlane } from "@react-three/cannon";
 import * as THREE from "three";
 import HeadController from "../3d/HeadController";
-import PhysicsCartoonHead from "../3d/Physics/PhysicsCartoonHead";
+import PhysicsCartoonHead, { PhysicsCartoonHeadHandle } from "../3d/Physics/PhysicsCartoonHead";
 import MarioBrick from "../components/MarioBrick/MarioBrick";
 import BackgroundMusic from "./BackgroundMusic/BackgroundMusic";
 import Goomba from "./Goomba/Goomba";
 import Shroom from "./Shroom/Shroom";
+import MiniGameBackground from "./MiniGameBackground/MiniGameBackground";
 
 const Ground = () => {
   const [ref] = usePlane(() => ({
@@ -21,41 +22,34 @@ const Ground = () => {
     </mesh>
   );
 };
-
 type MarioSceneProps = {
-  headRef: React.MutableRefObject<THREE.Group | null>;
+  headRef: React.MutableRefObject<PhysicsCartoonHeadHandle | null>;
 };
 
 const POOL_SIZE = 10;
 export const levelMatrix: string[][] = [
   [".", ".", ".", ".", ".", "C"], // top row: 3 empties, 1 breakable, 1 item
-  [".", ".", ".", ".", ".", "C"], // top row: 3 empties, 1 breakable, 1 item
+  [".", ".", ".", ".", "C", "C"], // top row: 3 empties, 1 breakable, 1 item
   [".", ".", ".", "C", "C", "C"], // next row: 2 empties, 2 concrete, 1 item
   [".", ".", "C", "C", "C", "C"],
   [".", "C", "C", "C", "C", "C"], // row with all concrete except last is item
 ];
 export const ItemBricksRow: string[][] = [
-  [".", ".", ".", ".", ".", "."], // top row: 3 empties, 1 breakable, 1 item
-  [".", ".", ".", ".", ".", "."], // top row: 3 empties, 1 breakable, 1 item
-  [".", ".", ".", "B", "C", "I"], // next row: 2 empties, 2 concrete, 1 item
-  [".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", "."], // row with all concrete except last is item
+  [".", ".", ".", "B", "C", "I"]
 ];
 
-const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
+const MarioScene: React.FC<MarioSceneProps> = ({ headRef,  }) => {
   function createLevel(
     matrix: string[][],
     onItemSpawn: (pos: THREE.Vector3) => void,
-    onPush: (impulse: THREE.Vector3) => void
+    onPush: (impulse: THREE.Vector3) => void,
+    startX: number,
+   startY: number,
   ) {
     const bricks: any[] = [];
-
     // Decide your top-left corner and cell sizes
-    const startX = -2;
-    const startY = 2;
     const cellWidth = 1;
     const cellHeight = 1;
-
     for (let r = 0; r < matrix.length; r++) {
       for (let c = 0; c < matrix[r].length; c++) {
         const cell = matrix[r][c];
@@ -164,18 +158,16 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         shadow-mapSize-height={1024}
       />
       <Ground />
-
+      <MiniGameBackground />
       <PhysicsCartoonHead
         ref={headRef}
-        shorten={false}
         onHoverChange={() => {}}
-        targetPosition={null}
         onCollide={onHeadCollide}
         position={[-7, -1, 0]}
         disableDrift={true}
       />
 
-      <HeadController headRef={headRef} speed={0.1} isOnBrick={isOnBrick} />
+      <HeadController headRef={headRef} speed={0.1}  />
 
       {/* Render all shroom pool items */}
       {pool.map((shroom) => (
@@ -190,8 +182,8 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       ))}
 
       <Debug>
-        {createLevel(levelMatrix, handleItemSpawn, rejectByForce)}
-        {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce)}
+        {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 0,2 )}
+        {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, -7, 2)}
 
         {/* <MarioBrick
           position={[4, -1.8, 0]}

@@ -63,7 +63,7 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
       if (e.contact && typeof e.contact.ni[1] === "number") {
         // If the normal's y is greater than or equal to -0.5,
         // assume the head landed on top (or sideways) and do nothing.
-        if (e.contact.ni[1] >= -0.5) {
+        if (e.contact.ni[1] <= -0.9) {
           return;
         }
       }

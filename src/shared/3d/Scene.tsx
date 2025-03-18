@@ -9,6 +9,7 @@ import CameraController from "./CameraController";
 import ProfolioLoader from "../pages/Loader/Loader";
 import MarioScene from "../components/MarioScene";
 import MainScene from "./Scenes/MainScene";
+import { PhysicsCartoonHeadHandle } from "./Physics/PhysicsCartoonHead";
 
 const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) => {
   const { state } = useDarkMode();
@@ -16,7 +17,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
   const location = useLocation();
   const shorten = location.pathname !== "/";
   // For the head jump
-  const headRef = useRef<THREE.Group>(null);
+  const headRef = useRef<PhysicsCartoonHeadHandle | null>(null);
   const [inTube, setInTube] = useState(false);
   const [inMarioMode, setInMarioMode] = useState(false);
 
