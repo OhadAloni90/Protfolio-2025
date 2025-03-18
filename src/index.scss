@@ -1,0 +1,126 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
+  width: 100vw;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+:root {
+  height: 100vh;
+  width: 100vw;
+
+}
+.main-container {
+  width: 100vw;
+  height: 100vh;
+
+}
+.light {
+  background-color: #ffffff;
+  color: #000
+}
+.dark {
+  color: #ffffff;
+  background-color: #000
+}
+.text_big {
+  font-size: 1.5rem;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Lunasima:wght@400;700&family=Noto+Sans+Hebrew:wght@100..900&family=Quicksand:wght@300..700&display=swap');
+* {
+  font-family: "Amatic SC", sans-serif;
+}
+.text_extra_big {
+  font-size: 2rem;
+}
+.text_bold {
+  font-weight: 900;
+}
+.text_title_med {
+  font-size: 1.5rem;
+}
+
+.text_title_big {
+  font-size: 2.5rem;
+}
+
+.scene {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+  
+.wave-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: waveAppear 0.6s ease-in-out forwards;
+}
+
+.dialog-container {
+  padding: 1rem;
+  width: 400px;
+  height: fit-content;
+  border-radius: 2rem;
+  overflow: scroll;
+  .dialog-header {
+   height: 15%;
+    position: relative;
+    top: 0;
+  }
+  .dialog-body {
+   height: 80%;
+   .self-drawing {
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0rem;
+    img {
+      width: 40%;
+      height: 100%;
+      border-radius: 100%;
+    }
+   }
+  }
+  .dialog-footer {
+    bottom: 0;
+    position: sticky;
+    height: 10%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    button {
+      width: 20%;
+      height: 50%;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    
+  }
+}
+@keyframes waveAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

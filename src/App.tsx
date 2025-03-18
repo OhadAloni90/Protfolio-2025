@@ -1,25 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { Route, BrowserRouter as Router, Routes, useNavigate } from "react-router";
+import Home from "./shared/pages/Home";
+import { DarkModeProvider } from "./shared/providers/DarkModeProvider/DarkModeProvider";
+import About from "./shared/pages/About/About";
+import Header from "./shared/components/Header/Header";
+import Scene from "./shared/3d/Scene";
+
+// Create a component that uses useNavigate inside Router context.
+const AppRoutes = () => {
+  const navigate = useNavigate();
+  const [isHeadHovered, setIsHeadHovered] = useState(false); // Track hover state
+  const onMenuItemClicked = (route: string) => {
+    navigate(`/${route.toLowerCase()}`);
+  };
+
+  return (
+    <>
+      <div className="header">
+        <Header onMenuItemClicked={onMenuItemClicked} />
+      </div>
+      <div className="scene">
+        <Scene onHeadHover={setIsHeadHovered}></Scene>
+      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/start" element={<About isHovered={isHeadHovered} />} />
+      </Routes>
+    </>
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <DarkModeProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </DarkModeProvider>
   );
 }
 
