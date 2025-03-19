@@ -99,7 +99,8 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   // Preload the shroom model once.
   const shroomModel = useFBX("/models/mario-mini/mario_shroom.fbx") as THREE.Group;
   const [isOnBrick, setIsOnBrick] = useState(false);
-  const [lives, setLives] = useState<number>(1);
+  const [lives, setLives] = useState<number>(0);
+  const [headScale, setHeadScale] = useState<[number, number, number]>([1,2,1])
   const [isEnlarge, setIsEnlarge] = useState<boolean>(false);
   // Create a pool of shroom instances.
   const [pool, setPool] = useState<Array<{ id: number; active: boolean; pos: THREE.Vector3 }>>(
@@ -127,13 +128,21 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
 
   // When a shroom is collected, mark it inactive.
   const handleShroomCollected = (id: number) => {
+    if (!headRef.current) return;
+    const head = headRef.current;
     setPool((prev) =>
       prev.map((s) => (s.id === id ? { ...s, active: false, pos: new THREE.Vector3(0, -1000, 0) } : s))
     );
-    if (lives === 1) animateScale(true);
+    setLives((prevLives) => {
+      const newLives = prevLives + 1;
+      if (newLives === 1) {
+        animateScale(true);
+        setHeadScale((prevScale) => [head.scale.x, head.scale.y, head.scale.z]);
+      }
+      return newLives;
+    });
   };
-
-  const animateScale = (enlarge: boolean) => {
+    const animateScale = (enlarge: boolean) => {
     if (!headRef.current) return;
     const head = headRef.current;
     if (enlarge) {

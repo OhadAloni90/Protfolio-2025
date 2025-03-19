@@ -46,7 +46,7 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
 
   const [ref, api] = useBox(() => ({
     type: "Static",
-    args: [1, 1, 1],
+    args: [1, 1, 4],
     position,
     friction: 1,
     restitution: 0,
@@ -67,6 +67,7 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
           return;
         }
       }
+ 
       
       // If collision is from below, trigger the appropriate reaction.
       if (breakable) {

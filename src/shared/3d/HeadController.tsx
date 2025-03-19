@@ -36,10 +36,8 @@ const HeadController: React.FC<HeadControllerProps> = ({
       if(e?.code?.toLowerCase() === 'space' && !marioMode) {
         keysPressed.current.space = true;
       }
-      console.log(keysPressed.current)
 
     };
-
     const handleKeyUp = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       if (key in keysPressed.current) {
@@ -49,7 +47,6 @@ const HeadController: React.FC<HeadControllerProps> = ({
         keysPressed.current.space = false;
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     return () => {
@@ -57,7 +54,6 @@ const HeadController: React.FC<HeadControllerProps> = ({
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
-
   useFrame((_, delta) => {
     if (!headRef.current) return;
     let input: MoveInput = {};

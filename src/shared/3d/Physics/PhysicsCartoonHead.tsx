@@ -9,6 +9,7 @@ export interface PhysicsCartoonHeadProps {
   onCollide?: (e: any) => void;
   position?: [number, number, number];
   disableDrift?: boolean;
+  scale?: [number, number]
 }
 
 export interface PhysicsCartoonHeadHandle extends THREE.Group {
