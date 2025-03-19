@@ -21,6 +21,7 @@ const HeadController: React.FC<HeadControllerProps> = ({
     arrowright: false,
     arrowup: false,   // for Mario mode jump only
     arrowDown: false,   // for Mario mode jump only
+    space: false, //For jumping in 3d model
     a: false,
     d: false,
     w: false,       // for Mario mode jump only
@@ -32,12 +33,20 @@ const HeadController: React.FC<HeadControllerProps> = ({
       if (key in keysPressed.current) {
         keysPressed.current[key] = true;
       }
+      if(e?.code?.toLowerCase() === 'space' && !marioMode) {
+        keysPressed.current.space = true;
+      }
+      console.log(keysPressed.current)
+
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       if (key in keysPressed.current) {
         keysPressed.current[key] = false;
+      } 
+      if(e?.code?.toLowerCase() === 'space' && !marioMode) {
+        keysPressed.current.space = false;
       }
     };
 
@@ -57,7 +66,7 @@ const HeadController: React.FC<HeadControllerProps> = ({
       input.left = true;
     } else if (keysPressed.current.arrowright || keysPressed.current.d) {
       input.right = true;
-    }
+    } 
     // In Mario mode, use jump (up/W) input:
     if (marioMode) {
       if (keysPressed.current.arrowup || keysPressed.current.w) {
@@ -74,6 +83,9 @@ const HeadController: React.FC<HeadControllerProps> = ({
         input.up = true;
       } else if (keysPressed.current.arrowDown || keysPressed.current.s) {
         input.down = true;
+      }
+      else if(keysPressed.current.space) {
+        input.jump = true;
       }
       // Also call setMoveInput to update horizontal velocity if desired:
       head.setMoveInput(input);

@@ -74,12 +74,54 @@ code {
   border-radius: 2rem;
   overflow: scroll;
   .dialog-header {
-   height: 15%;
-    position: relative;
     top: 0;
+    position: sticky;
+    height: auto;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    margin: 0rem 0rem 1rem 0rem;
+    .name-container {
+      display: flex;
+      flex-direction: column;
+    }
+    .items-filter {
+      display: flex;
+      margin: 0.5rem 0rem 1rem 0rem;
+      .item-box {
+        height: 2rem;
+        width: 6rem;
+        margin: 0rem 0.6rem 0rem 0rem;
+        cursor: pointer;
+        border: 1px solid black;
+        background-color: gray;
+        padding-bottom: 10px;
+        transition: 0.1s ease-in-out;
+        user-select: none;
+        .item {
+          background-color: #dddddd;
+          border: 4px solid #fff;
+          padding: 3px 8px;
+          span {
+
+          }
+        }
+        z-index: 2222;
+      &:active{
+        padding: 0.2rem 0rem;
+        margin-bottom: 2px;
+        transform: translateX(2px);
+      
+      }
+      }
+    }
   }
+
   .dialog-body {
    height: 80%;
+   overflow: scroll;
    .self-drawing {
     height: auto;
     width: 100%;

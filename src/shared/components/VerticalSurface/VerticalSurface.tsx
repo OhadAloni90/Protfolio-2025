@@ -27,8 +27,6 @@ const FragmentPiece: React.FC<{
     mass: 0.1,
     position,
     args: size,
-    collisionFilterGroup: 2,  // assign fragments to group 2
-    collisionFilterMask: 2,
   }));
 
   React.useEffect(() => {

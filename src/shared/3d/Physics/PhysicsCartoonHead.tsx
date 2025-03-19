@@ -21,6 +21,7 @@ export type MoveInput = {
   jump?: boolean;
   up?: boolean;
   down?: boolean;
+  space?:boolean;
 };
 
 const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHeadProps>(
@@ -28,7 +29,7 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
     // Create a dynamic physics body for the head
     const [bodyRef, api] = useBox(() => ({
       type: "Dynamic",
-      mass: 1,
+      mass: 10000,
       args: [1, 2, 1],
       position,
       friction: 1,
@@ -53,56 +54,57 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
     }, [api.velocity]);
 
     // Update movement based on user input.
- const setMoveInput = (input: MoveInput) => {
-    const [vx, vy, vz] = velocityRef.current;
-    let newVx = vx;
-    let newVy = vy;
-    let newVz = vz;
-    if (disableDrift) {
-      // Horizontal movement on X
-      newVx = 0;
-      if (input.left) {
-        newVx = -5;
-        setFacing("left");
-      } else if (input.right) {
-        newVx = 5;
-        setFacing("right");
+    const setMoveInput = (input: MoveInput) => {
+      const [vx, vy, vz] = velocityRef.current;
+      let newVx = vx;
+      let newVy = vy;
+      let newVz = vz;
+    
+      if (disableDrift) {
+        // Mario mode: Only horizontal (X) movement and jump on Y.
+        newVx = 0;
+        if (input.left) {
+          newVx = -5;
+          setFacing("left");
+        } else if (input.right) {
+          newVx = 5;
+          setFacing("right");
+        }
+    
+        // Jump is only triggered via the jump input (ignore input.up)
+        if (input.jump && Math.abs(vy) < 0.01) {
+          newVy = 8; // jump speed
+          setFacing("jump");
+        }
+        // Ensure no movement on Z.
+        newVz = 0;
+      } else {
+        // Top-down (free) mode: Movement on X and Z (vertical via up/down).
+        newVx = 0;
+        newVz = 0;
+        if (input.left) {
+          newVx = 4;
+          setFacing("left");
+        } else if (input.right) {
+          newVx = -4;
+          setFacing("right");
+        }
+        if (input.up) {
+          newVz = 4; // forward is negative Z, or adjust as needed
+          setFacing("up");
+        } else if (input.down) {
+          newVz = -4;
+          setFacing("down");
+        } else if (input.jump) {
+          newVy = 10;
+          setFacing("jump");
+        }
       }
-
-      // Jump (up or jump key)
-      if ((input.jump || input.up) && Math.abs(vy) < 0.01) {
-        newVy = 8;
-        setFacing("jump");
-      }
-      // No movement on Z
-      newVz = 0;
-    } else {
-      // "topDown" mode
-      // Move on X/Z plane, no jump by default
-      newVx = 0;
-      newVz = 0;
-      if (input.left) {
-        newVx = -5;
-        setFacing("left");
-      } else if (input.right) {
-        newVx = 5;
-        setFacing("right");
-      }
-      if (input.up) {
-        newVz = -5; // forward is negative Z, or you can invert
-        setFacing("up");
-      } else if (input.down) {
-        newVz = 5; // backward is positive Z
-        setFacing("down");
-      }
-      // No jump in topDown mode (unless you want it).
-      newVy = vy;
-    }
-
-    // Finally, set velocity
-    api.velocity.set(newVx, newVy, newVz);
-  };
-    // Expose setMoveInput on our ref
+    
+      // Finally, update the physics velocity.
+      api.velocity.set(newVx, newVy, newVz);
+    };
+        // Expose setMoveInput on our ref
     useImperativeHandle(ref, () => {
       const group = bodyRef.current as THREE.Group;
       (group as any).setMoveInput = setMoveInput;

@@ -148,7 +148,7 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
 
   return (
     <mesh ref={ref} castShadow receiveShadow>
-      <boxGeometry args={[1, 1, 1]} />
+      <boxGeometry args={[1, 1, 4]} />
       <meshStandardMaterial map={textureToUse} color={brickColor()} />
     </mesh>
   );

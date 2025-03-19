@@ -14,33 +14,7 @@ import Skills from "../../pages/Skills/Skills";
 import ScrollModel from "../../components/ScrollModel/ScrollModel";
 import FloorWithGrid from "../../components/FloorWithGrid/FloorWithGrid";
 import MarioTube from "../../components/MarioTube/MarioTube";
-export const bioDialogContent = (
-    <>
-      <div className="dialog-header wave-letter">
-        <div className="text text_title_big text_bold My Bio">Ohad Aloni</div>
-        <div className="text text_title_med">Architect and Front-end developer.</div>
-      </div>
-      <div className="dialog-body wave-letter">
-        <div className="">
-          Holds a vast experience in design, fine arts, data analysis and programming. A firm believer in exploring and
-          combining a wide array of practises, specifically within the intersection technology and art.
-          <br />
-          <br />
-          First ventured into the world of programming while working as a BI Developer, soon after graduating from
-          Thelma Yellin High School of the Arts. During that time, he also produced electronic music, organized events, and
-          regularly performed under the stage name of Tomba. Ensuing his growing success and relocation to Europe, Tom has
-          appeared on hundreds of stages all over the world, while garnering millions of views and collaborating with
-          prominent names in the electronic music industry. Soon after his return to Israel, Tom began his architecture
-          studies where he was first introduced to parametric design. His rich background in creative software and coding
-          has enabled him to quickly master generative design tools, and tutor students from various disciplines during
-          and after his studies.
-        </div>
-        <div className="self-drawing">
-          <img src="/self-drawing.jpg" alt="Self drawing" />
-        </div>
-      </div>
-    </>
-  );
+import BioTemplate from "../../pages/Bio/BioTemplate";
   
   interface MainSceneProps {
     onMarioEnter: () => void;
@@ -95,7 +69,7 @@ export const bioDialogContent = (
         <WoodenArrow
                 key={'experience'}
           text="Experience"
-          position={[2, 0, -3]}
+          position={[1, 0, -5]}
           rotation={[0, Math.PI / 9 + 0.7, 0]}
           scale={[2, 4, 6]}
           flipText={true}
@@ -115,11 +89,8 @@ export const bioDialogContent = (
       <>
         <group>
           <FloorWithGrid onFloorClick={handleScrollClick} />
-          <Selection>
-            <ScrollModel onScrollClick={handleScrollClick} onHoverChange={setScrollHovered} />
-          </Selection>
         </group>
-        <MarioTube position={[5, 0, 0]} onEnter={onMarioEnter} />
+        <MarioTube position={[11, 0, 10]} onEnter={onMarioEnter} />
 
         <PhysicsCartoonHead
           ref={headRef}
@@ -140,10 +111,10 @@ export const bioDialogContent = (
           scale={[20, 20, 20]}
           dialogOpen={dialogOpen}
           onCloseDialog={() => {setDialogOpen(false)}}
-          dialogContent={bioDialogContent}
+          dialogContent={<BioTemplate/>}
           dialog={{ width: "40rem", height: "40rem" }}
         />
-        {shorten && woodenArrows()}
+        { woodenArrows()}
         <Skills headRef={headRef} position-z={-0.1} />
         <Experience headRef={headRef} shorten={shorten} />
       </>
