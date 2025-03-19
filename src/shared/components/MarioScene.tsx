@@ -28,20 +28,20 @@ type MarioSceneProps = {
 
 const POOL_SIZE = 10;
 export const levelMatrix: string[][] = [
-  [".", ".", ".", ".", ".", "C"], // top row: 3 empties, 1 breakable, 1 item
-  [".", ".", ".", ".", "C", "C"], // top row: 3 empties, 1 breakable, 1 item
-  [".", ".", ".", "C", "C", "C"], // next row: 2 empties, 2 concrete, 1 item
-  [".", ".", "C", "C", "C", "C"],
-  [".", "C", "C", "C", "C", "C"], // row with all concrete except last is item
+  [".", ".", ".", ".", ".", "W"], // top row: 3 empties, 1 breakable, 1 item
+  [".", ".", ".", ".", "W", "W"], // top row: 3 empties, 1 breakable, 1 item
+  [".", ".", ".", "W", "W", "W"], // next row: 2 empties, 2 WonWrete, 1 item
+  [".", ".", "W", "W", "W", "W"],
+  [".", "W", "W", "W", "W", "W"], // row with all concrete except last is item
 ];
 export const ItemBricksRow: string[][] = [[".", ".", ".", "B", "C", "I"]];
 export const MixBreakable: string[][] = [["B", "C", ".", ".", ".", "C", "C", "B"]];
 export const Pyramid: string[][] = [
-  [".", ".", ".", ".", ".", "C", "C", "C", ".", ".", ".", ".", "."], // top row: 3 empties, 1 breakable, 1 item
-  [".", ".", ".", ".", "C", "C", "C", "C", "C", ".", ".", ".", "."], // top row: 3 empties, 1 breakable, 1 item
-  [".", ".", ".", "C", "C", "C", "C", "C", "C", "C", ".", ".", "."], // next row: 2 empties, 2 concrete, 1 item
-  [".", ".", "C", "C", "C", "C", "C", "C", "C", "C", "C", ".", "."],
-  [".", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "C", "."], // row with all concrete except last is item
+  [".", ".", ".", ".", ".", "W", "W", "W", ".", ".", ".", ".", "."], // top row: 3 empties, 1 breakable, 1 item
+  [".", ".", ".", ".", "W", "W", "W", "W", "W", ".", ".", ".", "."], // top row: 3 empties, 1 breakable, 1 item
+  [".", ".", ".", "W", "W", "W", "W", "W", "W", "W", ".", ".", "."], // next row: 2 empties, 2 WonWrete, 1 item
+  [".", ".", "W", "W", "W", "W", "W", "W", "W", "W", "W", ".", "."],
+  [".", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "."], // row with all concrete except last is item
 ];
 
 const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
@@ -68,7 +68,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         // Decide brick props
         let breakable = false;
         let spawnsItem = false;
-        let spawnType: "none" | "item" = "none";
+        let spawnType: "none" | "walk" | "item" = "none";
 
         if (cell === "B") {
           breakable = true; // Breakable
@@ -78,8 +78,11 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
           spawnsItem = true; // Item
           spawnType = "item";
           breakable = false; // Concrete
+        } else if(cell === 'W') {
+          spawnsItem = false; // Item
+          breakable = false; // Concrete
+          spawnType = "walk";
         }
-
         bricks.push(
           <MarioBrick
             key={`r${r}-c${c}`}
@@ -137,6 +140,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       const newLives = prevLives + 1;
       if (newLives === 1) {
         animateScale(true);
+        setIsEnlarge(true);
         setHeadScale((prevScale) => [head.scale.x, head.scale.y, head.scale.z]);
       }
       return newLives;
@@ -162,11 +166,11 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       }, 300);
       // Shrink back
       setTimeout(() => {
-        head.scale.set(1.4, 1.4, 1.4);
+        head.scale.set(1.2, 1.4, 1.4);
       }, 400);
       // Finally, return to the original scale (assumed to be 1)
       setTimeout(() => {
-        head.scale.set(1.7, 1.7, 1.7);
+        head.scale.set(1.4, 1.4, 1.4);
       }, 500);
       return;
     } else {
@@ -216,7 +220,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       {/* <BackgroundMusic path={"music/SuperMarioBros.mp3"} /> */}
       <ambientLight intensity={0.5} />
       <directionalLight
-        position={[0, 1, 12]}
+        position={[0, 10, 10]}
         intensity={2}
         castShadow
         shadow-mapSize-width={1024}
@@ -250,6 +254,13 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
           <div className="text text_title text_title_big text_bold">Hope you've enjoyed my protfolio site!</div>
         </div>
       </Html>
+      <Html transform position={[70, 4, 0]}>
+        <div className="end-container">
+          <div className="text text_title text_title_big text_bold">Please, feel free to contact on any subject!</div>
+          <div className="text text_title text_title_big text_bold">Ohadaloni90@gmail.com</div>
+        </div>
+      </Html>
+
       <Debug>
         {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 0, 2.5)}
         {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, -7, 2)}

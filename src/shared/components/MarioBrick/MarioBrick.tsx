@@ -7,7 +7,7 @@ export interface MarioBrickProps {
   position?: [number, number, number];
   breakable?: boolean;          // If true, the brick will break on collision from below.
   spawnsItem?: boolean;         // If true, the brick will spawn an item when hit.
-  spawnType?: "none" | "item" | "powerUp"; // "item" means an item brick.
+  spawnType?: "none" | "item" | "powerUp" | "walk";
   onItemSpawn?: (pos: THREE.Vector3) => void; // Callback to spawn an item or power-up model.
   onPush?: (impulse: THREE.Vector3) => void;  // Callback to push the head.
 }
@@ -58,7 +58,8 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
     onCollide: (e) => {
       // Only react if the other body is the head.
       if (e.body.userData?.type !== "head") return;
-      
+      if (spawnType === "walk") return;             //  do nothing
+
       // Check collision contact normal.
       if (e.contact && typeof e.contact.ni[1] === "number") {
         // If the normal's y is greater than or equal to -0.5,
@@ -101,12 +102,11 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
   const itemTexture = useLoader(THREE.TextureLoader, "/textures/mini-game/mario_item.jpg");
 
   const textureToUse = useMemo(() => {
-    if (spawnsItem) {
-      return isConcrete ? concreteTexture : itemTexture;
-    }
+    if (spawnType === "walk") return brickTexture;
+    if (spawnsItem) return isConcrete ? concreteTexture : itemTexture;
     return isConcrete ? concreteTexture : brickTexture;
-  }, [spawnsItem, isConcrete, brickTexture, concreteTexture, itemTexture]);
-
+  }, [spawnType, spawnsItem, isConcrete, brickTexture, concreteTexture, itemTexture]);
+  
   const handleHit = () => {
     if (broken) return;
     setBroken(true);

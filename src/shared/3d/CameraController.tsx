@@ -84,9 +84,9 @@ const CameraController: React.FC<CameraControllerProps> = ({ shorten, headRef,tu
       headRef.current.getWorldPosition(headWorldPos);
       const ndc = headWorldPos.clone().project(camera);
       if (ndc.x > 0.5) {
-        cameraOffsetX.current += 0.03; // pan left
+        cameraOffsetX.current += 0.15; // pan left
       } else if (ndc.x < -0.5) {
-        cameraOffsetX.current -= 0.03; // pan right
+        cameraOffsetX.current -= 0.15; // pan right
       }
       if (ndc.y > 0.6) {
         cameraOffsetY.current += 0.1; // pan up

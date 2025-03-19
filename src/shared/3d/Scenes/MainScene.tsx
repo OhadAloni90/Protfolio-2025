@@ -91,8 +91,8 @@ import BioTemplate from "../../pages/Bio/BioTemplate";
           <FloorWithGrid onFloorClick={handleScrollClick} />
         </group>
         <MarioTube position={[11, 0, 10]} onEnter={onMarioEnter} />
-
         <PhysicsCartoonHead
+
           ref={headRef}
           onHoverChange={onHeadHover}
           onCollide={handleHeadCollide}

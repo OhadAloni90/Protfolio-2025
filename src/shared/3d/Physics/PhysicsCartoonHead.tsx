@@ -3,13 +3,13 @@ import { useBox } from "@react-three/cannon";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
-
+import * as CANNON from "cannon-es";
 export interface PhysicsCartoonHeadProps {
   onHoverChange: (hovering: boolean) => void;
   onCollide?: (e: any) => void;
   position?: [number, number, number];
   disableDrift?: boolean;
-  scale?: [number, number]
+  scale?: [number, number,number]
 }
 
 export interface PhysicsCartoonHeadHandle extends THREE.Group {
@@ -26,21 +26,25 @@ export type MoveInput = {
 };
 
 const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHeadProps>(
-  ({ onHoverChange, onCollide, position = [0, 0, 0], disableDrift }, ref) => {
+  ({ onHoverChange, onCollide, position = [0, 0, 0], disableDrift, scale }, ref) => {
     // Create a dynamic physics body for the head
-    const [bodyRef, api] = useBox(() => ({
-      type: "Dynamic",
-      mass: 10000,
-      args: [1, 2, 1],
-      position,
-      friction: 1,
-      collisionFilterGroup: 3,
-      collisionFilterMask: 3 | 2,
-      userData: { type: "head" },
-      onCollide: (e) => {
-        if (onCollide) onCollide(e);
-      }
-    }));
+    const [bodyRef, api] = useBox<THREE.Group>(
+      () => ({
+        type: "Dynamic",
+        mass: 10000,
+        args: scale ?? [1, 2, 1],
+        position,
+        friction: 1,
+        collisionFilterGroup: 3,
+        collisionFilterMask: 3 | 2,
+        userData: { type: "head" },
+        onCollide,
+      }),
+      undefined,      // no forwarded ref is provided here
+      [scale]         // dependency array to rebuild the body when scale changes
+        );
+    
+    
 
     const gltf = useLoader(GLTFLoader, "/models/Head3.glb");
     const [facing, setFacing] = useState<"left" | "right" | "up" | "down" | "jump">("right");
@@ -111,6 +115,21 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
       (group as any).setMoveInput = setMoveInput;
       return group as PhysicsCartoonHeadHandle;
     });
+
+    useEffect(() => {
+      if (!bodyRef.current || !scale) return;
+      const body = (bodyRef.current as any).body as CANNON.Body;
+      const shape = body.shapes[0] as CANNON.Box;
+    
+      // Update the halfExtents
+      shape.halfExtents.set(scale[0] / 2, scale[1] / 2, scale[2] / 2);
+      shape.updateConvexPolyhedronRepresentation();
+    
+      // Must update bounding radius & inertia
+      body.updateBoundingRadius();
+      body.updateMassProperties();
+    }, [scale]);
+    
 
     useFrame(() => {
       if (!bodyRef.current) return;
