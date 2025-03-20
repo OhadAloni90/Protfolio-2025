@@ -9,6 +9,8 @@ import BackgroundMusic from "./BackgroundMusic/BackgroundMusic";
 import Goomba from "./Goomba/Goomba";
 import Shroom from "./Shroom/Shroom";
 import MiniGameBackground from "./MiniGameBackground/MiniGameBackground";
+import BoundaryWall from "./BoundryWall/BoundryWall";
+import LimitReached from "./LimitReached/LimitReached";
 
 const Ground = () => {
   const [ref] = usePlane(() => ({
@@ -78,7 +80,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
           spawnsItem = true; // Item
           spawnType = "item";
           breakable = false; // Concrete
-        } else if(cell === 'W') {
+        } else if (cell === "W") {
           spawnsItem = false; // Item
           breakable = false; // Concrete
           spawnType = "walk";
@@ -102,8 +104,9 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   // Preload the shroom model once.
   const shroomModel = useFBX("/models/mario-mini/mario_shroom.fbx") as THREE.Group;
   const [isOnBrick, setIsOnBrick] = useState(false);
+  const [showLimitReached, setShowLimitReached] = useState(false);
   const [lives, setLives] = useState<number>(0);
-  const [headScale, setHeadScale] = useState<[number, number, number]>([1,2,1])
+  const [headScale, setHeadScale] = useState<[number, number, number]>([1, 2, 1]);
   const [isEnlarge, setIsEnlarge] = useState<boolean>(false);
   // Create a pool of shroom instances.
   const [pool, setPool] = useState<Array<{ id: number; active: boolean; pos: THREE.Vector3 }>>(
@@ -146,7 +149,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       return newLives;
     });
   };
-    const animateScale = (enlarge: boolean) => {
+  const animateScale = (enlarge: boolean) => {
     if (!headRef.current) return;
     const head = headRef.current;
     if (enlarge) {
@@ -170,11 +173,10 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       }, 400);
       // Finally, return to the original scale (assumed to be 1)
       setTimeout(() => {
-        head.scale.set(1.4, 1.4, 1.4);
+        head.scale.set(1.3, 1.3, 1.3);
       }, 500);
       return;
     } else {
-      
     }
     head.scale.set(1.7, 1.7, 1.7);
     // First pulse: grow
@@ -207,13 +209,24 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
 
   const onHeadCollide = (e: any) => {
     // Check if the collision is with a brick.
-    if (e.body.userData?.type === "marioBrick") {
+    const type: string = e.body.userData?.type;
+    console.log(type === "boundryWall" && !showLimitReached)
+    if (type === "marioBrick") {
       // Here we assume that the brick’s position is the center of the brick
       // and that the brick is 1 unit high.
       // So the top of the brick is at brickPos.y + 0.5.
       setIsOnBrick(true);
+    } else if (type === "boundryWall" && !showLimitReached) {
+      showBoundryWarning();
     }
   };
+  const showBoundryWarning = () => {
+    setShowLimitReached(true);
+    setTimeout(() => {
+      setShowLimitReached(false);
+    }, 1500);
+  };
+
   return (
     <>
       <OrthographicCamera makeDefault position={[0, 10, 10]} zoom={55} />
@@ -260,6 +273,8 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
           <div className="text text_title text_title_big text_bold">Ohadaloni90@gmail.com</div>
         </div>
       </Html>
+      <BoundaryWall position={[-19, 0, 0]} scale={[1, 100, 2]} transparent={true} mario />
+      <BoundaryWall position={[77, 0, 0]} scale={[1, 100, 2]} transparent={true} mario />
 
       <Debug>
         {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 0, 2.5)}
@@ -269,6 +284,9 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         {createLevel(Pyramid, handleItemSpawn, rejectByForce, 35, 3)}
         {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 36, 8)}
         {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 55, 2.5)}
+        {showLimitReached && (
+  <LimitReached rotation={[0,0,0]} position={[77,4,0]} />
+)}
 
         <Goomba headRef={headRef} />
         <Goomba headRef={headRef} position={[20, -1.8, 0]} />

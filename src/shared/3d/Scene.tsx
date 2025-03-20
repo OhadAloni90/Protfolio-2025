@@ -56,6 +56,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
           <directionalLight
             position={[-3, 10, -10]}
             intensity={10}
+            scale={[1,1,3]}
             castShadow
             shadow-mapSize-width={1024 * 10}
             shadow-mapSize-height={1024 * 10}

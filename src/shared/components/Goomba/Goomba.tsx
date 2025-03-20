@@ -13,10 +13,6 @@ interface GoombaProps {
 
 const Goomba: React.FC<GoombaProps> = ({ position = [0, -1.8, 0], headRef, onHit, onStomp }) => {
   // Load the Goomba FBX model once.
-  const lastBrickHit = useRef(0);
-const BRICK_COOLDOWN = 200; // ms
-const PUSH_BACK = 0.1;
-
   const originalFBX = useFBX("/models/mario-mini/Goomba.fbx") as THREE.Group;
   // Clone the model for this instance
   const fbx = useMemo(() => originalFBX.clone(), [originalFBX]);
@@ -28,12 +24,10 @@ const PUSH_BACK = 0.1;
       actions["Take 001"].reset().setLoop(THREE.LoopRepeat, Infinity).play();
     }
   }, [actions]);
-
   // Track whether the Goomba is “dead” (stomped).
   const [isDead, setIsDead] = useState(false);
   // We'll store a reference to the time we got stomped, so we can animate.
   const deadTimeRef = useRef<number | null>(null);
-
   // Create a physics body for collision detection.
   const [boxRef, api] = useBox(() => ({
     type: "Dynamic",
@@ -46,7 +40,6 @@ const PUSH_BACK = 0.1;
       if (e.body.userData?.type === "head") {
         // e.contact.ni is the collision normal relative to the Goomba
         if (e.contact && typeof e.contact.ni[1] === "number") {
-          console.log(e.contact.ni);
           // If normal's y is less than -0.5 => head from above
           if (e.contact.ni[1] < -0.5) {
             // Stomped
@@ -54,7 +47,6 @@ const PUSH_BACK = 0.1;
             deadTimeRef.current = performance.now();
             // Disable collisions so we won't interact further
             api.collisionFilterMask.set(0);
-
             if (onStomp) onStomp();
           } else {
             // Otherwise, side collision => Mario takes damage
@@ -77,7 +69,6 @@ const PUSH_BACK = 0.1;
       groupRef.current.add(boxRef.current);
     }
   }, [boxRef, groupRef]);
-
   // Patrol & chase logic
   const [direction, setDirection] = useState(1); // 1 = right, -1 = left
   const patrolSpeed = 0.01;

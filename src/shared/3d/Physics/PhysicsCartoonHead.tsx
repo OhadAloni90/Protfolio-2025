@@ -32,7 +32,7 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
       () => ({
         type: "Dynamic",
         mass: 10000,
-        args: scale ?? [1, 2, 1],
+        args: scale ?? [1, 2.2, 1],
         position,
         friction: 1,
         collisionFilterGroup: 3,
@@ -115,21 +115,6 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
       (group as any).setMoveInput = setMoveInput;
       return group as PhysicsCartoonHeadHandle;
     });
-
-    useEffect(() => {
-      if (!bodyRef.current || !scale) return;
-      const body = (bodyRef.current as any).body as CANNON.Body;
-      const shape = body.shapes[0] as CANNON.Box;
-    
-      // Update the halfExtents
-      shape.halfExtents.set(scale[0] / 2, scale[1] / 2, scale[2] / 2);
-      shape.updateConvexPolyhedronRepresentation();
-    
-      // Must update bounding radius & inertia
-      body.updateBoundingRadius();
-      body.updateMassProperties();
-    }, [scale]);
-    
 
     useFrame(() => {
       if (!bodyRef.current) return;

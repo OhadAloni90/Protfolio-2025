@@ -66,6 +66,56 @@ code {
   transform: translateY(10px);
   animation: waveAppear 0.6s ease-in-out forwards;
 }
+.limit_reached {
+  padding: 1rem;
+  animation: wiggle 2s linear;
+}
+.stop-sign-wrapper {
+  top: -10rem;
+  scale: 0.5;
+  position: relative;
+  left: -50px;
+  animation: wiggle 2s linear;
+  .hexagon {
+    float:left;
+    background-color: white;
+    shape-outside: polygon(0 50px, 50px 0, 100px 0, 150px 50px, 150px 100px, 100px 150px, 50px 150px, 0 100px);
+    width: 300px;
+    height: 600px;
+    
+     -webkit-clip-path: polygon(0 50px, 50px 0, 100px 0, 150px 50px, 150px 100px, 100px 150px, 50px 150px, 0 100px);
+    width: 300px;
+    height: 600px;
+  }
+  
+  .hexagon2 {  position: relative;
+    background-color: red;
+    shape-outside: polygon(10px 50px, 50px 10px, 100px 10px, 140px 50px, 140px 150px, 100px 140px, 50px 150px, 10px 100px);
+    width: 300px;
+    height: 600px;
+    
+     -webkit-clip-path: polygon(10px 50px, 50px 10px, 100px 10px, 140px 50px, 140px 100px, 100px 140px, 50px 140px, 10px 100px);
+    width: 300px;
+    height: 600px;
+  }
+  
+  .text {
+    position: relative;
+    font-family: arial;
+    font-weight: 600;
+    font-size: 42px;
+    letter-spacing: 1px;
+    color: white;
+    left: 17.5px;
+    top:100px;
+    z-index: 1;
+  }
+  
+  .wrapper {
+    float:left;
+    margin-left:40%;
+  }
+}
 
 .dialog-container {
   padding: 1rem;
@@ -118,6 +168,30 @@ code {
       }
     }
   }
+
+@keyframes wiggle {
+  0%, 7% {
+    transform: rotateZ(0);
+  }
+  15% {
+    transform: rotateZ(-15deg);
+  }
+  20% {
+    transform: rotateZ(10deg);
+  }
+  25% {
+    transform: rotateZ(-10deg);
+  }
+  30% {
+    transform: rotateZ(6deg);
+  }
+  35% {
+    transform: rotateZ(-4deg);
+  }
+  40%, 100% {
+    transform: rotateZ(0);
+  }
+}
 
   .dialog-body {
    height: 80%;

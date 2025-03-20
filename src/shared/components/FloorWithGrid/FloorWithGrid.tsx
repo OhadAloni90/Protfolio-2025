@@ -24,7 +24,7 @@ const FloorWithGrid: React.FC<FloorWithGridProps> = ({ onFloorClick }) => {
       ref={ref}
       receiveShadow
       castShadow
-      scale={[200, 200, 1]}
+      scale={[1000, 1000, 1]}
       onClick={(e) => {
         e.stopPropagation();
         const adjustedPoint = e.point.clone();
@@ -40,6 +40,7 @@ const FloorWithGrid: React.FC<FloorWithGridProps> = ({ onFloorClick }) => {
         mixStrength={0.098}
         resolution={3072}
         side={DoubleSide}
+        // roughness={0} metalness={0}
       >
         <GradientTexture
           attach="map"
