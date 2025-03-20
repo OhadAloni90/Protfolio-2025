@@ -37,17 +37,17 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
   const {state} = useDarkMode();
   const socialMediaModels: SocialMediaModel[] = [
     {
-      modelUrl: "/models/social/facebook.fbx" , // URL or path to your GLB or FBX model.
+      modelUrl: `${process.env.PUBLIC_URL}/models/social/facebook.fbx` , // URL or path to your GLB or FBX model.
       modelType: "fbx",                       // 'glb' or 'fbx'
       position: [29, 2, 7],                  // Set model position in the scene.
       mass: 10,
       rotation: [0,Math.PI / 3, 0],      // Rotate the model (in radians).
       scale: 0.008,                           // Scale the model uniformly.
-      textureUrl: "/models/social/facebook.jpg", // Optional texture URL.
+      textureUrl: `${process.env.PUBLIC_URL}/models/social/facebook.jpg`, // Optional texture URL.
       linkUrl: 'https://www.facebook.com/AloniOhad/'
     },
     {
-      modelUrl: "/models/social/linkedin.fbx" , // URL or path to your GLB or FBX model.
+      modelUrl: `${process.env.PUBLIC_URL}/models/social/linkedin.fbx` , // URL or path to your GLB or FBX model.
       modelType: "fbx",                       // 'glb' or 'fbx'
       position: [31, 1, -7],                  // Set model position in the scene.
       mass: 10,
@@ -57,13 +57,13 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
       linkUrl: 'https://www.linkedin.com/in/ohad-aloni-a23630175/'
     },
     {
-      modelUrl: "/models/social/github.glb" , // URL or path to your GLB or FBX model.
+      modelUrl: `${process.env.PUBLIC_URL}/models/social/github.glb` , // URL or path to your GLB or FBX model.
       modelType: "glb",                       // 'glb' or 'fbx'
       position: [29, 0, -16],                  // Set model position in the scene.
       mass: 10,
       rotation: [0,-Math.PI / 4 , 0],      // Rotate the model (in radians).
       scale: 0.7,                           // Scale the model uniformly.
-      textureUrl: "/models/social/github.jpeg", // Optional texture URL.
+      textureUrl: `${process.env.PUBLIC_URL}/models/social/github.jpeg`, // Optional texture URL.
       linkUrl: 'https://github.com/OhadAloni90'
     },
 
