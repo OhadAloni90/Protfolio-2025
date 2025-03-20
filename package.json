@@ -28,7 +28,7 @@
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
-  "homepage": "https://github.com/OhadAloni90/NewProtfolio",
+  "homepage": "https://ohadaloni90.github.io/NewProtfolio/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
