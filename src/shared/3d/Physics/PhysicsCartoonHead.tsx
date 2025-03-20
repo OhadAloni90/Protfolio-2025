@@ -46,7 +46,7 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
     
     
 
-    const gltf = useLoader(GLTFLoader, "/models/Head3.glb");
+    const gltf = useLoader(GLTFLoader, "./models/Head3.glb");
     const [facing, setFacing] = useState<"left" | "right" | "up" | "down" | "jump">("right");
 
     // Create a ref to store the current velocity.

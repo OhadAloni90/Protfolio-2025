@@ -35,7 +35,7 @@ const WreckingBall = forwardRef<WreckingBallRef, WreckingBallProps>(
     ref
   ) => {
     // Load a metal texture for the wrecking ball.
-    const metalTexture = useLoader(TextureLoader, "/textures/metal_texture.avif");
+    const metalTexture = useLoader(TextureLoader, "./textures/metal_texture.avif");
 
     // Create a dynamic sphere for the ball.
     const [ballRef, ballApi] = useSphere(() => ({

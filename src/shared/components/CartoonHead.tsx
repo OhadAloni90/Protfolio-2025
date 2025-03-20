@@ -20,8 +20,7 @@ const CartoonHead = forwardRef<THREE.Group, CartoonHeadProps>(
     const travelDuration = 2; // seconds to complete the bounce
 
     // Load models
-    const originalModel = useLoader(GLTFLoader, "/models/Head3.glb");
-    const alternateModel = useGLTF("/models/mac-draco.glb");
+    const originalModel = useLoader(GLTFLoader, "./models/Head3.glb");
 
     // Ensure shadows for the current model.
     useEffect(() => {

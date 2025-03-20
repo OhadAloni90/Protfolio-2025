@@ -29,7 +29,7 @@ const UnifiedCartoonHead = forwardRef<THREE.Group, UnifiedCartoonHeadProps>(
     }));
 
     const groupRef = useRef<THREE.Group>(null);
-    const gltf = useLoader(GLTFLoader, "/models/Head3.glb");
+    const gltf = useLoader(GLTFLoader, "./models/Head3.glb");
 
     // Re-center the model if needed and enable shadows
     useEffect(() => {
