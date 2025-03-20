@@ -28,7 +28,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
   }));
 
   // 2) Load the 3D model. (FBX example)
-  const fbxModel = useLoader(FBXLoader, "./models/mario-mini/MSteel_Pipe.fbx");
+  const fbxModel = useLoader(FBXLoader, `${process.env.PUBLIC_URL}/models/mario-mini/MSteel_Pipe.fbx`);
   // If GLTF, do: const gltf = useLoader(GLTFLoader, "/models/MSteel_Pipe.glb");
 
   // 3) Load PBR textures

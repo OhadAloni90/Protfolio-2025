@@ -97,9 +97,9 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
     },
   }));
 
-  const brickTexture = useLoader(THREE.TextureLoader, "./textures/mini-game/mario_brick.jpg");
-  const concreteTexture = useLoader(THREE.TextureLoader, "./textures/mini-game/mario_concrete.jpg");
-  const itemTexture = useLoader(THREE.TextureLoader, "./textures/mini-game/mario_item.jpg");
+  const brickTexture = useLoader(THREE.TextureLoader, `${process.env.PUBLIC_URL}//textures/mini-game/mario_brick.jpg`);
+  const concreteTexture = useLoader(THREE.TextureLoader, `${process.env.PUBLIC_URL}/textures/mini-game/mario_concrete.jpg`);
+  const itemTexture = useLoader(THREE.TextureLoader, `${process.env.PUBLIC_URL}//textures/mini-game/mario_item.jpg`);
 
   const textureToUse = useMemo(() => {
     if (spawnType === "walk") return brickTexture;

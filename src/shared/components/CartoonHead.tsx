@@ -20,7 +20,7 @@ const CartoonHead = forwardRef<THREE.Group, CartoonHeadProps>(
     const travelDuration = 2; // seconds to complete the bounce
 
     // Load models
-    const originalModel = useLoader(GLTFLoader, "./models/Head3.glb");
+    const originalModel = useLoader(GLTFLoader, `${process.env.PUBLIC_URL}/models/Head3.glb`);
 
     // Ensure shadows for the current model.
     useEffect(() => {
