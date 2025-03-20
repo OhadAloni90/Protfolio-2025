@@ -40,11 +40,11 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
     normalMap,
     displacementMap
   ] = useTexture([
-    "./textures/mini-game/MSteel_Pipe_4K_Diffuse.png",
-    "./textures/mini-game/MSteel_Pipe_4K_Metalness.png",
-    "./textures/mini-game/MSteel_Pipe_4K_Roughness.png",
-    "./textures/mini-game/MSteel_Pipe_4K_Normal.png",
-    "./textures/mini-game/MSteel_Pipe_4K_Displacement.png",
+    `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Diffuse.png`,
+    `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Metalness.png`,
+    `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Roughness.png`,
+    `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Normal.png`,
+    `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Displacement.png`,
   ]);
 
   // 5) We’ll apply these textures to the model’s mesh material(s).
