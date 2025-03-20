@@ -37,7 +37,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
   const {state} = useDarkMode();
   const socialMediaModels: SocialMediaModel[] = [
     {
-      modelUrl: `${process.env.PUBLIC_URL}/models/social/facebook.fbx` , // URL or path to your GLB or FBX model.
+      modelUrl: `${process.env.PUBLIC_URL}/models/social/facebook.FBX` , // URL or path to your GLB or FBX model.
       modelType: "fbx",                       // 'glb' or 'fbx'
       position: [29, 2, 7],                  // Set model position in the scene.
       mass: 10,
