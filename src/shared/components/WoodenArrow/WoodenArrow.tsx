@@ -13,7 +13,7 @@ interface WoodenArrowProps {
 const WoodenArrow = forwardRef<THREE.Group, WoodenArrowProps>(
   ({ text, position = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1],flipText }, ref,) => {
     // Load the wooden arrow GLB (shared across instances)
-    const { scene } = useGLTF("/models/wooden_arrow.glb");
+    const { scene } = useGLTF(`${process.env.PUBLIC_URL}/models/wooden_arrow.glb`);
     // Clone the scene for each instance using useMemo for performance.
     const clonedScene = useMemo(() => scene.clone(true), [scene]);
 
