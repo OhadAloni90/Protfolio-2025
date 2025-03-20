@@ -102,7 +102,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   }
 
   // Preload the shroom model once.
-  const shroomModel = useFBX("/models/mario-mini/mario_shroom.fbx") as THREE.Group;
+  const shroomModel = useFBX(`${process.env.PUBLIC_URL}/models/mario-mini/mario_shroom.fbx`) as THREE.Group;
   const [isOnBrick, setIsOnBrick] = useState(false);
   const [showLimitReached, setShowLimitReached] = useState(false);
   const [lives, setLives] = useState<number>(0);

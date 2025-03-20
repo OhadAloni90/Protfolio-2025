@@ -25,9 +25,10 @@ const AppRoutes = () => {
         <Scene onHeadHover={setIsHeadHovered}></Scene>
       </div>
       <Routes>
-        <Route path={`${process.env.PUBLIC_URL}`} element={<Home />} />
-        <Route path={`${process.env.PUBLIC_URL}/start`}element={<About isHovered={isHeadHovered} />} />
-      </Routes>
+  <Route path={`${process.env.PUBLIC_URL}/`} element={<Home />} />
+  <Route path={`${process.env.PUBLIC_URL}/start`} element={<About isHovered={isHeadHovered} />} />
+</Routes>
+
     </>
   );
 };
