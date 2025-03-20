@@ -9,7 +9,7 @@ const MiniGameBackground: React.FC<MiniGameBackgroundProps> = () => {
   // Load textures (replace with your URLs)
   const backTexture = useLoader(TextureLoader, "https://raw.githubusercontent.com/Kageetai/mario-background-parallax/master/img/back.png?raw=true");
   const bushesTexture = useLoader(TextureLoader, "https://raw.githubusercontent.com/Kageetai/mario-background-parallax/master/img/bushes.png?raw=true");
-  const groundTexture = useLoader(TextureLoader, "/textures/mini-game/mario_ground.png");
+  const groundTexture = useLoader(TextureLoader, `${process.env.PUBLIC_URL}//textures/mini-game/mario_ground.png`);
   // Optionally, load the mario layer if desired:
   // const marioTexture = useLoader(TextureLoader, "https://raw.githubusercontent.com/Kageetai/mario-background-parallax/master/img/mario.gif?raw=true");
 
