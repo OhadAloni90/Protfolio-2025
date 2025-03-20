@@ -35,7 +35,7 @@ const PhysicsPushButton = forwardRef<THREE.Group, PhysicsPushButtonProps>(
     }));
 
     // Load and clone your button model.
-    const { scene, animations } = useGLTF("/models/button.glb");
+    const { scene, animations } = useGLTF(`${process.env.PUBLIC_URL}/models/button.glb`);
     const clonedScene = useMemo(() => {
       const clone = scene.clone(true);
       clone.position.set(0, 0, 0);

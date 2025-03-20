@@ -20,7 +20,7 @@ const SocialButton = forwardRef<THREE.Group, SocialButtonProps>(
     }));
 
     // Load the same button model from a GLB file.
-    const { scene } = useGLTF("/models/button.glb");
+    const { scene } = useGLTF(`${process.env.PUBLIC_URL}/models/button.glb`);
     // Clone the scene for each instance so they don't conflict.
     const clonedScene = useMemo(() => {
       const clone = scene.clone(true);

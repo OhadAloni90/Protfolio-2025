@@ -45,7 +45,7 @@ const PhysicsPushButton = forwardRef<THREE.Group, PhysicsPushButtonProps>(
 
     const { state } = useDarkMode();
     // Load the button GLTF file
-    const { scene, animations } = useGLTF("/models/button.glb");
+    const { scene, animations } = useGLTF(`${process.env.PUBLIC_URL}/models/button.glb`);
     const { actions } = useAnimations(animations, groupRef);
 
     // Play an idle animation if available.
