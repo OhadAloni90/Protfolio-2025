@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { Route, BrowserRouter as Router, Routes, useNavigate } from "react-router";
+import { Route, HashRouter as Router, Routes, useNavigate } from "react-router";
 import Home from "./shared/pages/Home";
 import { DarkModeProvider } from "./shared/providers/DarkModeProvider/DarkModeProvider";
 import About from "./shared/pages/About/About";
