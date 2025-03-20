@@ -33,9 +33,11 @@ const AppRoutes = () => {
 };
 
 function App() {
+  const PortalRoot =  () => <div id="portal-root" />;
   return (
     <DarkModeProvider>
       <Router>
+        <PortalRoot/>
         <AppRoutes />
       </Router>
     </DarkModeProvider>

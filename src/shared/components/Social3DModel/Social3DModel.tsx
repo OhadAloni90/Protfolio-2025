@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLoader } from '@react-three/fiber';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { Html } from '@react-three/drei';
+import { useDarkMode } from '../../providers/DarkModeProvider/DarkModeProvider';
 
 interface Social3DModelProps {
   modelUrl: string;
@@ -14,6 +16,8 @@ interface Social3DModelProps {
   scale?: [number, number, number] | number;
   textureUrl?: string;
   mass?: number;
+  // URL to navigate to on click (for example, a Facebook profile).
+  linkUrl?: string;
 }
 
 const Social3DModel: React.FC<Social3DModelProps> = ({
@@ -24,7 +28,10 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
   scale = 1,
   textureUrl,
   mass = 1,
+  linkUrl,
 }) => {
+  const [hovered, setHovered] = useState(false);
+    const {state} = useDarkMode();
   // Load the model using the appropriate loader.
   const model: any = useLoader(
     modelType === 'glb' ? GLTFLoader : FBXLoader,
@@ -37,13 +44,12 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
     return new THREE.TextureLoader().load(textureUrl);
   }, [textureUrl]);
 
-  // Helper function to traverse the model and apply texture.
+  // Helper function to traverse and apply texture and set shadows.
   const applyTexture = (object: THREE.Object3D) => {
     object.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        // set shadows
-        child.receiveShadow = true
-        child.castShadow = true
+        child.receiveShadow = true;
+        child.castShadow = true;
         if (Array.isArray(child.material)) {
           child.material.forEach((mat) => {
             if ('map' in mat) {
@@ -73,20 +79,26 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
   // Determine which object to render: for GLB models, use model.scene; for FBX, use the model.
   const objectToRender = 'scene' in model && model.scene ? model.scene : model;
 
-  // Compute the bounding box of the model and adjust it by the scale.
-  const computedColliderArgs: [number, number, number] = React.useMemo(() => {
-    if (!objectToRender) return [1, 1, 1];
+  // Compute the bounding box of the model, its size, and center offset.
+  const { colliderArgs, offset } = React.useMemo(() => {
+    if (!objectToRender) {
+      return { colliderArgs: [1, 1, 1] as [number, number, number], offset: new THREE.Vector3() };
+    }
     const box = new THREE.Box3().setFromObject(objectToRender);
     const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
     box.getSize(size);
-    // Apply visual scale to the size.
+    box.getCenter(center);
+    // Apply the visual scale to both size and center.
     if (typeof scale === 'number') {
       size.multiplyScalar(scale);
+      center.multiplyScalar(scale);
     } else {
-      size.set(size.x, size.y, size.z );
+      size.set(size.x * scale[0], size.y * scale[1], size.z * scale[2]);
+      center.set(center.x * scale[0], center.y * scale[1], center.z * scale[2]);
     }
-    // useBox expects half-extents so we divide by 2.
-    return [size.x, size.y, size.z] as [number, number, number];
+    // useBox expects half-extents, so divide size by 2.
+    return { colliderArgs: [size.x, size.y, size.z] as [number, number, number], offset: center };
   }, [objectToRender, scale]);
 
   // Create a physics body using useBox with the computed collider arguments.
@@ -95,18 +107,53 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
     mass,
     position,
     rotation,
-    args: computedColliderArgs,
+    args: colliderArgs,
   }));
 
+  // Calculate interactive scale (slightly larger when hovered).
+  const interactiveScale =
+    typeof scale === 'number'
+      ? scale * (hovered ? 1.1 : 1)
+      : Array.isArray(scale)
+      ? (scale as [number, number, number]).map(val => hovered ? val * 1.1 : val) as [number, number, number]
+      : scale;
+
   return (
-    <group ref={ref}>
-      <primitive
-        object={objectToRender}
-        // Reset local transform so the physics body controls the overall transform.
-        position={[0, 0, 0]}
-        rotation={[0, 0, 0]}
-        scale={scale}
-      />
+    <group
+      ref={ref}
+      onPointerOver={(e) => {
+        setHovered(true);
+        document.body.style.cursor = 'pointer';
+        e.stopPropagation();
+      }}
+      onPointerOut={(e) => {
+        setHovered(false);
+        document.body.style.cursor = 'default';
+        e.stopPropagation();
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (linkUrl) {
+          window.open(linkUrl, '_blank');
+        }
+      }}
+    >
+      {/* Offset the model by the negative center so that its geometry is re-centered relative to the physics collider */}
+      <group position={[-offset.x, -offset.y, -offset.z]}>
+        <primitive
+          object={objectToRender}
+          position={[0, 0, 0]}
+          rotation={[0, 0, 0]}
+          scale={interactiveScale}
+        />
+      </group>
+      {
+        hovered &&       <Html transform >
+        <div className={`text text_bold text_big text_title_big ${state?.darkMode ? 'dark' : 'light'}`}>
+            Click to open in a new tab
+        </div>
+      </Html>
+      }
     </group>
   );
 };

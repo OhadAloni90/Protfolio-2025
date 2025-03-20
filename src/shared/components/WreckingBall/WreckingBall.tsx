@@ -42,19 +42,21 @@ const WreckingBall = forwardRef<WreckingBallRef, WreckingBallProps>(
       mass: mass,
       position: ballPosition,
       args: [radius],
-      angularDamping: 0.1,
-      linearDamping: 0.1,
+      angularDamping: 0.,
+      linearDamping: 0.,
       userData: { type: "wreckingBall" },
+      type: "Dynamic",
       onCollide: (e: any) => {
         const otherType = e.body.userData?.type;
         if (otherType === "head") {
-          ballApi.velocity.set(0, 0, 0);
           return;
         }
         if (otherType === "vertical") {
           onWallCollide && onWallCollide(e);
         }
       },
+    
+
     }));
 
     // Create a static sphere for the pivot point.

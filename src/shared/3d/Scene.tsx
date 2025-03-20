@@ -66,14 +66,14 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
             shadow-camera-bottom={-200}
           />
           <Physics iterations={10} gravity={[0, -9.8, 0]}>
-            <Debug>
+            {/* <Debug> */}
               <CameraController shorten={shorten} headRef={headRef} tubeActive={inMarioMode} />
               {inMarioMode ? (
                 <MarioScene headRef={headRef} />
               ) : (
                 <MainScene headRef={headRef} onMarioEnter={() => setInMarioMode(true)} onHeadHover={() => {}} />
               )}
-            </Debug>
+            {/* </Debug> */}
           </Physics>
         </Suspense>
       </Canvas>

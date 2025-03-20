@@ -14,6 +14,7 @@ import BioTemplate from "../../pages/Bio/BioTemplate";
 import BoundaryWall from "../../components/BoundryWall/BoundryWall";
 import LimitReached from "../../components/LimitReached/LimitReached";
 import Social3DModel from "../../components/Social3DModel/Social3DModel";
+import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 interface MainSceneProps {
   onMarioEnter: () => void;
@@ -23,6 +24,7 @@ interface MainSceneProps {
 interface SocialMediaModel {
   modelUrl: string, // URL or path to your GLB or FBX model.
   textureUrl: string;
+  linkUrl: string;
   modelType: 'fbx' | 'glb',
   position: [number, number, number],
   rotation:[number, number, number],
@@ -32,6 +34,7 @@ interface SocialMediaModel {
 
 const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRef }) => {
   const location = useLocation();
+  const {state} = useDarkMode();
   const socialMediaModels: SocialMediaModel[] = [
     {
       modelUrl: "/models/social/facebook.fbx" , // URL or path to your GLB or FBX model.
@@ -40,25 +43,28 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
       mass: 10,
       rotation: [0,Math.PI / 3, 0],      // Rotate the model (in radians).
       scale: 0.008,                           // Scale the model uniformly.
-      textureUrl: "/models/social/facebook.jpg" // Optional texture URL.
+      textureUrl: "/models/social/facebook.jpg", // Optional texture URL.
+      linkUrl: 'https://www.facebook.com/AloniOhad/'
     },
     {
       modelUrl: "/models/social/linkedin.fbx" , // URL or path to your GLB or FBX model.
       modelType: "fbx",                       // 'glb' or 'fbx'
-      position: [31, -2, -7],                  // Set model position in the scene.
+      position: [31, 1, -7],                  // Set model position in the scene.
       mass: 10,
       rotation: [0,-Math.PI / 2, 0],      // Rotate the model (in radians).
       scale: 0.065,                           // Scale the model uniformly.
-      textureUrl: "" // Optional texture URL.
+      textureUrl: "",// Optional texture URL.
+      linkUrl: 'https://www.linkedin.com/in/ohad-aloni-a23630175/'
     },
     {
       modelUrl: "/models/social/github.glb" , // URL or path to your GLB or FBX model.
       modelType: "glb",                       // 'glb' or 'fbx'
-      position: [29, -3, -16],                  // Set model position in the scene.
+      position: [29, 0, -16],                  // Set model position in the scene.
       mass: 10,
       rotation: [0,-Math.PI / 4 , 0],      // Rotate the model (in radians).
       scale: 0.7,                           // Scale the model uniformly.
-      textureUrl: "/models/social/github.jpeg" // Optional texture URL.
+      textureUrl: "/models/social/github.jpeg", // Optional texture URL.
+      linkUrl: 'https://github.com/OhadAloni90'
     },
 
   ]
@@ -174,18 +180,33 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
       )}
       <HeadController headRef={headRef} speed={0.1} />
       <Mouth position={[0, -1.5, 8]} scale={[0.02, 0.02, 0.02]} rotation={[Math.PI / 10, Math.PI, 0]} />
-      <PushButton
-        text="Bio"
-        position={[-8, -1.8, -4]}
-        rotation={[0, 0, 2 * Math.PI]}
-        scale={[20, 20, 20]}
-        dialogOpen={dialogOpen}
-        onCloseDialog={() => {
-          setDialogOpen(false);
-        }}
-        dialogContent={<BioTemplate />}
-        dialog={{ width: "40rem", height: "40rem" }}
-      />
+        {
+          state?.darkMode ? (
+            <PushButton
+            text="Bio"
+            position={[-8, -1.8, -4]}
+            rotation={[0, 0, 2 * Math.PI]}
+            scale={[20, 20, 20]}
+            dialogOpen={dialogOpen}
+            onCloseDialog={() => {
+              setDialogOpen(false);
+            }}
+            dialogContent={<BioTemplate darkMode={true} />}
+            dialog={{ width: "40rem", height: "40rem" }}
+          />
+          ) :    <PushButton
+          text="Bio"
+          position={[-8, -1.8, -4]}
+          rotation={[0, 0, 2 * Math.PI]}
+          scale={[20, 20, 20]}
+          dialogOpen={dialogOpen}
+          onCloseDialog={() => {
+            setDialogOpen(false);
+          }}
+          dialogContent={<BioTemplate darkMode={false} />}
+          dialog={{ width: "40rem", height: "40rem" }}
+        />
+        }
       {woodenArrows()}
       {
         socialMediaModels && socialMediaModels.map((social: SocialMediaModel) => (
@@ -197,6 +218,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
           mass={social.mass}     
           rotation={social.rotation}            // Rotate the model (in radians).
           scale={social.scale}                            // Scale the model uniformly.
+          linkUrl={social.linkUrl}
         />
         ))
       }
