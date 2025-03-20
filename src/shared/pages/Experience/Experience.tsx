@@ -53,7 +53,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
       position: [12, -1.85, -32],
       rotation: [Math.PI / 2, 0, 0],
       text: "Media & Folders system",
-      subtext: "Media & Folders system Media & Folders system Media & Folders system Media & Folders system",
+      subtext: "I managed and developed an advanced media system that simulates a file system using a recursive tree structure to minimize server requests and enhance performance. The system supports file uploads, viewing, tagging, renaming, folder creation, and seamless file movement between directories, handling numerous asynchronous operations efficiently. It was designed to be fully responsive, optimized for both mobile and desktop platforms.",
     },
     {
       videoSrc: "projects/video/movie.mp4",

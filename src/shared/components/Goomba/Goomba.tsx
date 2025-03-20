@@ -13,7 +13,7 @@ interface GoombaProps {
 
 const Goomba: React.FC<GoombaProps> = ({ position = [0, -1.8, 0], headRef, onHit, onStomp }) => {
   // Load the Goomba FBX model once.
-  const originalFBX = useFBX("/models/mario-mini/Goomba.fbx") as THREE.Group;
+  const originalFBX = useFBX(`${process.env.PUBLIC_URL}/models/mario-mini/Goomba.fbx`) as THREE.Group;
   // Clone the model for this instance
   const fbx = useMemo(() => originalFBX.clone(), [originalFBX]);
   // Use animations on the cloned model.

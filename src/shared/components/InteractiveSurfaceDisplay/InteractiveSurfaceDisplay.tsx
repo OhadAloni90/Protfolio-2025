@@ -122,7 +122,7 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
           strokeOpacity={shorten ? 1 : 0}
           outlineOpacity={shorten ? 1 : 0}
           fillOpacity={shorten ? 1 : 0}
-          position={[0, 4, 0.1]}
+          position={[0, 0, 0.1]}
           rotation={[0, Math.PI, 0]}
           fontSize={0.7}
           color={!state?.darkMode ? '#000': '#fff'}
@@ -139,7 +139,7 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
       {videoSrc && (
         <Html
           receiveShadow
-          position={[0, -height / 2 - 1, 0]}
+          position={[0, -height / 2 - 1,50]}
           center
           style={{ pointerEvents: 'auto', opacity: shorten ? 1 : 0 }}
         >

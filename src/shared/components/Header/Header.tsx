@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Header.scss";
 import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
-import { useNavigate } from "react-router";
 
 const titles: string[] = ["start", "CV"];
 interface HeaderInterface {
@@ -10,7 +9,6 @@ interface HeaderInterface {
 
 const Header = ({ onMenuItemClicked }: HeaderInterface) => {
   const { state, dispatch } = useDarkMode();
-  const navigate = useNavigate();
   const [didClickStart, setDidClickStart] = useState(false);
 
   const onMenuItemClick = (title: string) => {
