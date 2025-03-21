@@ -1,15 +1,17 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { useBox } from "@react-three/cannon";
 import * as THREE from "three";
 import { useLoader } from "@react-three/fiber";
 
 export interface MarioBrickProps {
   position?: [number, number, number];
-  breakable?: boolean;          // If true, the brick will break on collision from below.
-  spawnsItem?: boolean;         // If true, the brick will spawn an item when hit.
+  breakable?: boolean;          // Brick will break on collision from below.
+  spawnsItem?: boolean;         // Brick will spawn an item when hit.
   spawnType?: "none" | "item" | "powerUp" | "walk";
-  onItemSpawn?: (pos: THREE.Vector3) => void; // Callback to spawn an item or power-up model.
+  // The second parameter is required: either "shroom" or "fireflower"
+  onItemSpawn?: (pos: THREE.Vector3, itemType: "shroom" | "fireflower") => void;
   onPush?: (impulse: THREE.Vector3) => void;  // Callback to push the head.
+  isEnlarge?: boolean; // Tells the brick if the player is already powered up.
 }
 
 function DebrisFragment({ position }: { position: [number, number, number] }) {
@@ -23,7 +25,7 @@ function DebrisFragment({ position }: { position: [number, number, number] }) {
     ],
     userData: { type: "debris" },
   }));
-  
+
   return (
     <mesh ref={ref} castShadow receiveShadow>
       <boxGeometry args={[0.2, 0.2, 0.2]} />
@@ -39,10 +41,21 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
   spawnType = "none",
   onItemSpawn,
   onPush,
+  isEnlarge = false,
 }) => {
   const [broken, setBroken] = useState(false);
-  const [debris, setDebris] = useState<Array<{ id: number; pos: [number, number, number] }>>([]);
+  const [debris, setDebris] = useState<
+    Array<{ id: number; pos: [number, number, number] }>
+  >([]);
+  // State to track if this brick has already been used (changed to concrete).
   const [isConcrete, setIsConcrete] = useState(false);
+  // Use a ref to block multiple triggers in rapid succession.
+  const hasSpawnedRef = useRef(false);
+  // Use a ref to always have the current value of isEnlarge.
+  const isEnlargeRef = useRef(isEnlarge);
+  useEffect(() => {
+    isEnlargeRef.current = isEnlarge;
+  }, [isEnlarge]);
 
   const [ref, api] = useBox(() => ({
     type: "Static",
@@ -51,35 +64,31 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
     friction: 1,
     restitution: 0,
     mass: 10000,
-    // Set collision filtering: put brick in group 2, head is in group 3.
     collisionFilterGroup: 2,
     collisionFilterMask: 3,
     userData: { type: "marioBrick" },
     onCollide: (e) => {
-      // Only react if the other body is the head.
       if (e.body.userData?.type !== "head") return;
-      if (spawnType === "walk") return;             //  do nothing
-
-      // Check collision contact normal.
-      if (e.contact && typeof e.contact.ni[1] === "number") {
-        // If the normal's y is greater than or equal to -0.5,
-        // assume the head landed on top (or sideways) and do nothing.
-        if (e.contact.ni[1] <= -0.9) {
-          return;
-        }
-      }
- 
-      
-      // If collision is from below, trigger the appropriate reaction.
+      // For breakable bricks, break them.
       if (breakable) {
         handleHit();
       } else if (spawnsItem) {
-        if (!isConcrete) {
-          setIsConcrete(true);
+        // Only spawn the item once.
+        if (!hasSpawnedRef.current) {
+          hasSpawnedRef.current = true;
+          setIsConcrete(true); // Update state so texture updates.
+          // Disable further collisions so this brick won't trigger again.
+          api.collisionFilterMask.set(0);
           if (onItemSpawn) {
+            // Read the current isEnlarge value from the ref.
+            const spawnItemType = isEnlargeRef.current ? "fireflower" : "shroom";
             setTimeout(() => {
-              const spawnPos = new THREE.Vector3(position[0], position[1], position[2]);
-              onItemSpawn(spawnPos);
+              const spawnPos = new THREE.Vector3(
+                position[0],
+                position[1],
+                position[2]
+              );
+              onItemSpawn(spawnPos, spawnItemType);
             }, 0);
           }
           if (onPush) {
@@ -92,24 +101,39 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
           const impulse = new THREE.Vector3(2, -5, 0);
           onPush(impulse);
         }
-        setIsConcrete(true);
+        if (!hasSpawnedRef.current) {
+          hasSpawnedRef.current = true;
+          setIsConcrete(true);
+        }
       }
     },
   }));
 
-  const brickTexture = useLoader(THREE.TextureLoader, `${process.env.PUBLIC_URL}/textures/mini-game/mario_brick.jpg`);
-  const concreteTexture = useLoader(THREE.TextureLoader, `${process.env.PUBLIC_URL}/textures/mini-game/mario_concrete.jpg`);
-  const itemTexture = useLoader(THREE.TextureLoader, `${process.env.PUBLIC_URL}/textures/mini-game/mario_item.jpg`);
+  // Load textures.
+  const brickTexture = useLoader(
+    THREE.TextureLoader,
+    `${process.env.PUBLIC_URL}/textures/mini-game/mario_brick.jpg`
+  );
+  const concreteTexture = useLoader(
+    THREE.TextureLoader,
+    `${process.env.PUBLIC_URL}/textures/mini-game/mario_concrete.jpg`
+  );
+  const itemTexture = useLoader(
+    THREE.TextureLoader,
+    `${process.env.PUBLIC_URL}/textures/mini-game/mario_item.jpg`
+  );
 
+  // Determine which texture to use based on type and whether it's been used.
   const textureToUse = useMemo(() => {
     if (spawnType === "walk") return brickTexture;
     if (spawnsItem) return isConcrete ? concreteTexture : itemTexture;
     return isConcrete ? concreteTexture : brickTexture;
   }, [spawnType, spawnsItem, isConcrete, brickTexture, concreteTexture, itemTexture]);
-  
+
   const handleHit = () => {
     if (broken) return;
     setBroken(true);
+    // Disable further collisions.
     api.collisionFilterMask.set(0);
     spawnDebris();
   };
@@ -123,15 +147,15 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
 
   const spawnDebris = () => {
     const newDebris: Array<{ id: number; pos: [number, number, number] }> = [];
-    const debrisCount = 20;
+    const debrisCount = 10;
     for (let i = 0; i < debrisCount; i++) {
       newDebris.push({
         id: i,
         pos: [
-          position[0] + (Math.random() - 0.2) * 0.2,
-          position[1] + 0.2,
-          position[2] + (Math.random() - 0.2) * 0.2,
-        ] as [number, number, number],
+          position[0] + (Math.random() - 0.5) * 0.5,
+          position[1] + 0.5,
+          position[2] + (Math.random() - 0.5) * 0.5,
+        ],
       });
     }
     setDebris(newDebris);

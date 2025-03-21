@@ -11,6 +11,7 @@ import Shroom from "../../components/Shroom/Shroom";
 import MiniGameBackground from "../../components/MiniGameBackground/MiniGameBackground";
 import BoundaryWall from "../../components/BoundryWall/BoundryWall";
 import LimitReached from "../../components/LimitReached/LimitReached";
+import FireFlower from "../../components/FireFlower/FireFlower";
 
 const Ground = () => {
   const [ref] = usePlane(() => ({
@@ -49,37 +50,34 @@ export const Pyramid: string[][] = [
 const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   function createLevel(
     matrix: string[][],
-    onItemSpawn: (pos: THREE.Vector3) => void,
+    onItemSpawn: (pos: THREE.Vector3, itemType: "shroom" | "fireflower") => void,
     onPush: (impulse: THREE.Vector3) => void,
     startX: number,
     startY: number
   ) {
     const bricks: any[] = [];
-    // Decide your top-left corner and cell sizes
     const cellWidth = 1;
     const cellHeight = 1;
     for (let r = 0; r < matrix.length; r++) {
       for (let c = 0; c < matrix[r].length; c++) {
         const cell = matrix[r][c];
-        if (cell === ".") continue; // skip empty
-        // Convert row/col to world coordinates
+        if (cell === ".") continue;
         const x = startX + c * cellWidth;
         const y = startY - r * cellHeight;
-        // Decide brick props
         let breakable = false;
         let spawnsItem = false;
         let spawnType: "none" | "walk" | "item" = "none";
         if (cell === "B") {
-          breakable = true; // Breakable
+          breakable = true;
         } else if (cell === "C") {
-          breakable = false; // Concrete
+          breakable = false;
         } else if (cell === "I") {
-          spawnsItem = true; // Item
+          spawnsItem = true;
           spawnType = "item";
-          breakable = false; // Concrete
+          breakable = false;
         } else if (cell === "W") {
-          spawnsItem = false; // Item
-          breakable = false; // Concrete
+          spawnsItem = false;
+          breakable = false;
           spawnType = "walk";
         }
         bricks.push(
@@ -89,17 +87,26 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
             breakable={breakable}
             spawnsItem={spawnsItem}
             spawnType={spawnType}
-            onItemSpawn={onItemSpawn}
+            // Now itemType is guaranteed to be defined.
+            onItemSpawn={(pos, itemType) => onItemSpawn(pos, itemType)}
             onPush={onPush}
+            isEnlarge={isEnlarge}
           />
         );
       }
     }
     return bricks;
   }
+  
 
   // Preload the shroom model once.
   const shroomModel = useFBX(`${process.env.PUBLIC_URL}/models/mario-mini/mario_shroom.fbx`) as THREE.Group;
+  const fireFlowerModel = useFBX(`${process.env.PUBLIC_URL}/models/mario-mini/FireFlower.fbx`) as THREE.Group;
+  const [fireFlowerData, setFireFlowerData] = useState<{ active: boolean; pos: THREE.Vector3 }>({
+    active: false,
+    pos: new THREE.Vector3(0, -1000, 0),
+  });
+  
   const [isOnBrick, setIsOnBrick] = useState(false);
   const [showLimitReached, setShowLimitReached] = useState(false);
   const [lives, setLives] = useState<number>(0);
@@ -116,9 +123,10 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   );
 
   // When a brick is hit, activate one shroom from the pool.
-  const handleItemSpawn = (brickPos: THREE.Vector3) => {
+  const handleItemSpawn = (brickPos: THREE.Vector3, itemType: string) => {
+    console.log('itemType2',itemType)
     // If Mario is already enlarged, spawn the fire flower instead.
-    if (isEnlarge) {
+    if (isEnlarge || itemType === 'fireflower') {
       spawnFireFlower(brickPos);
       return;
     }
@@ -136,7 +144,14 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
     });
   };
   
-
+  const handleFireFlowerCollected = (id: number) => {
+    setFireFlowerData({ active: false, pos: new THREE.Vector3(0, -1000, 0) });
+  setHasFireFlower(true);
+  setLives((prevLives) => {
+    const newLives = prevLives + 1;
+    return newLives;
+  });
+  }
   const handleShroomCollected = (id: number) => {
     // Mark the shroom as inactive.
     setPool((prev) =>
@@ -146,15 +161,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
           : s
       )
     );
-    // If Mario is already enlarged, then instead of increasing lives again,
-    // spawn the fire flower (if not already spawned).
-    if (isEnlarge) {
-      if (!hasFireFlower) {
-        // You might want to use the shroom's last known position or a brick position.
-        spawnFireFlower(new THREE.Vector3(/* appropriate x, y, z */));
-      }
-      return;
-    }
     // Otherwise, this is Mario's first power-up.
     setLives((prevLives) => {
       const newLives = prevLives + 1;
@@ -166,13 +172,11 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
     });
   };
   
-const spawnFireFlower = (pos: THREE.Vector3) => {
-  console.log("Spawning fire flower at", pos);
-  // Insert your fire flower spawning logic here.
-  // This might be similar to your shroom pool, or you might simply set a state
-  // that causes a <FireFlower> component to render at the given position.
-  setHasFireFlower(true);
-};
+  const spawnFireFlower = (pos: THREE.Vector3) => {
+    console.log("Spawning fire flower at", pos);
+    setFireFlowerData({ active: true, pos });
+  };
+  
   const animateScale = (enlarge: boolean) => {
     if (!headRef.current) return;
     const head = headRef.current;
@@ -285,6 +289,19 @@ const spawnFireFlower = (pos: THREE.Vector3) => {
           onCollected={handleShroomCollected}
         />
       ))}
+      {fireFlowerData.active && (
+  <FireFlower
+    id={0} // you can manage an id or use a unique value
+    active={fireFlowerData.active}
+    position={[fireFlowerData.pos.x, fireFlowerData.pos.y + 0.5, fireFlowerData.pos.z]}
+    model={fireFlowerModel}
+    onCollected={
+      handleFireFlowerCollected
+      // Handle collection (for example, disable it)
+  }
+  />
+)}
+
       <Html transform position={[-10, 4, 0]}>
         <div className="end-container">
           <div className="text text_title text_title_big text_bold">Hope you've enjoyed my protfolio site!</div>
