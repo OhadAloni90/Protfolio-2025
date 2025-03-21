@@ -36,18 +36,23 @@ const Goomba: React.FC<GoombaProps> = ({ position = [0, -1.8, 0], headRef, onHit
     position: [position[0], position[1] + 1, position[2]],
     userData: { type: "goomba" },
     onCollide: (e) => {
+      function killed(){
+        setIsDead(true);
+        deadTimeRef.current = performance.now();
+        // Disable collisions so we won't interact further
+        api.collisionFilterMask.set(0);
+        if (onStomp) onStomp();
+      }
       if (isDead) return; // If already dead, ignore further collisions.
-      if (e.body.userData?.type === "head") {
+      const type =  e.body.userData?.type;
+      if (type === "head" || type === 'fireball') {
+        if(type === 'fireball') killed();
         // e.contact.ni is the collision normal relative to the Goomba
         if (e.contact && typeof e.contact.ni[1] === "number") {
           // If normal's y is less than -0.5 => head from above
           if (e.contact.ni[1] < -0.5) {
             // Stomped
-            setIsDead(true);
-            deadTimeRef.current = performance.now();
-            // Disable collisions so we won't interact further
-            api.collisionFilterMask.set(0);
-            if (onStomp) onStomp();
+            killed();
           } else {
             // Otherwise, side collision => Mario takes damage
             if (onHit) onHit();

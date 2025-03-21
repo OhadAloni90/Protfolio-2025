@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Html, Lightformer, OrthographicCamera, useFBX } from "@react-three/drei";
+import React, { useRef, useState } from "react";
+import { Html, OrthographicCamera, useFBX } from "@react-three/drei";
 import { Debug, usePlane } from "@react-three/cannon";
 import * as THREE from "three";
 import HeadController from "../HeadController";
@@ -12,12 +12,16 @@ import MiniGameBackground from "../../components/MiniGameBackground/MiniGameBack
 import BoundaryWall from "../../components/BoundryWall/BoundryWall";
 import LimitReached from "../../components/LimitReached/LimitReached";
 import FireFlower from "../../components/FireFlower/FireFlower";
+import Fireball from "../../components/FireBall/FireBall";
 
 const Ground = () => {
   const [ref] = usePlane(() => ({
     rotation: [-Math.PI / 2, 0, 0],
     position: [0, -2, 0],
-  }));
+    restitution: 0.8, // add this line for bounciness
+    friction: 0.3,    // lower friction can help bounces
+    userData: { type: "ground" },
+    }));
   return (
     <mesh ref={ref} receiveShadow castShadow>
       <boxGeometry args={[1000, 10, 0.2]} />
@@ -97,16 +101,18 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
     }
     return bricks;
   }
-  
 
   // Preload the shroom model once.
   const shroomModel = useFBX(`${process.env.PUBLIC_URL}/models/mario-mini/mario_shroom.fbx`) as THREE.Group;
   const fireFlowerModel = useFBX(`${process.env.PUBLIC_URL}/models/mario-mini/FireFlower.fbx`) as THREE.Group;
+  const [fireballs, setFireballs] = useState<Array<{ id: number; pos: THREE.Vector3; velocity: THREE.Vector3 }>>([]);
+  const nextFireballId = useRef(0);
+
   const [fireFlowerData, setFireFlowerData] = useState<{ active: boolean; pos: THREE.Vector3 }>({
     active: false,
     pos: new THREE.Vector3(0, -1000, 0),
   });
-  
+
   const [isOnBrick, setIsOnBrick] = useState(false);
   const [showLimitReached, setShowLimitReached] = useState(false);
   const [lives, setLives] = useState<number>(0);
@@ -121,12 +127,18 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       pos: new THREE.Vector3(0, -1000, 0), // Initially offscreen.
     }))
   );
+  const handleFireball = (pos: THREE.Vector3, direction: THREE.Vector3) => {
+    const speed = 5;
+    const velocity = direction.clone().multiplyScalar(speed);
+    const id = nextFireballId.current++;
+    setFireballs((prev) => [...prev, { id, pos, velocity }]);
+  };
 
   // When a brick is hit, activate one shroom from the pool.
   const handleItemSpawn = (brickPos: THREE.Vector3, itemType: string) => {
-    console.log('itemType2',itemType)
+    console.log("itemType2", itemType);
     // If Mario is already enlarged, spawn the fire flower instead.
-    if (isEnlarge || itemType === 'fireflower') {
+    if (isEnlarge || itemType === "fireflower") {
       spawnFireFlower(brickPos);
       return;
     }
@@ -143,23 +155,19 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       return [...prev];
     });
   };
-  
+
   const handleFireFlowerCollected = (id: number) => {
     setFireFlowerData({ active: false, pos: new THREE.Vector3(0, -1000, 0) });
-  setHasFireFlower(true);
-  setLives((prevLives) => {
-    const newLives = prevLives + 1;
-    return newLives;
-  });
-  }
+    setHasFireFlower(true);
+    setLives((prevLives) => {
+      const newLives = prevLives + 1;
+      return newLives;
+    });
+  };
   const handleShroomCollected = (id: number) => {
     // Mark the shroom as inactive.
     setPool((prev) =>
-      prev.map((s) =>
-        s.id === id
-          ? { ...s, active: false, pos: new THREE.Vector3(0, -1000, 0) }
-          : s
-      )
+      prev.map((s) => (s.id === id ? { ...s, active: false, pos: new THREE.Vector3(0, -1000, 0) } : s))
     );
     // Otherwise, this is Mario's first power-up.
     setLives((prevLives) => {
@@ -171,12 +179,12 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       return newLives;
     });
   };
-  
+
   const spawnFireFlower = (pos: THREE.Vector3) => {
     console.log("Spawning fire flower at", pos);
     setFireFlowerData({ active: true, pos });
   };
-  
+
   const animateScale = (enlarge: boolean) => {
     if (!headRef.current) return;
     const head = headRef.current;
@@ -277,7 +285,31 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         disableDrift={true}
         isEnlarge={isEnlarge}
       />
-      <HeadController headRef={headRef} speed={0.1} />
+<HeadController
+  headRef={headRef}
+  speed={0.1}
+  onFireball={handleFireball}
+  canShoot={hasFireFlower} // Only allow shooting if fireflower power-up is active.
+/>
+{fireballs.map((fb) => (
+  <Fireball
+    key={fb.id}
+    id={fb.id}
+    position={[fb.pos.x, fb.pos.y, fb.pos.z]}
+    velocity={[fb.velocity.x, fb.velocity.y, fb.velocity.z]}
+    onRemove={(id) => setFireballs((prev) => prev.filter((f) => f.id !== id))}
+  />
+))}
+  {fireFlowerData.active && (
+  <FireFlower
+    id={0}
+    active={fireFlowerData.active}
+    position={[fireFlowerData.pos.x, fireFlowerData.pos.y + 0.5, fireFlowerData.pos.z]}
+    model={fireFlowerModel}
+    onCollected={handleFireFlowerCollected}
+  />
+)}
+
       {/* Render all shroom pool items */}
       {pool.map((shroom) => (
         <Shroom
@@ -289,18 +321,8 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
           onCollected={handleShroomCollected}
         />
       ))}
-      {fireFlowerData.active && (
-  <FireFlower
-    id={0} // you can manage an id or use a unique value
-    active={fireFlowerData.active}
-    position={[fireFlowerData.pos.x, fireFlowerData.pos.y + 0.5, fireFlowerData.pos.z]}
-    model={fireFlowerModel}
-    onCollected={
-      handleFireFlowerCollected
-      // Handle collection (for example, disable it)
-  }
-  />
-)}
+   
+ 
 
       <Html transform position={[-10, 4, 0]}>
         <div className="end-container">
