@@ -6,7 +6,7 @@ import ProgressBarWithImage from "../ProgressBar/ProgressBar";
 import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 const Mouth = (props: JSX.IntrinsicElements["group"]) => {
-  const { scene } = useGLTF(`${process.env.PUBLIC_URL}/models/mouth.glb`);
+  const { scene } = useGLTF(`${process.env.PUBLIC_URL}/models/Mouth.glb`);
   const groupRef = useRef<THREE.Group>(null);
 
   // State to track if the mouth is open (spun up), spinning, or closing (spinning back)
