@@ -1,0 +1,55 @@
+.instruction {
+    width: 40rem;
+    padding: 1rem;
+    position: absolute;
+    border-radius: 2rem;
+    transform: translateY(5rem);
+  /* Apply the animation when the element appears */
+  animation: fadeSlideIn 0.6s ease-out forwards;
+
+
+    &.light {
+        background-color: #ffffff;
+        color: #000
+      }
+      &.dark {
+        color: #ffffff;
+        background-color: #000
+      }
+    .instruction-header {
+        height: auto;
+        text-align: center;
+        width: 100%;
+        margin: 0rem 0rem 1rem 0rem;
+    }
+    .instruction-body {
+        width: 100%;
+    }
+    .instruction-footer {
+        height: 5vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 1rem 0rem;
+        .button {
+            padding: 0.5rem 2rem;
+            &.light {
+                background-color: rgb(168, 168, 168);
+            }
+            &.dark {
+                background-color: rgb(36, 34, 34);
+            }
+        }
+    }
+}
+@keyframes fadeSlideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}  

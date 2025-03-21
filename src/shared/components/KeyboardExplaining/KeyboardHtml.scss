@@ -1,0 +1,72 @@
+.keyboard-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+    margin: 1rem;
+  }
+  
+  .keyboard {
+    background-color: #222;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .row {
+    display: flex;
+    margin-bottom: 5px;
+  }
+  
+  .key {
+    background-color: #444;
+    color: #fff;
+    padding: 1px 4px;
+    margin: 2px;
+    border-radius: 3px;
+    text-align: center;
+    min-width: 30px;
+  }
+  
+  .key-wide {
+    flex: 1;
+  }
+  
+  .key-extra-wide {
+    flex: 2;
+  }
+  
+  .key-space {
+    flex: 4;
+  }
+  
+  .highlight {
+    background-color: #e74c3c; /* a different color for WASD keys */
+  }
+  
+  .instructions {
+    margin-top: 10px;
+    color: #fff;
+    font-size: 1.2em;
+  }
+  
+  .tooltip {
+    position: absolute;
+    left: 25%;
+    transform: translateX(-0%) translateY(10px); /* Start 10px further down */
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 1,2rem;
+    color: #fff;
+    white-space: nowrap;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .key.highlight:hover .tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* Move up into final position */
+  }
+  

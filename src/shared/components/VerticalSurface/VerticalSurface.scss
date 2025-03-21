@@ -1,0 +1,36 @@
+.vertical-surface-container{
+    background: rgba(255,255,255,0.8);
+    padding: 0.3rem;
+    border-radius: 2rem;
+    text-align: 'center';
+    max-width: 14rem;
+    max-height: 10rem;
+    overflow: scroll;
+    scroll-behavior: smooth;
+    .board-header {
+        height: 10%;
+    }
+    .board-body {
+        height: 90%;
+    }
+}
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 0.4rem;
+    height: 0.1rem;
+    padding: 2rem;
+    position: absolute;
+  }
+  ::-webkit-scrollbar-corner{
+    background-color: transparent;
+
+  }
+  ::-webkit-scrollbar-button{
+    background-color:transparent
+
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(206, 36, 191, 0.5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+  }

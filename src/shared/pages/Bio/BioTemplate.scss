@@ -1,0 +1,18 @@
+.eTitle {
+    margin: 0.4rem 0rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    &.light {
+        background: #d2dcf2;
+        color: #000
+  }
+  &.dark {
+    color: #ffffff;
+    background-color: #525252d1;
+  }
+    .ins-title {
+        display: flex;
+        flex-direction: column;
+    }
+}
+

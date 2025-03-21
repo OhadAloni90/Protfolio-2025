@@ -1,0 +1,29 @@
+.header {
+  position: absolute;
+  top: 10%;
+  color: #fff;
+  display: flex
+;
+  justify-content: flex-start;
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  z-index: 2;
+}
+.scene {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex
+;
+  justify-content: center;
+  align-items: center;
+}
+.instructions {
+  z-index: 10000;
+  position: absolute;
+  top: calc(100% - 40rem);
+  /* left: calc(100% - 0rem); */
+  right: calc(50% + 21rem);
+}

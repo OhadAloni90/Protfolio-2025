@@ -1,0 +1,35 @@
+.embedded {
+    position: relative;
+    transform: none;
+    transform-origin: right top;
+    top: -12rem;
+    left: -10rem;
+    .text-container {
+        .top-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .close {
+                padding: 0.2rem 0.6rem;
+                font-size: 1rem;
+                display: flex;
+                justify-content: center;
+                background-color: rgb(213, 193, 142);
+                color:rgb(0, 0, 0);
+                :hover {
+                    cursor: pointer;
+                }
+            }
+        }
+        .middle-container {
+            .eTitle {
+                margin: 0.4rem 0rem;
+                .ins-title {
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
+        }
+    }
+}
