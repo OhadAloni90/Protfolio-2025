@@ -67,22 +67,18 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
             shadow-camera-bottom={-200}
           />
           <Physics iterations={10} gravity={[0, -9.8, 0]}>
-            <Debug>
+            {/* <Debug> */}
               <CameraController shorten={shorten} headRef={headRef} tubeActive={state?.marioMode} />
               {state?.marioMode ? (
                 <MarioScene headRef={headRef} />
               ) : (
                 <MainScene headRef={headRef} onMarioEnter={() => setMarioIn()} onHeadHover={() => {}} />
               )}
-            </Debug>
+            {/* </Debug> */}
           </Physics>
         </Suspense>
       </Canvas>
     </div>
-    {/* <div className="instructions">
-                  {state?.gameStarted &&         <KeyboardExplaining/>
-              }
-    </div> */}
     </>
   );
 };
