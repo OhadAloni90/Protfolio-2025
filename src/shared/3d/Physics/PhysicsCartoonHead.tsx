@@ -9,7 +9,8 @@ export interface PhysicsCartoonHeadProps {
   onCollide?: (e: any) => void;
   position?: [number, number, number];
   disableDrift?: boolean;
-  scale?: [number, number,number]
+  scale?: [number, number,number],
+  isEnlarge?: boolean
 }
 
 export interface PhysicsCartoonHeadHandle extends THREE.Group {
@@ -26,7 +27,7 @@ export type MoveInput = {
 };
 
 const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHeadProps>(
-  ({ onHoverChange, onCollide, position = [0, 0, 0], disableDrift, scale }, ref) => {
+  ({ onHoverChange, onCollide, position = [0, 0, 0], disableDrift, scale, isEnlarge }, ref) => {
     const [isGrounded, setIsGrounded] = useState(true);
     // Create a dynamic physics body for the head
         // Custom collision handler to update grounded state
@@ -85,10 +86,9 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
           newVx = 5;
           setFacing("right");
         }
-    
         // Jump is only triggered via the jump input (ignore input.up)
         if (input.jump && isGrounded && Math.abs(vy) < 0.01) {
-          newVy = 8; // jump speed
+          newVy = isEnlarge ? 10 : 8; // jump speed
           setFacing("jump");
           setIsGrounded(false); // disable jumping until landing
         }

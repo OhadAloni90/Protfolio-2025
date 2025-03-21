@@ -146,7 +146,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
           : s
       )
     );
-    
     // If Mario is already enlarged, then instead of increasing lives again,
     // spawn the fire flower (if not already spawned).
     if (isEnlarge) {
@@ -156,7 +155,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       }
       return;
     }
-  
     // Otherwise, this is Mario's first power-up.
     setLives((prevLives) => {
       const newLives = prevLives + 1;
@@ -168,7 +166,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
     });
   };
   
-
 const spawnFireFlower = (pos: THREE.Vector3) => {
   console.log("Spawning fire flower at", pos);
   // Insert your fire flower spawning logic here.
@@ -274,6 +271,7 @@ const spawnFireFlower = (pos: THREE.Vector3) => {
         onCollide={onHeadCollide}
         position={[-15, 5, 0]}
         disableDrift={true}
+        isEnlarge={isEnlarge}
       />
       <HeadController headRef={headRef} speed={0.1} />
       {/* Render all shroom pool items */}

@@ -123,14 +123,14 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
 
   const spawnDebris = () => {
     const newDebris: Array<{ id: number; pos: [number, number, number] }> = [];
-    const debrisCount = 10;
+    const debrisCount = 20;
     for (let i = 0; i < debrisCount; i++) {
       newDebris.push({
         id: i,
         pos: [
-          position[0] + (Math.random() - 0.5) * 0.5,
-          position[1] + 0.5,
-          position[2] + (Math.random() - 0.5) * 0.5,
+          position[0] + (Math.random() - 0.2) * 0.2,
+          position[1] + 0.2,
+          position[2] + (Math.random() - 0.2) * 0.2,
         ] as [number, number, number],
       });
     }
