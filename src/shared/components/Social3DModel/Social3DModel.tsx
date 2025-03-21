@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { useLoader } from '@react-three/fiber';
+import React, { useRef, useState } from 'react';
+import { useLoader, useThree } from '@react-three/fiber';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import { Html } from '@react-three/drei';
+import { Html, useDepthBuffer } from '@react-three/drei';
 import { useGlobal } from '../../providers/DarkModeProvider/DarkModeProvider';
 
 interface Social3DModelProps {
@@ -37,7 +37,7 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
     modelType === 'glb' ? GLTFLoader : FBXLoader,
     modelUrl
   );
-
+  let light = useRef<THREE.SpotLight>(null);
   // Load texture if provided.
   const texture = React.useMemo(() => {
     if (!textureUrl) return null;
@@ -78,6 +78,7 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
 
   // Determine which object to render: for GLB models, use model.scene; for FBX, use the model.
   const objectToRender = 'scene' in model && model.scene ? model.scene : model;
+
 
   // Compute the bounding box of the model, its size, and center offset.
   const { colliderArgs, offset } = React.useMemo(() => {

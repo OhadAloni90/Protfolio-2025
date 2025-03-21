@@ -62,16 +62,13 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       for (let c = 0; c < matrix[r].length; c++) {
         const cell = matrix[r][c];
         if (cell === ".") continue; // skip empty
-
         // Convert row/col to world coordinates
         const x = startX + c * cellWidth;
         const y = startY - r * cellHeight;
-
         // Decide brick props
         let breakable = false;
         let spawnsItem = false;
         let spawnType: "none" | "walk" | "item" = "none";
-
         if (cell === "B") {
           breakable = true; // Breakable
         } else if (cell === "C") {
@@ -108,6 +105,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   const [lives, setLives] = useState<number>(0);
   const [headScale, setHeadScale] = useState<[number, number, number]>([1, 2, 1]);
   const [isEnlarge, setIsEnlarge] = useState<boolean>(false);
+  const [hasFireFlower, setHasFireFlower] = useState(false);
   // Create a pool of shroom instances.
   const [pool, setPool] = useState<Array<{ id: number; active: boolean; pos: THREE.Vector3 }>>(
     Array.from({ length: POOL_SIZE }, (_, i) => ({
@@ -119,6 +117,12 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
 
   // When a brick is hit, activate one shroom from the pool.
   const handleItemSpawn = (brickPos: THREE.Vector3) => {
+    // If Mario is already enlarged, spawn the fire flower instead.
+    if (isEnlarge) {
+      spawnFireFlower(brickPos);
+      return;
+    }
+    // Otherwise, spawn a shroom from your pool.
     setPool((prev) => {
       const inactive = prev.find((s) => !s.active);
       if (!inactive) {
@@ -126,29 +130,52 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         return prev;
       }
       inactive.active = true;
-      // Adjust the offset so the shroom appears just above the brick.
+      // Adjust position so the shroom appears above the brick.
       inactive.pos = brickPos.clone().add(new THREE.Vector3(0, 1, 0));
       return [...prev];
     });
   };
+  
 
-  // When a shroom is collected, mark it inactive.
   const handleShroomCollected = (id: number) => {
-    if (!headRef.current) return;
-    const head = headRef.current;
+    // Mark the shroom as inactive.
     setPool((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, active: false, pos: new THREE.Vector3(0, -1000, 0) } : s))
+      prev.map((s) =>
+        s.id === id
+          ? { ...s, active: false, pos: new THREE.Vector3(0, -1000, 0) }
+          : s
+      )
     );
+    
+    // If Mario is already enlarged, then instead of increasing lives again,
+    // spawn the fire flower (if not already spawned).
+    if (isEnlarge) {
+      if (!hasFireFlower) {
+        // You might want to use the shroom's last known position or a brick position.
+        spawnFireFlower(new THREE.Vector3(/* appropriate x, y, z */));
+      }
+      return;
+    }
+  
+    // Otherwise, this is Mario's first power-up.
     setLives((prevLives) => {
       const newLives = prevLives + 1;
       if (newLives === 1) {
         animateScale(true);
         setIsEnlarge(true);
-        setHeadScale((prevScale) => [head.scale.x, head.scale.y, head.scale.z]);
       }
       return newLives;
     });
   };
+  
+
+const spawnFireFlower = (pos: THREE.Vector3) => {
+  console.log("Spawning fire flower at", pos);
+  // Insert your fire flower spawning logic here.
+  // This might be similar to your shroom pool, or you might simply set a state
+  // that causes a <FireFlower> component to render at the given position.
+  setHasFireFlower(true);
+};
   const animateScale = (enlarge: boolean) => {
     if (!headRef.current) return;
     const head = headRef.current;
@@ -210,7 +237,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   const onHeadCollide = (e: any) => {
     // Check if the collision is with a brick.
     const type: string = e.body.userData?.type;
-    console.log(type === "boundryWall" && !showLimitReached)
+    console.log(type === "boundryWall" && !showLimitReached);
     if (type === "marioBrick") {
       // Here we assume that the brick’s position is the center of the brick
       // and that the brick is 1 unit high.
@@ -245,12 +272,10 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         ref={headRef}
         onHoverChange={() => {}}
         onCollide={onHeadCollide}
-        position={[-7, 5, 0]}
+        position={[-15, 5, 0]}
         disableDrift={true}
       />
-
       <HeadController headRef={headRef} speed={0.1} />
-
       {/* Render all shroom pool items */}
       {pool.map((shroom) => (
         <Shroom
@@ -275,7 +300,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       </Html>
       <BoundaryWall position={[-19, 0, 0]} scale={[1, 100, 2]} transparent={true} mario />
       <BoundaryWall position={[77, 0, 0]} scale={[1, 100, 2]} transparent={true} mario />
-
       <Debug>
         {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 0, 2.5)}
         {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, -7, 2)}
@@ -284,9 +308,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         {createLevel(Pyramid, handleItemSpawn, rejectByForce, 35, 3)}
         {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 36, 8)}
         {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 55, 2.5)}
-        {showLimitReached && (
-  <LimitReached rotation={[0,0,0]} position={[77,4,0]} />
-)}
+        {showLimitReached && <LimitReached rotation={[0, 0, 0]} position={[77, 4, 0]} />}
 
         <Goomba headRef={headRef} />
         <Goomba headRef={headRef} position={[20, -1.8, 0]} />

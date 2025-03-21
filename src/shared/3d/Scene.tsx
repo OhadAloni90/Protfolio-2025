@@ -13,7 +13,7 @@ import { PhysicsCartoonHeadHandle } from "./Physics/PhysicsCartoonHead";
 import KeyboardExplaining from "../components/KeyboardExplaining/KeyboardExplaining";
 
 const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) => {
-  const sceneRef = useRef<THREE.Scene>(null);
+  let sceneRef = useRef<THREE.Scene>(null);
   const location = useLocation();
   const shorten = location.pathname !== "/";
   // For the head jump
@@ -23,7 +23,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
   const {dispatch, state} = useGlobal();
   useEffect(() => {
     if (sceneRef.current) {
-      sceneRef.current.background = new THREE.Color(state.darkMode ? "black" : "#fff");
+      sceneRef.current.background = new THREE.Color(state.darkMode ? "#001F24" : "#fff");
     }
   }, [state.darkMode]);
   const handleTubeEnter = () => {
@@ -41,6 +41,9 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
     <>
     <div className="canvas">
       <Canvas
+        onCreated={({ scene }) => {
+          sceneRef.current = scene;
+        }}
         linear
         camera={{
           fov: 75,

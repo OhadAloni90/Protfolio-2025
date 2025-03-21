@@ -11,18 +11,16 @@ import KeyboardExplaining from "./shared/components/KeyboardExplaining/KeyboardE
 
 // Create a component that uses useNavigate inside Router context.
 const AppRoutes = () => {
-  const {dispatch, state} = useGlobal();
+  const { dispatch, state } = useGlobal();
   const navigate = useNavigate();
   const [isHeadHovered, setIsHeadHovered] = useState(false); // Track hover state
   const onMenuItemClicked = (route: string) => {
     navigate(`/${route.toLowerCase()}`);
-    if(state?.marioMode) dispatch({type: 'SET_MARIO_MODE'})
-      else     dispatch({type: 'SET_GAME_STARTED'});
+    if (state?.marioMode) dispatch({ type: "SET_MARIO_MODE" });
+    else dispatch({ type: "SET_GAME_STARTED" });
   };
 
-  useEffect(() => {
-
-  },[state])
+  useEffect(() => {}, [state]);
   return (
     <>
       <div className="header">
@@ -31,25 +29,21 @@ const AppRoutes = () => {
       <div className="scene">
         <Scene onHeadHover={setIsHeadHovered}></Scene>
       </div>
-      <div className="instructions">
-                  {state?.gameStarted && !state?.instructionApproved &&         <KeyboardExplaining/>
-              }
-    </div>
+      <div className="instructions">{state?.gameStarted && !state?.instructionApproved && <KeyboardExplaining />}</div>
       <Routes>
-  <Route path={`/`} element={<Home />} />
-  <Route path={`/start`} element={<About isHovered={isHeadHovered} />} />
-</Routes>
-
+        <Route path={`/`} element={<Home />} />
+        <Route path={`/start`} element={<About isHovered={isHeadHovered} />} />
+      </Routes>
     </>
   );
 };
 
 function App() {
-  const PortalRoot =  () => <div id="portal-root" />;
+  const PortalRoot = () => <div id="portal-root" />;
   return (
     <GlobalProvider>
       <Router>
-        <PortalRoot/>
+        <PortalRoot />
         <AppRoutes />
       </Router>
     </GlobalProvider>
