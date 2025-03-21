@@ -185,7 +185,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
         {
           state?.darkMode ? (
             <PushButton
-            text="Bio"
+            text="Bio - Jump to activate!"
             position={[-8, -1.8, -4]}
             rotation={[0, 0, 2 * Math.PI]}
             scale={[20, 20, 20]}
@@ -197,7 +197,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
             dialog={{ width: "40rem", height: "40rem" }}
           />
           ) :    <PushButton
-          text="Bio"
+          text="Bio - Jump to activate"
           position={[-8, -1.8, -4]}
           rotation={[0, 0, 2 * Math.PI]}
           scale={[20, 20, 20]}

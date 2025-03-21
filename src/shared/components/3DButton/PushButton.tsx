@@ -86,8 +86,9 @@ const PhysicsPushButton = forwardRef<THREE.Group, PhysicsPushButtonProps>(
         <Text
           castShadow
           rotation={[Math.PI / 2, Math.PI, 0]}
-          position={[0.05, 0.05, 0.1]}
-          fontSize={0.1}
+          position={[-0.01, 0.05, 0.05]}
+          fontSize={0.05}
+          font="fonts/AmaticSC-Bold.ttf"
           color="black"
           anchorX="center"
           anchorY="middle"
