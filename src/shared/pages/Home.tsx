@@ -3,9 +3,9 @@ import './Home.scss';
 import Scene from '../3d/Scene';
 import Header from '../components/Header/Header';
 import CursorTrail from '../components/CursorTail/CursorTrail';
-import { useDarkMode } from '../providers/DarkModeProvider/DarkModeProvider';
+import { useGlobal } from '../providers/DarkModeProvider/DarkModeProvider';
 const Home = () => {
-    const { state } = useDarkMode(); // Get darkMode state
+    const { state } = useGlobal(); // Get darkMode state
 
   return (
     <div className={`main-container ${state.darkMode ? 'dark' : 'light'}`}>

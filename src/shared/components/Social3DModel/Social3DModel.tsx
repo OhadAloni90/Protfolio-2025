@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { Html } from '@react-three/drei';
-import { useDarkMode } from '../../providers/DarkModeProvider/DarkModeProvider';
+import { useGlobal } from '../../providers/DarkModeProvider/DarkModeProvider';
 
 interface Social3DModelProps {
   modelUrl: string;
@@ -31,7 +31,7 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
   linkUrl,
 }) => {
   const [hovered, setHovered] = useState(false);
-    const {state} = useDarkMode();
+    const {state} = useGlobal();
   // Load the model using the appropriate loader.
   const model: any = useLoader(
     modelType === 'glb' ? GLTFLoader : FBXLoader,

@@ -27,18 +27,28 @@ export type MoveInput = {
 
 const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHeadProps>(
   ({ onHoverChange, onCollide, position = [0, 0, 0], disableDrift, scale }, ref) => {
+    const [isGrounded, setIsGrounded] = useState(true);
     // Create a dynamic physics body for the head
+        // Custom collision handler to update grounded state
+        const handleCollide = (e: any) => {
+          // Check e.g. if the collision was with a ground object by inspecting e.contact, collisionFilter, etc.
+          // For simplicity, we assume any collision means landing.
+          setIsGrounded(true);
+          if (onCollide) {
+            onCollide(e);
+          }
+        };
     const [bodyRef, api] = useBox<THREE.Group>(
       () => ({
         type: "Dynamic",
-        mass: 10000,
+        mass: 100,
         args: scale ?? [1, 2.2, 1],
         position,
         friction: 1,
         collisionFilterGroup: 3,
         collisionFilterMask: 3 | 2,
         userData: { type: "head" },
-        onCollide,
+        onCollide:handleCollide,
       }),
       undefined,      // no forwarded ref is provided here
       [scale]         // dependency array to rebuild the body when scale changes
@@ -77,9 +87,10 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
         }
     
         // Jump is only triggered via the jump input (ignore input.up)
-        if (input.jump && Math.abs(vy) < 0.01) {
+        if (input.jump && isGrounded && Math.abs(vy) < 0.01) {
           newVy = 8; // jump speed
           setFacing("jump");
+          setIsGrounded(false); // disable jumping until landing
         }
         // Ensure no movement on Z.
         newVz = 0;
@@ -100,9 +111,10 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
         } else if (input.down) {
           newVz = -4;
           setFacing("down");
-        } else if (input.jump) {
+        } else if (input.jump && isGrounded) {
           newVy = 10;
           setFacing("jump");
+          setIsGrounded(false);
         }
       }
     

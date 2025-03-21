@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Html, Lightformer, OrthographicCamera, useFBX } from "@react-three/drei";
 import { Debug, usePlane } from "@react-three/cannon";
 import * as THREE from "three";
-import HeadController from "../3d/HeadController";
-import PhysicsCartoonHead, { PhysicsCartoonHeadHandle } from "../3d/Physics/PhysicsCartoonHead";
-import MarioBrick from "../components/MarioBrick/MarioBrick";
-import BackgroundMusic from "./BackgroundMusic/BackgroundMusic";
-import Goomba from "./Goomba/Goomba";
-import Shroom from "./Shroom/Shroom";
-import MiniGameBackground from "./MiniGameBackground/MiniGameBackground";
-import BoundaryWall from "./BoundryWall/BoundryWall";
-import LimitReached from "./LimitReached/LimitReached";
+import HeadController from "../HeadController";
+import PhysicsCartoonHead, { PhysicsCartoonHeadHandle } from "../Physics/PhysicsCartoonHead";
+import MarioBrick from "../../components/MarioBrick/MarioBrick";
+import BackgroundMusic from "../../components/BackgroundMusic/BackgroundMusic";
+import Goomba from "../../components/Goomba/Goomba";
+import Shroom from "../../components/Shroom/Shroom";
+import MiniGameBackground from "../../components/MiniGameBackground/MiniGameBackground";
+import BoundaryWall from "../../components/BoundryWall/BoundryWall";
+import LimitReached from "../../components/LimitReached/LimitReached";
 
 const Ground = () => {
   const [ref] = usePlane(() => ({

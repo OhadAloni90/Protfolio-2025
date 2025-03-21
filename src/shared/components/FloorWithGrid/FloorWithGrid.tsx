@@ -2,14 +2,14 @@ import React from "react";
 import { MeshReflectorMaterial, GradientTexture } from "@react-three/drei";
 import { DoubleSide, Vector3 } from "three";
 import { usePlane } from "@react-three/cannon";
-import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 interface FloorWithGridProps {
   onFloorClick: (pos: Vector3) => void;
 }
 
 const FloorWithGrid: React.FC<FloorWithGridProps> = ({ onFloorClick }) => {
-  const { state } = useDarkMode();
+  const { state } = useGlobal();
 
   // Static physics plane (collision group 1 colliding with head group 3)
   const [ref] = usePlane(() => ({

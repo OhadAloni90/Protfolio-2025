@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Html, Text } from '@react-three/drei';
 import * as THREE from 'three';
 import './InteractiveSurfaceDisplay.scss'
-import { useDarkMode } from '../../providers/DarkModeProvider/DarkModeProvider';
+import { useGlobal } from '../../providers/DarkModeProvider/DarkModeProvider';
 export interface InteractiveSurfaceDisplayProps {
   position?: [number, number, number];
   rotation?: [number, number, number];
@@ -27,7 +27,7 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const { state } = useDarkMode();
+  const { state } = useGlobal();
   // Create video element if videoSrc is provided.
   const video = useMemo(() => {
     if (videoSrc) {

@@ -3,7 +3,7 @@ import { Html, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import ProgressBarWithImage from "../ProgressBar/ProgressBar";
-import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 const Mouth = (props: JSX.IntrinsicElements["group"]) => {
   const { scene } = useGLTF(`${process.env.PUBLIC_URL}/models/Mouth.glb`);
@@ -15,7 +15,7 @@ const Mouth = (props: JSX.IntrinsicElements["group"]) => {
   const [isClosing, setIsClosing] = useState(false);
   const [spinProgress, setSpinProgress] = useState(0);
   const spinDuration = 1.5; // seconds
-  const { state } = useDarkMode();
+  const { state } = useGlobal();
   // Enable shadows for all meshes
   useEffect(() => {
     scene.traverse((child) => {

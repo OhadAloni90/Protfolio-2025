@@ -4,7 +4,7 @@ import InteractiveSurfaceDisplay, {
 } from "../../components/InteractiveSurfaceDisplay/InteractiveSurfaceDisplay";
 import * as THREE from "three";
 import { Text } from "@react-three/drei";
-import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 interface ExperienceProps {
   headRef: React.RefObject<THREE.Group | null>;
@@ -44,7 +44,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
       position: [0, -1.85, -32],
       rotation: [Math.PI / 2, 0, 0],
       text: "User tagging system",
-      subtext: "User tagging system User tagging system User tagging system User tagging system",
+      subtext: "I worked on a user tagging system for social media content planning within a product that enables publishing across multiple platforms simultaneously. Users can create and schedule posts in one place, tag other users, and seamlessly send the content through API calls. One of the key challenges was transforming an HTML element into a rich text editor capable of handling user tagging through event listeners on the HTML tree, allowing for dynamic interactions and modifications. The system was designed to be fully responsive, optimized for both mobile and desktop platforms.",
     },
     {
       videoSrc: "projects/video/movie.mp4",
@@ -62,7 +62,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
       position: [-12, -1.85, -32],
       rotation: [Math.PI / 2, 0, 0],
       text: "Custom Media & Thumbnail player",
-      subtext: "Custom Media & Thumbnail player & Custom Media & Thumbnail player &",
+      subtext: "I developed an internal media player that allowed sports clubs to set custom thumbnails for their videos, enabling full branding customization for the content they publish. The player was designed to mimic the behavior of YouTube’s video player—specifically, by displaying a preview frame on hover through a small canvas, before the user actively selects a frame. This approach allowed users to browse through frames visually without needing to scrub through the video manually, streamlining the thumbnail selection process. The implementation involved complex asynchronous logic to ensure smooth performance and responsiveness.",
     },
     {
       videoSrc: "projects/video/movie.mp4",
@@ -71,7 +71,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
       position: [-24, -1.85, -32],
       rotation: [Math.PI / 2, 0, 0],
       text: "3D Shootout game activation",
-      subtext: "3D Shootout game activation 3D Shootout game activation &",
+      subtext: "I led the development of the first 3D game at the company—marking a shift from the 2D activations that sports clubs had previously relied on. The initial requirement was to create a basketball shooting game, fully customizable with club-branded visuals and backgrounds. Beyond visual customization, the game was architected with a flexible structure to support different sports types. This allowed us to easily adapt it for clubs from other sports. While the first release included basketball, handball, and football, additional versions for hockey and rugby were later developed in response to club requests. The result was a highly modular and adaptable 3D activation tool tailored to diverse club needs.",
     },
     // You can also add text-based surfaces:
     // {
@@ -82,7 +82,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
     //   rotation: [-Math.PI / 2, 0, 0],
     // },
   ];
-  const {state} = useDarkMode();
+  const {state} = useGlobal();
   return (
     <>
       <Text

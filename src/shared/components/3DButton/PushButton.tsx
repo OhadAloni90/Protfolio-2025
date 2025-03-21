@@ -2,7 +2,7 @@ import React, { forwardRef, useRef, useEffect, useState } from "react";
 import { Html, Text, useGLTF, useAnimations } from "@react-three/drei";
 import { useBox } from "@react-three/cannon";
 import * as THREE from "three";
-import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 export interface PhysicsPushButtonProps {
   text?: string;
@@ -43,7 +43,7 @@ const PhysicsPushButton = forwardRef<THREE.Group, PhysicsPushButtonProps>(
     // Expose the internal ref to the parent.
     React.useImperativeHandle(ref, () => groupRef.current as THREE.Group);
 
-    const { state } = useDarkMode();
+    const { state } = useGlobal();
     // Load the button GLTF file
     const { scene, animations } = useGLTF(`${process.env.PUBLIC_URL}/models/button.glb`);
     const { actions } = useAnimations(animations, groupRef);

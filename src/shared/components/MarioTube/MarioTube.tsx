@@ -1,11 +1,10 @@
 import React from "react";
 import { useCylinder } from "@react-three/cannon";
 import { useLoader } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
+import { Text, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-// If your model is FBX:
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-// Or if GLTF, import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 interface MarioTubeProps {
   position?: [number, number, number];
@@ -13,32 +12,43 @@ interface MarioTubeProps {
 }
 
 const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) => {
-  // 1) Create a static cylinder collider for physics
-  const [colliderRef] = useCylinder(() => ({
+  // 1) Outer Collider: This will block the head from entering.
+  const [outerColliderRef] = useCylinder(() => ({
     type: "Static",
-    args: [1.2, 1.2, 2, 32], // radiusTop, radiusBottom, height, radialSegments
-    position: [position[0], position[1] + 1,position[2]],
+    args: [1.2, 1.2, 5, 32], // radiusTop, radiusBottom, height, segments
+    position: [position[0], position[1] - 1 , position[2]],
     rotation: [0, 0, 0],
-    userData: { type: "tube" },
+    userData: { type: "tubeOuter" },
+  }));
+  
+  // 2) Inner Trigger: This ring is positioned inside the tube.
+  // It does not produce a collision response (so the head won’t be blocked)
+  // but will trigger onCollide when the head touches it.
+  const [innerTriggerRef] = useCylinder(() => ({
+    type: "Static",
+    args: [1, 1, 0.2, 32], // a smaller radius and thin height creates a ring-like collider
+    position: [position[0], position[1] + 2, position[2]], // same center as tube
+    rotation: [0, 0, 0],
+    userData: { type: "tubeTrigger" },
+    collisionResponse: false,
     onCollide: (e) => {
-      // if (e.body.userData?.type === "head") {
-      //   onEnter();
-      // }
-    }
+      // Check that the colliding body is the head
+      if (e.body.userData?.type === "head") {
+        onEnter();
+      }
+    },
   }));
 
-  // 2) Load the 3D model. (FBX example)
+  // 3) Load the FBX model for the tube
   const fbxModel = useLoader(FBXLoader, `${process.env.PUBLIC_URL}/models/mario-mini/MSteel_Pipe.fbx`);
-  // If GLTF, do: const gltf = useLoader(GLTFLoader, "/models/MSteel_Pipe.glb");
-
-  // 3) Load PBR textures
-  // Adjust these paths to match your file structure
+  
+  // 4) Load textures for a PBR material
   const [
     diffuseMap,
     metalnessMap,
     roughnessMap,
     normalMap,
-    displacementMap
+    displacementMap,
   ] = useTexture([
     `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Diffuse.png`,
     `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Metalness.png`,
@@ -47,51 +57,61 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
     `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Displacement.png`,
   ]);
 
-  // 5) We’ll apply these textures to the model’s mesh material(s).
-  // If the model has multiple meshes, you might need to traverse them.
-
-  // We’ll return a group that has the collider plus the loaded model
+  // 5) Apply the textures and material to the model.
+  const onModelUpdate = (obj: THREE.Object3D) => {
+    obj.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        // Hide low-poly helper meshes if needed (e.g., a mesh named "HP")
+        if (mesh.name === "HP") {
+          mesh.visible = false;
+        } else {
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          mesh.material = new THREE.MeshStandardMaterial({
+            map: diffuseMap,
+            metalnessMap,
+            roughnessMap,
+            normalMap,
+            displacementMap,
+            displacementScale: 0.01,
+            metalness: 1,
+            roughness: 1.4,
+          });
+        }
+      }
+    });
+  };
+  const {state} = useGlobal();
   return (
     <group>
-      {/* Invisible physics collider */}
-      <mesh ref={colliderRef} visible={false} />
+      {/* Outer collider (invisible) to block the head */}
+      <mesh ref={outerColliderRef} visible={false} />
 
-      {/* The 3D model */}
+      {/* Inner trigger collider (invisible) that starts the game */}
+      <mesh ref={innerTriggerRef} visible={false} />
+
+      {/* 3D model of the tube */}
       <primitive
         object={fbxModel}
         position={position}
-        scale={[0.01, 0.01, 0.01]} // Adjust as needed
-        onUpdate={(obj: THREE.Object3D) => {
-          obj.traverse((child) => {
-            if ((child as THREE.Mesh).isMesh) {
-              const mesh = child as THREE.Mesh;
-              if (mesh.name === "HP") {
-                // Option 1: Hide the low-poly mesh
-                mesh.visible = false;
-        
-                // Option 2: Or remove it from the scene:
-                // mesh.parent?.remove(mesh);
-              } else {
-                // It's the "HP" mesh, apply your material
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-                mesh.material = new THREE.MeshStandardMaterial({
-                  map: diffuseMap,
-                  metalnessMap,
-                  roughnessMap,
-                  normalMap,
-                  displacementMap,
-                  displacementScale: 0.01,
-                  metalness: 1,
-                  roughness: 1.4,
-                });
-              }
-            }
-          });
-        }}
+        scale={[0.01, 0.01, 0.01]} // Adjust scale as needed
+        onUpdate={onModelUpdate}
       />
+      <Text position={[position[0],position[1] + 1,position[2] - 2]} rotation={[0, Math.PI,0 ]}   fontSize={2}
+      fontWeight={'bold'}
+        color={!state?.darkMode ? '#000': '#fff'}
+        font="fonts/AmaticSC-Bold.ttf"
+      >Contact & play!</Text>
+            <Text position={[position[0],position[1] -0.5 ,position[2] - 2]} rotation={[0, Math.PI,0 ]}   fontSize={1.2}
+      fontWeight={'bold'}
+        color={!state?.darkMode ? '#000': '#fff'}
+        font="fonts/AmaticSC-Bold.ttf"
+      >Jump inside...</Text>
+
     </group>
-  );
+  );      
+
 };
 
 export default MarioTube;

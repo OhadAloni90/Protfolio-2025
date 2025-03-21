@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Header.scss";
-import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 const titles: string[] = ["start", "CV"];
 interface HeaderInterface {
@@ -8,7 +8,7 @@ interface HeaderInterface {
 }
 
 const Header = ({ onMenuItemClicked }: HeaderInterface) => {
-  const { state, dispatch } = useDarkMode();
+  const { state, dispatch } = useGlobal();
   const [didClickStart, setDidClickStart] = useState(false);
 
   const onMenuItemClick = (title: string) => {
@@ -24,7 +24,7 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
             className={`text text_big btn ${state.darkMode ? "dark" : "light"}`}
             onClick={() => onMenuItemClick(didClickStart && title === 'start' ? '' : title)}
           >
-            {didClickStart && title === 'start' ? 'back' : title}
+            {(state?.gameStarted || state?.marioMode) && title === 'start' ? 'back' : title}
           </div>
         
         ))}

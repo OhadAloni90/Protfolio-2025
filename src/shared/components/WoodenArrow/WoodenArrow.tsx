@@ -1,6 +1,7 @@
 import React, { forwardRef, useMemo } from "react";
 import { Html, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { useBox } from "@react-three/cannon";
 
 interface WoodenArrowProps {
   text: string;
@@ -24,9 +25,26 @@ const WoodenArrow = forwardRef<THREE.Group, WoodenArrowProps>(
         child.receiveShadow = true;
       }
     });
-
+    const [physicsRef] = useBox(() => ({
+      type: "Static",
+      position,
+      rotation,
+      args: [3,5,0.3],
+    }));
+    function mergeRefs<T>(...refs: React.Ref<T>[]): React.RefCallback<T> {
+      return (node: T) => {
+        refs.forEach(ref => {
+          if (typeof ref === "function") {
+            ref(node);
+          } else if (ref) {
+            (ref as React.MutableRefObject<T>).current = node;
+          }
+        });
+      };
+    }
+    
     return (
-      <group ref={ref} position={position} rotation={rotation} scale={scale}>
+      <group  ref={mergeRefs(physicsRef, ref)} position={position} rotation={rotation} scale={scale}>
         <primitive object={clonedScene} />
         <Html transform center position={[1.4, 0.2, 0]} rotation={[0,flipText ? -Math.PI : 0 ,0]}>
           <div

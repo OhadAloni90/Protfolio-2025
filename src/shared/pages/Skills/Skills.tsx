@@ -3,7 +3,7 @@ import React from "react";
 import { Physics } from "@react-three/cannon";
 import * as THREE from "three";
 import InteractiveSurface from "../../components/InteractiveSurface/InterActiveSurface";
-import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 interface SkillsProps {
   headRef: React.RefObject<THREE.Group | null>;
@@ -17,7 +17,7 @@ const Skills = ({ headRef }: SkillsProps) => {
   const handleScrollClick = () => {
 
   }
-  const { state  }   = useDarkMode();
+  const { state  }   = useGlobal();
   return (
     <>
                 {/* InteractiveSurface for the "My Skills" board */}

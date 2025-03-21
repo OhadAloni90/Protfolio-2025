@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { MoveInput, PhysicsCartoonHeadHandle } from "./Physics/PhysicsCartoonHead";
+import { useGlobal } from "../providers/DarkModeProvider/DarkModeProvider";
 
 
 type HeadControllerProps = {
@@ -27,7 +28,9 @@ const HeadController: React.FC<HeadControllerProps> = ({
     w: false,       // for Mario mode jump only
     s: false
   });
+  const {state}  = useGlobal();
   useEffect(() => {
+    if(!state?.gameStarted) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       if (key in keysPressed.current) {
@@ -53,7 +56,7 @@ const HeadController: React.FC<HeadControllerProps> = ({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, []);
+  }, [state?.gameStarted]);
   useFrame((_, delta) => {
     if (!headRef.current) return;
     let input: MoveInput = {};

@@ -19,3 +19,9 @@
   justify-content: center;
   align-items: center;
 }
+.instructions {
+  position: absolute;
+  top: calc(100% - 40rem);
+  /* left: calc(100% - 0rem); */
+  right: calc(50% + 21rem);
+}

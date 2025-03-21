@@ -1,35 +1,58 @@
 import React, { createContext, useReducer, useContext, ReactNode } from "react";
 
-type State = { darkMode: boolean };
-type Action = { type: "TOGGLE_DARK_MODE" };
-type Dispatch = (action: Action) => void;
+interface GlobalState {
+  darkMode: boolean;
+  marioMode: boolean;
+  gameStarted: boolean;
+  instructionApproved: boolean;
+}
 
-const initialState: State = { darkMode: false };
+type GlobalAction =
+   { type: "TOGGLE_DARK_MODE" }
+  | { type: "SET_MARIO_MODE" }
+  | { type: "SET_GAME_STARTED" } | 
+  {type: 'INSTRUCTION_APPROVED'}
 
-const DarkModeContext = createContext<{ state: State; dispatch: Dispatch } | undefined>(undefined);
+const initialGlobalState: GlobalState = {
+  darkMode: false,
+  marioMode: false,
+  gameStarted: false,
+  instructionApproved: false
+};
 
-function darkModeReducer(state: State, action: Action): State {
+const GlobalContext = createContext<{
+  state: GlobalState;
+  dispatch: React.Dispatch<GlobalAction>;
+} | undefined>(undefined);
+
+function globalReducer(state: GlobalState, action: GlobalAction): GlobalState {
   switch (action.type) {
     case "TOGGLE_DARK_MODE":
-      return { darkMode: !state.darkMode };
+      return { ...state, darkMode: !state.darkMode };
+    case "SET_MARIO_MODE":
+      return { ...state, marioMode: !state.marioMode };
+    case "SET_GAME_STARTED":
+      return { ...state, gameStarted: !state.gameStarted };
+      case "INSTRUCTION_APPROVED":
+        return {...state, instructionApproved: !state.instructionApproved }
     default:
       return state;
   }
 }
 
-export const DarkModeProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(darkModeReducer, initialState);
+export const GlobalProvider = ({ children }: { children: ReactNode }) => {
+  const [state, dispatch] = useReducer(globalReducer, initialGlobalState);
   return (
-    <DarkModeContext.Provider value={{ state, dispatch }}>
+    <GlobalContext.Provider value={{ state, dispatch }}>
       {children}
-    </DarkModeContext.Provider>
+    </GlobalContext.Provider>
   );
 };
 
-export const useDarkMode = () => {
-  const context = useContext(DarkModeContext);
+export const useGlobal = () => {
+  const context = useContext(GlobalContext);
   if (!context) {
-    throw new Error("useDarkMode must be used within a DarkModeProvider");
+    throw new Error("useGlobal must be used within a GlobalProvider");
   }
   return context;
 };

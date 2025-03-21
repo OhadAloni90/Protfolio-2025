@@ -14,7 +14,8 @@ import BioTemplate from "../../pages/Bio/BioTemplate";
 import BoundaryWall from "../../components/BoundryWall/BoundryWall";
 import LimitReached from "../../components/LimitReached/LimitReached";
 import Social3DModel from "../../components/Social3DModel/Social3DModel";
-import { useDarkMode } from "../../providers/DarkModeProvider/DarkModeProvider";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
+import KeyboardExplaining from "../../components/KeyboardExplaining/KeyboardExplaining";
 
 interface MainSceneProps {
   onMarioEnter: () => void;
@@ -34,7 +35,7 @@ interface SocialMediaModel {
 
 const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRef }) => {
   const location = useLocation();
-  const {state} = useDarkMode();
+  const {state} = useGlobal();
   const socialMediaModels: SocialMediaModel[] = [
     {
       modelUrl: `${process.env.PUBLIC_URL}/models/social/facebook.fbx` , // URL or path to your GLB or FBX model.
@@ -155,6 +156,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
   return (
     <>
       <group>
+  
         <FloorWithGrid onFloorClick={handleScrollClick} />
       </group>
       <MarioTube position={[11, 0, 10]} onEnter={onMarioEnter} />
