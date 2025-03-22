@@ -13,7 +13,6 @@ interface BoundaryWallProps {
 const BoundaryWall: React.FC<BoundaryWallProps> = ({ position, scale, transparent, mario = false ,propRotation}) => {
   // When mario is true, we rotate the wall 90 degrees around Y.
   const rotation: [number, number, number] = mario ? [0, -Math.PI / 3, 0] : propRotation ? propRotation : [0,0,0];
-  console.log('rotation',rotation)
   // Create a static physics body for the wall.
   const [ref] = useBox(() => ({
     type: 'Static',

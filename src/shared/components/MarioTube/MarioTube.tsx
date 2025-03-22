@@ -101,12 +101,12 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
       <Text position={[position[0],position[1] + 1,position[2] - 2]} rotation={[0, Math.PI,0 ]}   fontSize={2}
       fontWeight={'bold'}
         color={!state?.darkMode ? '#000': '#fff'}
-        font="fonts/AmaticSC-Bold.ttf"
+        font="assets/fonts/AmaticSC-Bold.ttf"
       >Contact & play!</Text>
             <Text position={[position[0],position[1] -0.5 ,position[2] - 2]} rotation={[0, Math.PI,0 ]}   fontSize={1.2}
       fontWeight={'bold'}
         color={!state?.darkMode ? '#000': '#fff'}
-        font="fonts/AmaticSC-Bold.ttf"
+        font="assets/fonts/AmaticSC-Bold.ttf"
       >Jump inside...</Text>
 
     </group>

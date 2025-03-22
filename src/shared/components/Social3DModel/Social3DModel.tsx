@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLoader, useThree } from '@react-three/fiber';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
@@ -32,6 +32,7 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
 }) => {
   const [hovered, setHovered] = useState(false);
     const {state} = useGlobal();
+    const textureApplied = useRef(false);
   // Load the model using the appropriate loader.
   const model: any = useLoader(
     modelType === 'glb' ? GLTFLoader : FBXLoader,
@@ -68,14 +69,17 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
   };
 
   // Apply texture to the model if available.
-  if (texture) {
-    if ('scene' in model && model.scene) {
-      applyTexture(model.scene);
-    } else {
-      applyTexture(model);
+  useEffect(() => {
+    if (texture && !textureApplied.current) {
+      if ("scene" in model && model.scene) {
+        applyTexture(model.scene);
+      } else {
+        applyTexture(model);
+      }
+      textureApplied.current = true;
     }
-  }
-
+  }, [texture, model]);
+  
   // Determine which object to render: for GLB models, use model.scene; for FBX, use the model.
   const objectToRender = 'scene' in model && model.scene ? model.scene : model;
 

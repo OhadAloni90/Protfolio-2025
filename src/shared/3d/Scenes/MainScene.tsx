@@ -105,8 +105,6 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
         const localContact = new THREE.Vector3(e.contact.ri.x, e.contact.ri.y, e.contact.ri.z);
         // Compute the world position by adding the head's position.
         const worldContact = headRef.current.position.clone().add(localContact);
-        console.log("worldContact", e.contact.contactPoint);
-        console.log(localContact);
         setWarningPosition(
           new THREE.Vector3(e.contact.contactPoint[0] - 1, e.contact.contactPoint[1], e.contact.contactPoint[2])
         );

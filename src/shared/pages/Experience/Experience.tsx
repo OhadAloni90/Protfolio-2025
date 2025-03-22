@@ -92,7 +92,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
         color={!state?.darkMode ? '#000' : '#fff'}
         anchorX="center"
         anchorY="middle"
-        font="fonts/AmaticSC-Bold.ttf"
+        font="assets/fonts/AmaticSC-Bold.ttf"
       >
         Jobs
       </Text>
@@ -103,7 +103,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
         color={!state?.darkMode ? '#000' : '#fff'}
         anchorX="center"
         anchorY="middle"
-        font="fonts/AmaticSC-Bold.ttf"
+        font="assets/fonts/AmaticSC-Bold.ttf"
       >
         Key Features
       </Text>
@@ -116,7 +116,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
             color={!state?.darkMode ? '#000' : '#fff'}
             anchorX="center"
             anchorY="middle"
-            font="fonts/AmaticSC-Bold.ttf"
+            font="assets/fonts/AmaticSC-Bold.ttf"
           >
             {experience.name} -{" "}
           </Text>
@@ -127,7 +127,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
             color={!state?.darkMode ? '#000' : '#fff'}
             anchorX="center"
             anchorY="middle"
-            font="fonts/AmaticSC-Bold.ttf"
+            font="assets/fonts/AmaticSC-Bold.ttf"
           >
             {experience.period}
           </Text>
@@ -138,7 +138,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
             color={!state?.darkMode ? '#000' : '#fff'}
             anchorX="center"
             anchorY="middle"
-            font="fonts/AmaticSC-Bold.ttf"
+            font="assets/fonts/AmaticSC-Bold.ttf"
           >
             {experience.job_title} 
           </Text>
@@ -149,7 +149,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
             color={!state?.darkMode ? '#000' : '#fff'}
             anchorX="center"
             anchorY="middle"
-            font="fonts/AmaticSC-Bold.ttf"
+            font="assets/fonts/AmaticSC-Bold.ttf"
           >
             {experience.tech} 
           </Text>
@@ -161,7 +161,7 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
             maxWidth={10}
             anchorX="center"
             anchorY="middle"
-            font="fonts/AmaticSC-Bold.ttf"
+            font="assets/fonts/AmaticSC-Bold.ttf"
           >
             {experience.description} 
           </Text>
