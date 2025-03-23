@@ -57,7 +57,6 @@ const BioTemplate = (props: BioTemplateProps) => {
     },
   ];
   useEffect(() => {
-    console.log("props.darkMode", props.darkMode);
   }, [props.darkMode]);
   const EducationTitleContainer = (eTitle: EducationTitle) => {
     return (

@@ -112,7 +112,7 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
           color={!state?.darkMode ? '#000': '#fff'}
           anchorX="center"
           anchorY="middle"
-          font="fonts/AmaticSC-Bold.ttf"
+          font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
         >
           {text}
         </Text>
@@ -130,7 +130,7 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
           anchorY="middle"
           maxWidth={10}
           fontStyle="normal"
-          font="fonts/AmaticSC-Regular.ttf"
+          font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Regular.ttf`}
         >
           {subtext}
         </Text>

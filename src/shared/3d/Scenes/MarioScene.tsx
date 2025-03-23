@@ -136,7 +136,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
 
   // When a brick is hit, activate one shroom from the pool.
   const handleItemSpawn = (brickPos: THREE.Vector3, itemType: string) => {
-    console.log("itemType2", itemType);
     // If Mario is already enlarged, spawn the fire flower instead.
     if (isEnlarge || itemType === "fireflower") {
       spawnFireFlower(brickPos);
@@ -181,7 +180,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   };
 
   const spawnFireFlower = (pos: THREE.Vector3) => {
-    console.log("Spawning fire flower at", pos);
     setFireFlowerData({ active: true, pos });
   };
 
@@ -246,7 +244,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   const onHeadCollide = (e: any) => {
     // Check if the collision is with a brick.
     const type: string = e.body.userData?.type;
-    console.log(type === "boundryWall" && !showLimitReached);
     if (type === "marioBrick") {
       // Here we assume that the brick’s position is the center of the brick
       // and that the brick is 1 unit high.

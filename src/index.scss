@@ -256,3 +256,23 @@ code {
     transform: translateY(0);
   }
 }
+.glass-blur {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  height: 90%;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow:  4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(0.4rem);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 1000;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 30%, rgba(0, 0, 0, 0.2) 55%, black 75%);
+  mask-image: radial-gradient(circle at 50% 50%, transparent 30%, rgba(0, 0, 0, 0.2) 55%, black 75%);
+  transition: mask-image 10s ease-in-out;
+  &.started {
+      -webkit-mask-image:  radial-gradient(circle at 50% 60%, transparent 5rem, rgba(0, 0, 0, 11.3) 8rem, black 8rem);
+      mask-image:  radial-gradient(circle at 50% 60%, transparent 5rem, rgba(0, 0, 0, 11.3) 8rem, black 8rem);
+  }
+}
