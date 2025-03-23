@@ -79,7 +79,12 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
 
             <Physics iterations={10} gravity={[0, -9.8, 0]}>
               {/* <Debug> */}
-              <CameraController shorten={shorten} headRef={headRef} tubeActive={state?.marioMode} />
+              <CameraController
+  shorten={shorten}
+  headRef={headRef}
+  tubeActive={state?.marioMode}
+  lockCamera={state?.lockCameraOnHead}
+/>
               {state?.marioMode ? (
                 <MarioScene headRef={headRef} />
               ) : (

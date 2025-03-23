@@ -6,29 +6,34 @@ interface GlobalState {
   gameStarted: boolean;
   instructionApproved: boolean;
   loading: boolean;
+  lockCameraOnHead: boolean;
 }
 
 type GlobalAction =
-   { type: "TOGGLE_DARK_MODE" }
+  | { type: "TOGGLE_DARK_MODE" }
   | { type: "SET_MARIO_MODE" }
-  | { type: "SET_GAME_STARTED" } | 
-  {type: 'INSTRUCTION_APPROVED'} 
+  | { type: "SET_GAME_STARTED" }
+  | { type: "INSTRUCTION_APPROVED" }
+  | { type: "LOCK_CAMERA_ON_HEAD" }
+  | { type: "UNLOCK_CAMERA" }
   | { type: "SET_LOADING"; payload: boolean };
-
 
 const initialGlobalState: GlobalState = {
   darkMode: false,
   marioMode: false,
   gameStarted: false,
   instructionApproved: false,
+  lockCameraOnHead: false,
   loading: true, // Initially loading
-
 };
 
-const GlobalContext = createContext<{
-  state: GlobalState;
-  dispatch: React.Dispatch<GlobalAction>;
-} | undefined>(undefined);
+const GlobalContext = createContext<
+  | {
+      state: GlobalState;
+      dispatch: React.Dispatch<GlobalAction>;
+    }
+  | undefined
+>(undefined);
 
 function globalReducer(state: GlobalState, action: GlobalAction): GlobalState {
   switch (action.type) {
@@ -38,11 +43,15 @@ function globalReducer(state: GlobalState, action: GlobalAction): GlobalState {
       return { ...state, marioMode: !state.marioMode };
     case "SET_GAME_STARTED":
       return { ...state, gameStarted: !state.gameStarted };
-      case "INSTRUCTION_APPROVED":
-        return {...state, instructionApproved: !state.instructionApproved }
-        case "SET_LOADING":
-          return { ...state, loading: action.payload };
-    
+    case "INSTRUCTION_APPROVED":
+      return { ...state, instructionApproved: !state.instructionApproved };
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
+    case "LOCK_CAMERA_ON_HEAD":
+      return { ...state, lockCameraOnHead: true, marioMode: false };
+    case "UNLOCK_CAMERA":
+      return { ...state, lockCameraOnHead: false };
+
     default:
       return state;
   }
@@ -50,11 +59,7 @@ function globalReducer(state: GlobalState, action: GlobalAction): GlobalState {
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(globalReducer, initialGlobalState);
-  return (
-    <GlobalContext.Provider value={{ state, dispatch }}>
-      {children}
-    </GlobalContext.Provider>
-  );
+  return <GlobalContext.Provider value={{ state, dispatch }}>{children}</GlobalContext.Provider>;
 };
 
 export const useGlobal = () => {

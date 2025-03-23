@@ -28,7 +28,7 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
           <div
             key={title}
             className={`text text_big btn ${state.darkMode ? "dark" : "light"} ${state?.loading ? 'disabled' : ''}`}
-            onClick={() =>  onMenuItemClick(didClickStart && title === 'start' ? '' : title)}
+            onClick={() =>  onMenuItemClick(didClickStart && title === 'start' ? 'back' : title)}
           >
             {titleToShow(title)}
           </div>

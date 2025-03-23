@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { Route, HashRouter as Router, Routes, useNavigate } from "react-router";
+import { Navigate, Route, HashRouter as Router, Routes, useNavigate } from "react-router";
 import Home from "./shared/pages/Home";
 import { GlobalProvider, useGlobal } from "./shared/providers/DarkModeProvider/DarkModeProvider";
 import About from "./shared/pages/About/About";
@@ -15,9 +15,16 @@ const AppRoutes = () => {
   const navigate = useNavigate();
   const [isHeadHovered, setIsHeadHovered] = useState(false); // Track hover state
   const onMenuItemClicked = (route: string) => {
+    if(route === 'back') route = '';
     navigate(`/${route.toLowerCase()}`);
-    if (state?.marioMode) dispatch({ type: "SET_MARIO_MODE" });
-    else dispatch({ type: "SET_GAME_STARTED" });
+    // When going back from Mario mode, lock the camera to the head.
+    if (state?.marioMode && route === "start") {
+      dispatch({ type: "LOCK_CAMERA_ON_HEAD" });
+    } else if (state?.marioMode) {
+      dispatch({ type: "SET_MARIO_MODE" });
+    } else {
+      dispatch({ type: "SET_GAME_STARTED" });
+    }
   };
 
   useEffect(() => {}, [state]);
@@ -33,6 +40,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path={`/`} element={<Home />} />
         <Route path={`/start`} element={<About isHovered={isHeadHovered} />} />
+
       </Routes>
     </>
   );
