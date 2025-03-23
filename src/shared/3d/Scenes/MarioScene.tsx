@@ -19,9 +19,9 @@ const Ground = () => {
     rotation: [-Math.PI / 2, 0, 0],
     position: [0, -2, 0],
     restitution: 0.8, // add this line for bounciness
-    friction: 0.3,    // lower friction can help bounces
+    friction: 0.3, // lower friction can help bounces
     userData: { type: "ground" },
-    }));
+  }));
   return (
     <mesh ref={ref} receiveShadow castShadow>
       <boxGeometry args={[1000, 10, 0.2]} />
@@ -167,7 +167,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       return newLives;
     });
   };
-  
+
   const handleShroomCollected = (id: number) => {
     // Mark the shroom as inactive.
     setPool((prev) =>
@@ -270,12 +270,11 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       if (newLives === 0) {
         animateScale(false);
         setIsEnlarge(false);
-      } 
-      else if(newLives === 1) setHasFireFlower(false);
+      } else if (newLives === 1) setHasFireFlower(false);
       return newLives;
     });
-    console.log(lives)
-  }
+    console.log(lives);
+  };
   useEffect(() => {
     if (headRef.current) {
       headRef.current.traverse((child) => {
@@ -308,7 +307,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       });
     }
   }, [hasFireFlower, headRef]);
-    
+
   return (
     <>
       <OrthographicCamera makeDefault position={[0, 10, 10]} zoom={55} />
@@ -331,30 +330,30 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         disableDrift={true}
         isEnlarge={isEnlarge}
       />
-<HeadController
-  headRef={headRef}
-  speed={0.1}
-  onFireball={handleFireball}
-  canShoot={hasFireFlower} // Only allow shooting if fireflower power-up is active.
-/>
-{fireballs.map((fb) => (
-  <Fireball
-    key={fb.id}
-    id={fb.id}
-    position={[fb.pos.x, fb.pos.y, fb.pos.z]}
-    velocity={[fb.velocity.x, fb.velocity.y, fb.velocity.z]}
-    onRemove={(id) => setFireballs((prev) => prev.filter((f) => f.id !== id))}
-  />
-))}
-  {fireFlowerData.active && (
-  <FireFlower
-    id={0}
-    active={fireFlowerData.active}
-    position={[fireFlowerData.pos.x, fireFlowerData.pos.y + 0.5, fireFlowerData.pos.z]}
-    model={fireFlowerModel}
-    onCollected={handleFireFlowerCollected}
-  />
-)}
+      <HeadController
+        headRef={headRef}
+        speed={0.1}
+        onFireball={handleFireball}
+        canShoot={hasFireFlower} // Only allow shooting if fireflower power-up is active.
+      />
+      {fireballs.map((fb) => (
+        <Fireball
+          key={fb.id}
+          id={fb.id}
+          position={[fb.pos.x, fb.pos.y, fb.pos.z]}
+          velocity={[fb.velocity.x, fb.velocity.y, fb.velocity.z]}
+          onRemove={(id) => setFireballs((prev) => prev.filter((f) => f.id !== id))}
+        />
+      ))}
+      {fireFlowerData.active && (
+        <FireFlower
+          id={0}
+          active={fireFlowerData.active}
+          position={[fireFlowerData.pos.x, fireFlowerData.pos.y + 0.5, fireFlowerData.pos.z]}
+          model={fireFlowerModel}
+          onCollected={handleFireFlowerCollected}
+        />
+      )}
 
       {/* Render all shroom pool items */}
       {pool.map((shroom) => (
@@ -367,8 +366,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
           onCollected={handleShroomCollected}
         />
       ))}
-   
- 
 
       <Html transform position={[-10, 4, 0]}>
         <div className="end-container">
@@ -382,20 +379,20 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         </div>
       </Html>
       <BoundaryWall position={[-19, 0, 0]} scale={[1, 100, 2]} transparent={true} mario />
-      <BoundaryWall position={[77, 0, 0]} scale={[1, 100, 2]} transparent={true} mario />
+      <BoundaryWall position={[77, 0, 0]} scale={[2, 100, 2]} transparent={true} mario />
       {/* <Debug> */}
-        {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 0, 2.5)}
-        {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, -7, 2)}
-        {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 10, 3)}
-        {createLevel(MixBreakable, handleItemSpawn, rejectByForce, 20, 3)}
-        {createLevel(Pyramid, handleItemSpawn, rejectByForce, 35, 3)}
-        {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 36, 8)}
-        {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 55, 2.5)}
-        {showLimitReached && <LimitReached rotation={[0, 0, 0]} position={[77, 4, 0]} />}
+      {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 0, 2.5)}
+      {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, -7, 2)}
+      {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 10, 3)}
+      {createLevel(MixBreakable, handleItemSpawn, rejectByForce, 20, 3)}
+      {createLevel(Pyramid, handleItemSpawn, rejectByForce, 35, 3)}
+      {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 36, 8)}
+      {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 55, 2.5)}
+      {showLimitReached && <LimitReached rotation={[0, 0, 0]} position={[77, 4, 0]} />}
 
-        <Goomba headRef={headRef} onHit={onHeadHit} />
-        <Goomba headRef={headRef} position={[20, -1.8, 0]} onHit={onHeadHit} />
-        <Goomba headRef={headRef} position={[12, -1.8, 0]} onHit={onHeadHit} />
+      <Goomba headRef={headRef} onHit={onHeadHit} />
+      <Goomba headRef={headRef} position={[20, -1.8, 0]} onHit={onHeadHit} />
+      <Goomba headRef={headRef} position={[12, -1.8, 0]} onHit={onHeadHit} />
       {/* </Debug> */}
     </>
   );

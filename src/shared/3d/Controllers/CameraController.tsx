@@ -50,7 +50,7 @@ const CameraController: React.FC<CameraControllerProps> = ({ shorten, headRef,tu
           
             // When the head is far (z < -25), transition upward.
             if (headWorldPos.z < -25 && cameraOffsetY.current < 7) {
-              cameraOffsetY.current = THREE.MathUtils.lerp(cameraOffsetY.current, 7, delta * 0.5);
+              cameraOffsetY.current = THREE.MathUtils.lerp(cameraOffsetY.current, 10, delta * 0.5);
             } 
             // When the head moves back (z >= -25), transition back to normal (e.g. offsetY = 0).
             else if (headWorldPos.z >= -25 && cameraOffsetY.current > 0) {

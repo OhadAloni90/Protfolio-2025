@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.scss";
 import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
@@ -15,6 +15,12 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
     setDidClickStart(!didClickStart);
       onMenuItemClicked(title);
   }
+ const titleToShow = (title: string) => {
+  if(state?.gameStarted && !state?.marioMode) {
+    return title === 'start' ? 'back' : title
+  } else if (state?.gameStarted && state?.marioMode && title !== 'CV') return 'reset';
+  return title;
+ }
   return (
     <div className={`header-container ${state.darkMode ? "dark" : "light"}`}>
       <div className="menu-items">
@@ -24,7 +30,7 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
             className={`text text_big btn ${state.darkMode ? "dark" : "light"} ${state?.loading ? 'disabled' : ''}`}
             onClick={() =>  onMenuItemClick(didClickStart && title === 'start' ? '' : title)}
           >
-            {(state?.gameStarted || state?.marioMode) && title === 'start' ? 'back' : title}
+            {titleToShow(title)}
           </div>
         
         ))}
