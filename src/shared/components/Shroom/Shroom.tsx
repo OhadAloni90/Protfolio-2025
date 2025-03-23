@@ -54,6 +54,8 @@ const Shroom: React.FC<ShroomProps> = ({ id, active, position, model, onCollecte
       ref.current.traverse((child) => {
         if ((child as THREE.Mesh).isMesh && (child as THREE.Mesh).material) {
           const mat = (child as THREE.Mesh).material;
+          child.castShadow = true;
+          child.receiveShadow = true;
           if (Array.isArray(mat)) {
             mat.forEach(m => {
               m.transparent = true;
@@ -71,16 +73,13 @@ const Shroom: React.FC<ShroomProps> = ({ id, active, position, model, onCollecte
   // Play animation and control movement when active.
   useFrame(() => {
     if (!active || collected || !physicsRef.current) return;
-  
     // Simulate gravity by subtracting from the y coordinate.
     // Adjust 0.005 to match a gravity-like acceleration.
     localPos.y -= 0.03;
-    
     // Prevent falling below the ground (assume ground at y = -1.8)
-    if (localPos.y < -1.8) {
-      localPos.y = -1.8;
+    if (localPos.y < -1) {
+      localPos.y = -1;
     }
-    
     // Horizontal movement remains manual.
     localPos.x += 0.03;
     api.position.set(localPos.x, localPos.y, localPos.z);
