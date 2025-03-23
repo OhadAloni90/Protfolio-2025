@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/OhadAloni90/Protfolio-2025/static/css/main.47346ef4.css",
+    "main.js": "/OhadAloni90/Protfolio-2025/static/js/main.ca07a12b.js",
+    "static/js/453.d416b8fa.chunk.js": "/OhadAloni90/Protfolio-2025/static/js/453.d416b8fa.chunk.js",
+    "index.html": "/OhadAloni90/Protfolio-2025/index.html",
+    "main.47346ef4.css.map": "/OhadAloni90/Protfolio-2025/static/css/main.47346ef4.css.map",
+    "main.ca07a12b.js.map": "/OhadAloni90/Protfolio-2025/static/js/main.ca07a12b.js.map",
+    "453.d416b8fa.chunk.js.map": "/OhadAloni90/Protfolio-2025/static/js/453.d416b8fa.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.47346ef4.css",
+    "static/js/main.ca07a12b.js"
+  ]
+}
