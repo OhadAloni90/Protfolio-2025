@@ -2,8 +2,8 @@
 import React, { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { MoveInput, PhysicsCartoonHeadHandle } from "./Physics/PhysicsCartoonHead";
-import { useGlobal } from "../providers/DarkModeProvider/DarkModeProvider";
+import { MoveInput, PhysicsCartoonHeadHandle } from "../Physics/PhysicsCartoonHead";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 type HeadControllerProps = {
   headRef: React.MutableRefObject<PhysicsCartoonHeadHandle | null>;
@@ -85,7 +85,7 @@ const HeadController: React.FC<HeadControllerProps> = ({
     } else {
       if (keysPressed.current.arrowup || keysPressed.current.w) {
         input.up = true;
-      } else if (keysPressed.current.arrowdown) {
+      } else if (keysPressed.current.arrowdown || keysPressed.current.s) {
         input.down = true;
       }
       if (keysPressed.current.space) {

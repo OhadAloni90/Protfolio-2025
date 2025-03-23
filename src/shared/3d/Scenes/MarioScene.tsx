@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Html, OrthographicCamera, useFBX } from "@react-three/drei";
 import { Debug, usePlane } from "@react-three/cannon";
 import * as THREE from "three";
-import HeadController from "../HeadController";
+import HeadController from "../Controllers/HeadController";
 import PhysicsCartoonHead, { PhysicsCartoonHeadHandle } from "../Physics/PhysicsCartoonHead";
 import MarioBrick from "../../components/MarioBrick/MarioBrick";
 import BackgroundMusic from "../../components/BackgroundMusic/BackgroundMusic";
@@ -138,6 +138,10 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   const handleItemSpawn = (brickPos: THREE.Vector3, itemType: string) => {
     // If Mario is already enlarged, spawn the fire flower instead.
     if (isEnlarge || itemType === "fireflower") {
+      setLives((prevLives: number) => {
+        const newLives = 2;
+        return newLives;
+      });
       spawnFireFlower(brickPos);
       return;
     }
@@ -163,6 +167,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       return newLives;
     });
   };
+  
   const handleShroomCollected = (id: number) => {
     // Mark the shroom as inactive.
     setPool((prev) =>
@@ -259,7 +264,51 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       setShowLimitReached(false);
     }, 1500);
   };
-
+  const onHeadHit = () => {
+    setLives((prevLives: number) => {
+      const newLives = prevLives - 1;
+      if (newLives === 0) {
+        animateScale(false);
+        setIsEnlarge(false);
+      } 
+      else if(newLives === 1) setHasFireFlower(false);
+      return newLives;
+    });
+    console.log(lives)
+  }
+  useEffect(() => {
+    if (headRef.current) {
+      headRef.current.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          if (Array.isArray(mesh.material)) {
+            mesh.material = mesh.material.map((mat) => {
+              const material = (mat as THREE.MeshStandardMaterial).clone();
+              if (hasFireFlower) {
+                material.emissive = new THREE.Color(0xffffff);
+                material.emissiveIntensity = 0.7;
+              } else {
+                material.emissive = new THREE.Color(0x000000);
+                material.emissiveIntensity = 0;
+              }
+              return material;
+            });
+          } else {
+            const material = (mesh.material as THREE.MeshStandardMaterial).clone();
+            if (hasFireFlower) {
+              material.emissive = new THREE.Color(0xffffff);
+              material.emissiveIntensity = 0.5;
+            } else {
+              material.emissive = new THREE.Color(0x000000);
+              material.emissiveIntensity = 0;
+            }
+            mesh.material = material;
+          }
+        }
+      });
+    }
+  }, [hasFireFlower, headRef]);
+    
   return (
     <>
       <OrthographicCamera makeDefault position={[0, 10, 10]} zoom={55} />
@@ -344,9 +393,9 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 55, 2.5)}
         {showLimitReached && <LimitReached rotation={[0, 0, 0]} position={[77, 4, 0]} />}
 
-        <Goomba headRef={headRef} />
-        <Goomba headRef={headRef} position={[20, -1.8, 0]} />
-        <Goomba headRef={headRef} position={[12, -1.8, 0]} />
+        <Goomba headRef={headRef} onHit={onHeadHit} />
+        <Goomba headRef={headRef} position={[20, -1.8, 0]} onHit={onHeadHit} />
+        <Goomba headRef={headRef} position={[12, -1.8, 0]} onHit={onHeadHit} />
       </Debug>
     </>
   );

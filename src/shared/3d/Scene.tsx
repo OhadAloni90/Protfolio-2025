@@ -5,7 +5,7 @@ import { useGlobal } from "../providers/DarkModeProvider/DarkModeProvider";
 import { useLocation } from "react-router";
 import "./Scene.scss";
 import { Debug, Physics } from "@react-three/cannon";
-import CameraController from "./CameraController";
+import CameraController from "./Controllers/CameraController";
 import ProfolioLoader from "../pages/Loader/Loader";
 import MarioScene from "./Scenes/MarioScene";
 import MainScene from "./Scenes/MainScene";

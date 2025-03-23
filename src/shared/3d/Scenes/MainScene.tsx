@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as THREE from "three";
 import { useLocation } from "react-router";
 import PhysicsCartoonHead, { PhysicsCartoonHeadHandle } from "../Physics/PhysicsCartoonHead";
-import HeadController from "../HeadController";
+import HeadController from "../Controllers/HeadController";
 import PushButton from "../../components/3DButton/PushButton";
 import Mouth from "../../components/Mouth/Mouth";
 import WoodenArrow from "../../components/WoodenArrow/WoodenArrow";

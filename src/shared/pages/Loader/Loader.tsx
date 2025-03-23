@@ -13,7 +13,8 @@ const one = 'Loading'
   // Calculate offset so that when progress=0 offset = circumference and when progress=100 offset=0.
   const offset = circumference * (1 - progress / 100);
   useEffect(() => {
-    if (progress >= 100) {
+    console.log('progress,',progress)
+    if (progress >= 98) {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   }, [progress, dispatch]);
