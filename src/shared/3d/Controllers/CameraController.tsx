@@ -22,7 +22,7 @@ const CameraController: React.FC<CameraControllerProps> = ({ shorten, headRef,tu
   const cameraOffsetY = useRef(0); // New vertical offset
   const regularCameraLogic = (delta: number)  => {
         // Normal orbit logic.
-        const animationSpeed = delta * 0.5;
+        const animationSpeed = delta * 0.6;
         angleRef.current = THREE.MathUtils.lerp(angleRef.current, shorten ? Math.PI : 0, animationSpeed);
         heightRef.current = THREE.MathUtils.lerp(heightRef.current, shorten ? 10 : 0, animationSpeed);
     
@@ -41,11 +41,23 @@ const CameraController: React.FC<CameraControllerProps> = ({ shorten, headRef,tu
           targetLookAt.y + cameraOffsetY.current,
           targetLookAt.z + cameraOffsetZ.current
         );
-    
         // Check the head's screen-space position.
         if (headRef.current) {
           const headWorldPos = new THREE.Vector3();
-          headRef.current.getWorldPosition(headWorldPos);
+          if (headRef.current) {
+            const headWorldPos = new THREE.Vector3();
+            headRef.current.getWorldPosition(headWorldPos);
+          
+            // When the head is far (z < -25), transition upward.
+            if (headWorldPos.z < -25 && cameraOffsetY.current < 7) {
+              cameraOffsetY.current = THREE.MathUtils.lerp(cameraOffsetY.current, 7, delta * 0.5);
+            } 
+            // When the head moves back (z >= -25), transition back to normal (e.g. offsetY = 0).
+            else if (headWorldPos.z >= -25 && cameraOffsetY.current > 0) {
+              cameraOffsetY.current = THREE.MathUtils.lerp(cameraOffsetY.current, 0, delta * 0.5);
+            }
+          }
+                    headRef.current.getWorldPosition(headWorldPos);
           const ndc = headWorldPos.clone().project(camera); // ndc.x, ndc.y ∈ [-1,1]
           // Adjust horizontal offset.
           if (ndc.x > 0.6) {
@@ -61,6 +73,8 @@ const CameraController: React.FC<CameraControllerProps> = ({ shorten, headRef,tu
             // Head is too low on the screen, so move the caa down (decreasing Y offset) to bring it up.
             cameraOffsetZ.current -= 0.1;
           }
+          // console.log(cameraOffsetY.current)
+
         }
     
   }
