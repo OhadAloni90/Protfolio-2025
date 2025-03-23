@@ -223,7 +223,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
             setDialogOpen(false);
           }}
           dialogContent={<BioTemplate darkMode={false} />}
-          dialog={{ width: "40rem", height: "40rem" }}
+          dialog={{ width: "40rem", height: "35rem" }}
         />
         }
       {woodenArrows()}

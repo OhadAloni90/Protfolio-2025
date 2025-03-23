@@ -24,7 +24,7 @@ const AppRoutes = () => {
   return (
     <>
       <div className="header">
-        <Header onMenuItemClicked={onMenuItemClicked} />
+        {<Header onMenuItemClicked={onMenuItemClicked} />}
       </div>
       <div className="scene">
         <Scene onHeadHover={setIsHeadHovered}></Scene>

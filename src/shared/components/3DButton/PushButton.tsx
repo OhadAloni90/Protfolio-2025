@@ -98,7 +98,7 @@ const PhysicsPushButton = forwardRef<THREE.Group, PhysicsPushButtonProps>(
         </Text>
         {/* Dialog with HTML content */}
         {dialogOpen && (
-          <Html center position={[1, -4, 3]} style={{ pointerEvents: "auto" }}>
+          <Html center position={[1, -5, 3]} style={{ pointerEvents: "auto" , zIndex: 3}}  >
             <div
               className={`dialog-container ${state.darkMode ? "dark" : "light"}`}
               style={{

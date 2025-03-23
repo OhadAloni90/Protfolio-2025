@@ -103,7 +103,15 @@ const Mouth = (props: JSX.IntrinsicElements["group"]) => {
   };
 
   return (
-    <group {...props} ref={groupRef} onClick={handleClick}>
+    <group {...props} ref={groupRef} onClick={handleClick}       onPointerOver={(e) => {
+      document.body.style.cursor = 'pointer';
+      e.stopPropagation();
+    }}
+    onPointerOut={(e) => {
+      document.body.style.cursor = 'default';
+      e.stopPropagation();
+    }}
+>
       <primitive object={scene} />
       {isOpen && (
         <Html
@@ -116,15 +124,15 @@ const Mouth = (props: JSX.IntrinsicElements["group"]) => {
             <h2 className="wave-letter text text_med">Languages I Speak</h2>
             <p>
               Hebrew
-              <ProgressBarWithImage progress={100} imageSrc="/path/to/your/image.png" />
+              <ProgressBarWithImage progress={100} imageSrc={`${process.env.PUBLIC_URL}/images/israel.png`} />
             </p>
             <div>
               <p>
-                English <ProgressBarWithImage progress={90} imageSrc="/path/to/your/image.png" />
+                English <ProgressBarWithImage progress={90} imageSrc={`${process.env.PUBLIC_URL}/images/usa.png`} />
               </p>
               <p>
                 German
-                <ProgressBarWithImage progress={20} imageSrc="/path/to/your/image.png" />
+                <ProgressBarWithImage progress={20} imageSrc={`${process.env.PUBLIC_URL}/images/germany.png`} />
               </p>
             </div>
             <button onClick={handleClose}>Close</button>

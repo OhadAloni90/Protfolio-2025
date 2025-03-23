@@ -27,7 +27,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
   const [innerTriggerRef] = useCylinder(() => ({
     type: "Static",
     args: [1, 1, 0.2, 32], // a smaller radius and thin height creates a ring-like collider
-    position: [position[0], position[1] + 2, position[2]], // same center as tube
+    position: [position[0], position[1] + 2.5, position[2]], // same center as tube
     rotation: [0, 0, 0],
     userData: { type: "tubeTrigger" },
     collisionResponse: false,

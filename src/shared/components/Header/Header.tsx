@@ -21,8 +21,8 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
         {titles.map((title: string) => (
           <div
             key={title}
-            className={`text text_big btn ${state.darkMode ? "dark" : "light"}`}
-            onClick={() => onMenuItemClick(didClickStart && title === 'start' ? '' : title)}
+            className={`text text_big btn ${state.darkMode ? "dark" : "light"} ${state?.loading ? 'disabled' : ''}`}
+            onClick={() =>  onMenuItemClick(didClickStart && title === 'start' ? '' : title)}
           >
             {(state?.gameStarted || state?.marioMode) && title === 'start' ? 'back' : title}
           </div>

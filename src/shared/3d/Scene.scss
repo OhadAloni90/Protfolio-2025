@@ -1,6 +1,7 @@
 .canvas {
     height: 90%;
     width: 90%;
+    position: relative; /* Make sure the loader can be absolutely positioned relative to it */
 }
 .slide-panel {
     position: absolute;

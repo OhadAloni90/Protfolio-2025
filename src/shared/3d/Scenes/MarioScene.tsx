@@ -383,7 +383,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       </Html>
       <BoundaryWall position={[-19, 0, 0]} scale={[1, 100, 2]} transparent={true} mario />
       <BoundaryWall position={[77, 0, 0]} scale={[1, 100, 2]} transparent={true} mario />
-      <Debug>
+      {/* <Debug> */}
         {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 0, 2.5)}
         {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, -7, 2)}
         {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 10, 3)}
@@ -396,7 +396,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
         <Goomba headRef={headRef} onHit={onHeadHit} />
         <Goomba headRef={headRef} position={[20, -1.8, 0]} onHit={onHeadHit} />
         <Goomba headRef={headRef} position={[12, -1.8, 0]} onHit={onHeadHit} />
-      </Debug>
+      {/* </Debug> */}
     </>
   );
 };
