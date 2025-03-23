@@ -36,8 +36,8 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
       vid.crossOrigin = 'Anonymous';
       vid.loop = true;
       vid.muted = true;
-      vid.width = 320;
-      vid.height = 240;
+vid.width = 640;
+vid.height = 480;
       // Set autoplay properties instead of calling play() immediately.
       vid.autoplay = true;
       vid.playsInline = true;
@@ -53,8 +53,21 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
     return null;
   }, [videoSrc]);
 
-  const videoTexture = useMemo(() => (video ? new THREE.VideoTexture(video) : null), [video]);
-
+  const videoTexture = useMemo(() => {
+    if (video) {
+      const texture = new THREE.VideoTexture(video);
+  
+      // Mirror the texture horizontally:
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.x = -1; // negative repeat flips horizontally
+  
+      return texture;
+    }
+    return null;
+  }, [video]);
+  
+  
   // Create and setup the canvas (for when no videoSrc is provided)
   const canvas = useMemo(() => {
     const c = document.createElement('canvas');
@@ -101,17 +114,17 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
 
   return (
     <mesh ref={meshRef} position={position} rotation={rotation} receiveShadow>
-      <planeGeometry args={[width, height]} />
+      <planeGeometry args={[width, height]}   />
       <meshBasicMaterial map={usedTexture} side={THREE.DoubleSide} />
       
       {text && (
         <Text
-          position={[0, 6, 0.1]}
-          rotation={[0, Math.PI, 0]}
+        position={[0,20,0]}
+        rotation={[0, Math.PI, 0]}
           fontSize={0.9}
           color={!state?.darkMode ? '#000': '#fff'}
           anchorX="center"
-          anchorY="middle"
+          anchorY="top"
           font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
         >
           {text}
@@ -122,13 +135,13 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
           strokeOpacity={shorten ? 1 : 0}
           outlineOpacity={shorten ? 1 : 0}
           fillOpacity={shorten ? 1 : 0}
-          position={[0, 0, 0.1]}
+          position={[0,15,0]}
           rotation={[0, Math.PI, 0]}
           fontSize={0.7}
           color={!state?.darkMode ? '#000': '#fff'}
           anchorX="center"
           anchorY="middle"
-          maxWidth={10}
+          maxWidth={17}
           fontStyle="normal"
           font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Regular.ttf`}
         >
@@ -139,7 +152,7 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
       {videoSrc && (
         <Html
           receiveShadow
-          position={[0, -height / 2 - 1,50]}
+          position={[0,10,0]}
           center
           style={{ pointerEvents: 'auto', opacity: shorten ? 1 : 0 }}
         >

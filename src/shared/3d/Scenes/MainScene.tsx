@@ -187,7 +187,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
        * Top and bottom
        *  */}
       <BoundaryWall position={[0, 0, 20]} scale={[10000, 15, 2]} transparent />
-      <BoundaryWall position={[0, 0, -40]} scale={[10000, 15, 2]} transparent />
+      <BoundaryWall position={[0, 0, -70]} scale={[10000, 15, 2]} transparent />
        {/**
        * left and right
        *  */}
