@@ -1,6 +1,7 @@
 .header {
   position: absolute;
   top: 10%;
+  left: 0;
   color: #fff;
   display: flex
 ;
@@ -12,10 +13,13 @@
 }
 .scene {
   z-index: 1;
+  top: 0;
+  left: 0;
   position: absolute;
   width: 100%;
   height: 100%;
   display: flex
+  
 ;
   justify-content: center;
   align-items: center;

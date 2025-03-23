@@ -15,11 +15,17 @@ const AppRoutes = () => {
   const navigate = useNavigate();
   const [isHeadHovered, setIsHeadHovered] = useState(false); // Track hover state
   const onMenuItemClicked = (route: string) => {
-    if(route === 'back') route = '';
+    console.log(route)
+    if(route === 'back' && !state?.marioMode) route = '';
+    if(route === 'about') route = '';
     navigate(`/${route.toLowerCase()}`);
     // When going back from Mario mode, lock the camera to the head.
     if (state?.marioMode && route === "start") {
       dispatch({ type: "LOCK_CAMERA_ON_HEAD" });
+    } else if(state?.marioMode && route === "back"){
+      dispatch({ type: "SET_MARIO_MODE" });
+      dispatch({ type: "SET_GAME_STARTED" });
+
     } else if (state?.marioMode) {
       dispatch({ type: "SET_MARIO_MODE" });
     } else {
@@ -39,6 +45,8 @@ const AppRoutes = () => {
       <div className="instructions">{state?.gameStarted && !state?.instructionApproved && <KeyboardExplaining />}</div>
       <Routes>
         <Route path={`/`} element={<Home />} />
+        <Route path={`/back`} element={<Home />} />
+
         <Route path={`/start`} element={<About isHovered={isHeadHovered} />} />
 
       </Routes>
