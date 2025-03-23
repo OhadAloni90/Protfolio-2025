@@ -5,19 +5,24 @@ interface GlobalState {
   marioMode: boolean;
   gameStarted: boolean;
   instructionApproved: boolean;
+  loading: boolean;
 }
 
 type GlobalAction =
    { type: "TOGGLE_DARK_MODE" }
   | { type: "SET_MARIO_MODE" }
   | { type: "SET_GAME_STARTED" } | 
-  {type: 'INSTRUCTION_APPROVED'}
+  {type: 'INSTRUCTION_APPROVED'} 
+  | { type: "SET_LOADING"; payload: boolean };
+
 
 const initialGlobalState: GlobalState = {
   darkMode: false,
   marioMode: false,
   gameStarted: false,
-  instructionApproved: false
+  instructionApproved: false,
+  loading: true, // Initially loading
+
 };
 
 const GlobalContext = createContext<{
@@ -35,6 +40,9 @@ function globalReducer(state: GlobalState, action: GlobalAction): GlobalState {
       return { ...state, gameStarted: !state.gameStarted };
       case "INSTRUCTION_APPROVED":
         return {...state, instructionApproved: !state.instructionApproved }
+        case "SET_LOADING":
+          return { ...state, loading: action.payload };
+    
     default:
       return state;
   }

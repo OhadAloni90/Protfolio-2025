@@ -41,9 +41,8 @@ const KeyboardHtml: React.FC = () => {
           <div className="key">Q</div>
           {/* Highlight W with tooltip */}
           <div className="key highlight">
-            W
-            <div className="tooltip">Walk Up - N/A in Mario mode</div>
-            </div>
+            W<div className="tooltip">Walk Up - Jump in Mario mode</div>
+          </div>
           <div className="key">E</div>
           <div className="key">R</div>
           <div className="key">T</div>
@@ -59,15 +58,14 @@ const KeyboardHtml: React.FC = () => {
         <div className="row">
           <div className="key key-wide">Caps</div>
           {/* Highlight A, S, D */}
-          <div className="key highlight">A
-          <div className="tooltip">Walk Left</div>
+          <div className="key highlight">
+            A<div className="tooltip">Walk Left</div>
           </div>
-          <div className="key highlight">S
-
-          <div className="tooltip">Walk Down - N/A in Mario mode</div>
+          <div className="key highlight">
+            S<div className="tooltip">Walk Down - Fireflower throwing - Mario mode</div>
           </div>
-          <div className="key highlight">D
-          <div className="tooltip">Walk Right</div>
+          <div className="key highlight">
+            D<div className="tooltip">Walk Right</div>
           </div>
           <div className="key">F</div>
           <div className="key">G</div>
@@ -91,20 +89,32 @@ const KeyboardHtml: React.FC = () => {
           <div className="key">,</div>
           <div className="key">.</div>
           <div className="key">/</div>
-          <div className="key key-extra-wide">Shift</div>
+          <div className="key key-extra-wide highlight">⌃
+          <div className="tooltip">Jump</div>
+
+          </div>
         </div>
         <div className="row">
           <div className="key">Ctrl</div>
           <div className="key">Win</div>
           <div className="key">Alt</div>
-          <div className="key key-space highlight">Space
-
-          <div className="tooltip">Jump</div>
+          <div className="key key-space highlight">
+            Space
+            <div className="tooltip">Jump</div>
           </div>
-          <div className="key">Alt</div>
-          <div className="key">Fn</div>
-          <div className="key">Menu</div>
           <div className="key">Ctrl</div>
+          <div className="key highlight">˂
+          <div className="tooltip">Walk Left</div>
+
+          </div>
+          <div className="key highlight">˅
+          <div className="tooltip">Walk Down - Fireflower throwing - Mario mode</div>
+
+          </div>
+
+          <div className="key highlight">
+            ˃<div className="tooltip">Walk Right</div>
+          </div>
         </div>
       </div>
     </div>

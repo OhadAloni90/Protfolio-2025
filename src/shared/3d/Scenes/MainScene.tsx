@@ -16,6 +16,8 @@ import LimitReached from "../../components/LimitReached/LimitReached";
 import Social3DModel from "../../components/Social3DModel/Social3DModel";
 import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 import KeyboardExplaining from "../../components/KeyboardExplaining/KeyboardExplaining";
+import { Autofocus, EffectComposer } from "@react-three/postprocessing";
+import { Html } from "@react-three/drei";
 
 interface MainSceneProps {
   onMarioEnter: () => void;
@@ -122,6 +124,20 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
       setShowLimitReached(false);
     }, 1500);
   };
+  const socialMedia = () => {
+   return socialMediaModels && socialMediaModels.map((social: SocialMediaModel) => (
+      <Social3DModel
+      modelUrl={social.modelUrl}// URL or path to your GLB or FBX model.
+      modelType={social.modelType}      
+      textureUrl={social.textureUrl}     
+      position={social.position}                      // Set model position in the scene.
+      mass={social.mass}     
+      rotation={social.rotation}            // Rotate the model (in radians).
+      scale={social.scale}                            // Scale the model uniformly.
+      linkUrl={social.linkUrl}
+    />
+    ))
+  }
   const woodenArrows = () => (
     <>
       <WoodenArrow
@@ -157,6 +173,9 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
   
         <FloorWithGrid onFloorClick={handleScrollClick} />
       </group>
+      {/* <EffectComposer enableNormalPass={false}>
+      <Autofocus />
+        </EffectComposer>; */}
       <MarioTube position={[11, 0, 10]} onEnter={onMarioEnter} />
       <PhysicsCartoonHead
         ref={headRef}
@@ -209,18 +228,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
         }
       {woodenArrows()}
       {
-        socialMediaModels && socialMediaModels.map((social: SocialMediaModel) => (
-          <Social3DModel
-          modelUrl={social.modelUrl}// URL or path to your GLB or FBX model.
-          modelType={social.modelType}      
-          textureUrl={social.textureUrl}     
-          position={social.position}                      // Set model position in the scene.
-          mass={social.mass}     
-          rotation={social.rotation}            // Rotate the model (in radians).
-          scale={social.scale}                            // Scale the model uniformly.
-          linkUrl={social.linkUrl}
-        />
-        ))
+        socialMedia()
       }
       <Skills headRef={headRef} position-z={-0.1} />
       <Experience headRef={headRef} shorten={shorten} />

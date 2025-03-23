@@ -34,10 +34,16 @@ const Social3DModel: React.FC<Social3DModelProps> = ({
     const {state} = useGlobal();
     const textureApplied = useRef(false);
   // Load the model using the appropriate loader.
+  const customLoadingManager = new THREE.LoadingManager();
+
   const model: any = useLoader(
     modelType === 'glb' ? GLTFLoader : FBXLoader,
-    modelUrl
+    modelUrl,
+    (loader) => {
+      loader.manager = customLoadingManager;
+    }
   );
+  
   let light = useRef<THREE.SpotLight>(null);
   // Load texture if provided.
   const texture = React.useMemo(() => {
