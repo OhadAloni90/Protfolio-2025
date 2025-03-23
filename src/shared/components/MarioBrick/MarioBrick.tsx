@@ -69,7 +69,6 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
     userData: { type: "marioBrick" },
     onCollide: (e) => {
       if (e.body.userData?.type !== "head") return;
-      console.log(e.contact.ni)
       if (e.contact && e.contact.ni && e.contact.ni[1] < 0.5) return;
       // For breakable bricks, break them.
       if (breakable) {

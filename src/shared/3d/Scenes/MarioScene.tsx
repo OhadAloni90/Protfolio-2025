@@ -273,7 +273,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       } else if (newLives === 1) setHasFireFlower(false);
       return newLives;
     });
-    console.log(lives);
   };
   useEffect(() => {
     if (headRef.current) {
