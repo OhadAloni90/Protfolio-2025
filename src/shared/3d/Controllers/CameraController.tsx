@@ -81,16 +81,27 @@ const CameraController: React.FC<CameraControllerProps> = ({
       const headWorldPos = new THREE.Vector3();
       headRef.current.getWorldPosition(headWorldPos);
       if (headWorldPos.z < -25 && cameraOffsetY.current < 7) {
-        cameraOffsetY.current = THREE.MathUtils.lerp(
-          cameraOffsetY.current,
-          10,
-          delta * 0.5
+        // cameraOffsetY.current = THREE.MathUtils.lerp(
+        //   cameraOffsetY.current,
+        //   12,
+        //   delta * 0.5
+        // );
+        heightRef.current = THREE.MathUtils.lerp(
+          heightRef.current,
+          shorten ? 30 : 0,
+          animationSpeed
         );
+   
       } else if (headWorldPos.z >= -25 && cameraOffsetY.current > 0) {
-        cameraOffsetY.current = THREE.MathUtils.lerp(
-          cameraOffsetY.current,
-          0,
-          delta * 0.5
+        // cameraOffsetY.current = THREE.MathUtils.lerp(
+        //   cameraOffsetY.current,
+        //   0,
+        //   delta * 0.5
+        // );
+        heightRef.current = THREE.MathUtils.lerp(
+          heightRef.current,
+          10,
+          animationSpeed
         );
       }
       const ndc = headWorldPos.clone().project(camera);

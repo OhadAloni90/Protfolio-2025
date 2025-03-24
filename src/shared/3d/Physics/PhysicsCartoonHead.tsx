@@ -69,6 +69,10 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
     useEffect(() => {
       const unsubscribe = api.velocity.subscribe((v) => {
         velocityRef.current = v;
+        let temp = [v[0], v[1], v[2]];
+        if((Math.abs(temp[2]) > 2 || Math.abs(temp[2]) > 2) && state?.playMusic) {
+          // playSound(`${process.env.PUBLIC_URL}/music/rolling2.mp3`,0.2);
+        }
       });
       return unsubscribe;
     }, [api.velocity]);
@@ -125,6 +129,7 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
       }
     
       // Finally, update the physics velocity.
+
       api.velocity.set(newVx, newVy, newVz);
     };
         // Expose setMoveInput on our ref
