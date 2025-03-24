@@ -2,6 +2,8 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { useBox } from "@react-three/cannon";
 import * as THREE from "three";
 import { useLoader } from "@react-three/fiber";
+import { playSound } from "../../utils/audioUtils";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 export interface MarioBrickProps {
   position?: [number, number, number];
@@ -53,6 +55,8 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
   const hasSpawnedRef = useRef(false);
   // Use a ref to always have the current value of isEnlarge.
   const isEnlargeRef = useRef(isEnlarge);
+  const {state } = useGlobal();
+
   useEffect(() => {
     isEnlargeRef.current = isEnlarge;
   }, [isEnlarge]);
@@ -134,6 +138,7 @@ const MarioBrick: React.FC<MarioBrickProps> = ({
   const handleHit = () => {
     if (broken) return;
     setBroken(true);
+      state?.playMusic &&  playSound(`${process.env.PUBLIC_URL}/music/mario_brick_break.mp3`, 1);
     // Disable further collisions.
     api.collisionFilterMask.set(0);
     spawnDebris();

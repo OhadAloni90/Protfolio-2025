@@ -4,6 +4,7 @@ import { DoubleSide } from 'three';
 import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
 import "./VerticalSurface.scss";
+import { playSound } from '../../utils/audioUtils';
 
 export interface VerticalSurfaceProps {
   width?: number;

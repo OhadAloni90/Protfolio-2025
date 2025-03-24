@@ -150,6 +150,14 @@
       /* Ensure the container has a perspective for 3D effects */
       .toggle-container {
         perspective: 1000px;
+        display: flex;
+        .mute-button {
+          height: 100%;
+          .btn {
+            margin: 0rem 1rem 0rem 0rem;
+            padding: 0.8rem;
+          }
+        }
       }
           
     .btn {

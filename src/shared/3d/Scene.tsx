@@ -47,6 +47,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
     <>
       <div className="canvas">
         <Canvas
+          dpr={[1, 2]} // Clamp the pixel ratio between 1 and 2
           onCreated={({ scene, gl }) => {
             sceneRef.current = scene;
             rendererRef.current = gl;

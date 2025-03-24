@@ -7,6 +7,7 @@ interface GlobalState {
   instructionApproved: boolean;
   loading: boolean;
   lockCameraOnHead: boolean;
+  playMusic: boolean;
 }
 
 type GlobalAction =
@@ -15,7 +16,8 @@ type GlobalAction =
   | { type: "SET_GAME_STARTED" }
   | { type: "INSTRUCTION_APPROVED" }
   | { type: "LOCK_CAMERA_ON_HEAD" }
-  | { type: "UNLOCK_CAMERA" }
+  | { type: "UNLOCK_CAMERA" } |
+  {type: "PLAY_MUSIC"}
   | { type: "SET_LOADING"; payload: boolean };
 
 const initialGlobalState: GlobalState = {
@@ -25,6 +27,7 @@ const initialGlobalState: GlobalState = {
   instructionApproved: false,
   lockCameraOnHead: false,
   loading: true, // Initially loading
+  playMusic: true,
 };
 
 const GlobalContext = createContext<
@@ -47,6 +50,8 @@ function globalReducer(state: GlobalState, action: GlobalAction): GlobalState {
       return { ...state, instructionApproved: !state.instructionApproved };
     case "SET_LOADING":
       return { ...state, loading: action.payload };
+      case 'PLAY_MUSIC':
+        return {...state, playMusic: !state.playMusic };
     case "LOCK_CAMERA_ON_HEAD":
       return { ...state, lockCameraOnHead: true, marioMode: false };
     case "UNLOCK_CAMERA":

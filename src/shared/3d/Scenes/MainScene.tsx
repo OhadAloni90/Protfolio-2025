@@ -18,6 +18,7 @@ import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 import KeyboardExplaining from "../../components/KeyboardExplaining/KeyboardExplaining";
 import { Autofocus, EffectComposer } from "@react-three/postprocessing";
 import { Html } from "@react-three/drei";
+import BackgroundMusic from "../../components/BackgroundMusic/BackgroundMusic";
 
 interface MainSceneProps {
   onMarioEnter: () => void;
@@ -170,7 +171,8 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
   return (
     <>
       <group>
-  
+      {state?.gameStarted &&       <BackgroundMusic path={`${process.env.PUBLIC_URL}/music/main_scene_sound.mp3`} />
+    }
         <FloorWithGrid onFloorClick={handleScrollClick} />
       </group>
       {/* <EffectComposer enableNormalPass={false}>

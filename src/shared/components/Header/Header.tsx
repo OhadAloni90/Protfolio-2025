@@ -36,6 +36,11 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
         ))}
       </div>
       <div className="toggle-container">
+        <div className="mute-button">
+          <button className="btn" onClick={() => dispatch({type: 'PLAY_MUSIC'})}>
+            <img src={state?.playMusic ? `${process.env.PUBLIC_URL}/images/icons/volume-up.svg` : `${process.env.PUBLIC_URL}/images/icons/volume-mute.svg`} />
+          </button>
+        </div>
         {/* Add a dynamic class based on dark mode */}
         <label className={`switch ${state.darkMode ? "checked" : ""}`}>
           <input

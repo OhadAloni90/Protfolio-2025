@@ -15,12 +15,7 @@ type HeadControllerProps = {
   canShoot?: boolean;
 };
 
-const HeadController: React.FC<HeadControllerProps> = ({
-  headRef,
-  speed = 0.1,
-  onFireball,
-  canShoot = false,
-}) => {
+const HeadController: React.FC<HeadControllerProps> = ({ headRef, speed = 0.1, onFireball, canShoot = false }) => {
   // Track key state (all keys are lowercased)
   const keysPressed = useRef<{ [key: string]: boolean }>({
     arrowleft: false,
@@ -46,7 +41,7 @@ const HeadController: React.FC<HeadControllerProps> = ({
       if (key in keysPressed.current) {
         keysPressed.current[key] = true;
       }
-      if (e?.code?.toLowerCase() === 'space' && !state?.marioMode) {
+      if (e?.code?.toLowerCase() === "space" && !state?.marioMode) {
         keysPressed.current.space = true;
       }
     };
@@ -55,7 +50,7 @@ const HeadController: React.FC<HeadControllerProps> = ({
       if (key in keysPressed.current) {
         keysPressed.current[key] = false;
       }
-      if (e?.code?.toLowerCase() === 'space' && !state?.marioMode) {
+      if (e?.code?.toLowerCase() === "space" && !state?.marioMode) {
         keysPressed.current.space = false;
       }
     };
@@ -66,6 +61,8 @@ const HeadController: React.FC<HeadControllerProps> = ({
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, [state?.gameStarted, state?.marioMode]);
+
+ 
 
   useFrame((_, delta) => {
     if (!headRef.current) return;

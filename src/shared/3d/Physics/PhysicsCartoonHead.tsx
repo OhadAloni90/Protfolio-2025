@@ -4,6 +4,8 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
+import { playSound } from "../../utils/audioUtils";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 export interface PhysicsCartoonHeadProps {
   onHoverChange: (hovering: boolean) => void;
   onCollide?: (e: any) => void;
@@ -54,9 +56,11 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
       undefined,      // no forwarded ref is provided here
       [scale]         // dependency array to rebuild the body when scale changes
         );
-    
-    
-
+        const { state } = useGlobal();
+        const playJumpSound = (path: string) => {
+         state?.playMusic &&  playSound(path, 0.2);
+        };
+        
     const gltf = useLoader(GLTFLoader, `${process.env.PUBLIC_URL}/models/Head3.glb`);
     const [facing, setFacing] = useState<"left" | "right" | "up" | "down" | "jump">("right");
 
@@ -91,6 +95,7 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
           newVy = isEnlarge ? 10 : 8; // jump speed
           setFacing("jump");
           setIsGrounded(false); // disable jumping until landing
+          state?.playMusic &&  playSound(`${process.env.PUBLIC_URL}/music/mario_jump.mp3`,0.2);
         }
         // Ensure no movement on Z.
         newVz = 0;
@@ -115,6 +120,7 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
           newVy = 10;
           setFacing("jump");
           setIsGrounded(false);
+          playJumpSound(`${process.env.PUBLIC_URL}/music/mario_jump.mp3`);
         }
       }
     

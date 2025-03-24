@@ -13,11 +13,13 @@ import BoundaryWall from "../../components/BoundryWall/BoundryWall";
 import LimitReached from "../../components/LimitReached/LimitReached";
 import FireFlower from "../../components/FireFlower/FireFlower";
 import Fireball from "../../components/FireBall/FireBall";
+import { playSound } from "../../utils/audioUtils";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 const Ground = () => {
   const [ref] = usePlane(() => ({
     rotation: [-Math.PI / 2, 0, 0],
-    position: [0, -2, 0],
+    position: [0, -1.8, 0],
     restitution: 0.8, // add this line for bounciness
     friction: 0.3, // lower friction can help bounces
     userData: { type: "ground" },
@@ -116,6 +118,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   const [isOnBrick, setIsOnBrick] = useState(false);
   const [showLimitReached, setShowLimitReached] = useState(false);
   const [lives, setLives] = useState<number>(0);
+  const { state } = useGlobal();
   const [headScale, setHeadScale] = useState<[number, number, number]>([1, 2, 1]);
   const [isEnlarge, setIsEnlarge] = useState<boolean>(false);
   const [hasFireFlower, setHasFireFlower] = useState(false);
@@ -128,6 +131,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
     }))
   );
   const handleFireball = (pos: THREE.Vector3, direction: THREE.Vector3) => {
+    state?.playMusic &&  playSound(`${process.env.PUBLIC_URL}/music/mario_fireball.mp3`, 1);
     const speed = 5;
     const velocity = direction.clone().multiplyScalar(speed);
     const id = nextFireballId.current++;
@@ -158,10 +162,10 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       return [...prev];
     });
   };
-
   const handleFireFlowerCollected = (id: number) => {
     setFireFlowerData({ active: false, pos: new THREE.Vector3(0, -1000, 0) });
     setHasFireFlower(true);
+    state?.playMusic &&  playSound(`${process.env.PUBLIC_URL}/music/mario_fireball.mp3`, 1);
     setLives((prevLives) => {
       const newLives = prevLives + 1;
       return newLives;
@@ -179,6 +183,8 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       if (newLives === 1) {
         animateScale(true);
         setIsEnlarge(true);
+                  state?.playMusic &&  playSound(`${process.env.PUBLIC_URL}/music/mario_shroom.mp3`, 0.6);
+        
       }
       return newLives;
     });
@@ -310,7 +316,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   return (
     <>
       <OrthographicCamera makeDefault position={[0, 10, 10]} zoom={55} />
-      {/* <BackgroundMusic path={"music/SuperMarioBros.mp3"} /> */}
+      <BackgroundMusic path={`${process.env.PUBLIC_URL}/music/SuperMarioBros.mp3`} />
       <ambientLight intensity={0.5} />
       <directionalLight
         position={[0, 10, 10]}

@@ -3,6 +3,7 @@ import * as THREE from "three";
 import VerticalSurface, { VerticalSurfaceProps } from "../../components/VerticalSurface/VerticalSurface";
 import InteractiveHtmlButton, { InteractiveHtmlButtonProps } from "../../components/InteractiveHtmlButton/InteractiveHtmlButton";
 import WreckingBall, { WreckingBallProps, WreckingBallRef } from "../../components/WreckingBall/WreckingBall";
+import { playSound } from "../../utils/audioUtils";
 
 interface InteractiveSurfaceProps {
   boardProps: VerticalSurfaceProps;
@@ -40,6 +41,8 @@ const InteractiveSurface = ({
   const boardPropsWithExplode: VerticalSurfaceProps = {
     ...boardProps,
     onExplode: () => {
+      playSound(`${process.env.PUBLIC_URL}/music/rubble_crash.mp3`, 0.8);
+      playSound(`${process.env.PUBLIC_URL}/music/crash_bricks.mp4`, 0.7);
       setIsResetMode(true)
     },
   };
