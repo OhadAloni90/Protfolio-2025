@@ -99,6 +99,9 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
           setIsGrounded(false); // disable jumping until landing
           state?.playMusic &&  playSound(`${process.env.PUBLIC_URL}/music/mario_jump.mp3`,0.2);
         }
+        // Ensure no movement on Z.
+        newVz = 0;
+        
       } else {
         newVx = 0;
         newVz = 0;
