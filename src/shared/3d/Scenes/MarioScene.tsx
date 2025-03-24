@@ -19,7 +19,7 @@ import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 const Ground = () => {
   const [ref] = usePlane(() => ({
     rotation: [-Math.PI / 2, 0, 0],
-    position: [0, -1.8, 0],
+    position: [0, -2, 0],
     restitution: 0.8, // add this line for bounciness
     friction: 0.3, // lower friction can help bounces
     userData: { type: "ground" },
