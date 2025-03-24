@@ -65,6 +65,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
             position: [0, 0, 6],
           }}
           shadows
+          color="blue"
         >
           <Suspense fallback={<ProfolioLoader />}>
             {/* Global lights */}

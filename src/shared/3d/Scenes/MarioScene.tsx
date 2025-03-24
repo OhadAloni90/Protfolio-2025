@@ -390,7 +390,7 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
       {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, -7, 2)}
       {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 10, 3)}
       {createLevel(MixBreakable, handleItemSpawn, rejectByForce, 20, 3)}
-      {createLevel(Pyramid, handleItemSpawn, rejectByForce, 35, 3)}
+      {createLevel(Pyramid, handleItemSpawn, rejectByForce, 35, 2.5)}
       {createLevel(ItemBricksRow, handleItemSpawn, rejectByForce, 36, 8)}
       {createLevel(levelMatrix, handleItemSpawn, rejectByForce, 55, 2.5)}
       {showLimitReached && <LimitReached rotation={[0, 0, 0]} position={[77, 4, 0]} />}

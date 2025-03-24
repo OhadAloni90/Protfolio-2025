@@ -83,15 +83,13 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
       let newVx = vx;
       let newVy = vy;
       let newVz = vz;
-    
       if (disableDrift) {
         // Mario mode: Only horizontal (X) movement and jump on Y.
-        newVx = 0;
         if (input.left) {
-          newVx = -5;
+          newVx = -4;
           setFacing("left");
         } else if (input.right) {
-          newVx = 5;
+          newVx = 4;
           setFacing("right");
         }
         // Jump is only triggered via the jump input (ignore input.up)
@@ -101,10 +99,7 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
           setIsGrounded(false); // disable jumping until landing
           state?.playMusic &&  playSound(`${process.env.PUBLIC_URL}/music/mario_jump.mp3`,0.2);
         }
-        // Ensure no movement on Z.
-        newVz = 0;
       } else {
-        // Top-down (free) mode: Movement on X and Z (vertical via up/down).
         newVx = 0;
         newVz = 0;
         if (input.left) {

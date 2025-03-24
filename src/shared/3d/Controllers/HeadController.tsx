@@ -92,7 +92,7 @@ const HeadController: React.FC<HeadControllerProps> = ({ headRef, speed = 0.1, o
     }
 
     // Only allow firing if canShoot is true.
-    if (onFireball && keysPressed.current.s && canShoot) {
+    if (onFireball && (keysPressed.current.s || keysPressed.current.arrowdown ) && canShoot) {
       const now = performance.now() / 1000; // seconds
       if (now - lastFireballTime.current > FIREBALL_COOLDOWN) {
         lastFireballTime.current = now;

@@ -188,7 +188,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
         onCollide={handleHeadCollide}
         position={[0, 0, 0]}
       />
-      <Sky distance={450000} sunPosition={[0, 5, -100]} inclination={0} azimuth={0.2} />
+      {/* <Sky distance={450000} sunPosition={[0, 5, -100]} inclination={0} azimuth={0.2} /> */}
 
       {/**
        * Top and bottom
