@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useGlobal } from "../providers/DarkModeProvider/DarkModeProvider";
 import { useLocation } from "react-router";
@@ -23,6 +23,8 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
   const [inTube, setInTube] = useState(false);
   const [items, setItems] = useState<Array<{ id: number; x: number; y: number; z: number }>>([]);
   const { dispatch, state } = useGlobal();
+  const light = useRef(null)
+
   useEffect(() => {
     if (sceneRef.current) {
       sceneRef.current.background = new THREE.Color(state.darkMode ? "#001F24" : "#fff");
@@ -30,6 +32,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
     if (rendererRef.current) {
       // rendererRef.current.toneMapping = THREE.NoToneMapping;
     }
+    
   }, [state.darkMode]);
   const handleTubeEnter = () => {
     // Trigger a transition, e.g., fade to black
@@ -42,6 +45,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
   const setMarioIn = () => {
     dispatch({ type: "SET_MARIO_MODE" });
   };
+  
 
   return (
     <>
@@ -64,19 +68,33 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
         >
           <Suspense fallback={<ProfolioLoader />}>
             {/* Global lights */}
-            <ambientLight intensity={4} />
+            <ambientLight intensity={2.2} />
             <directionalLight
-              position={[-3, 10, -10]}
+              position={[-3, 30, -10]}
               intensity={7}
               scale={[1, 1, 3]}
               castShadow
-              shadow-mapSize-width={1024 * 10}
-              shadow-mapSize-height={1024 * 10}
+              shadow-mapSize-width={1024  * 6}
+              shadow-mapSize-height={1024  * 6}
               shadow-camera-left={-200}
               shadow-camera-right={200}
               shadow-camera-top={200}
               shadow-camera-bottom={-200}
             />
+                  {/* <directionalLight
+              position={[11, 2, 10]}
+              intensity={2}
+              scale={[1, 1, 1]}
+              castShadow
+              shadow-mapSize-width={1024 * 4}
+              shadow-mapSize-height={1024 * 4}
+              shadow-camera-left={-200}
+              shadow-camera-right={200}
+              shadow-camera-top={200}
+              shadow-camera-bottom={-200}
+            /> */}
+
+
 
             <Physics iterations={10} gravity={[0, -9.8, 0]}>
               {/* <Debug> */}

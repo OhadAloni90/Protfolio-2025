@@ -4,6 +4,8 @@ import VerticalSurface, { VerticalSurfaceProps } from "../../components/Vertical
 import InteractiveHtmlButton, { InteractiveHtmlButtonProps } from "../../components/InteractiveHtmlButton/InteractiveHtmlButton";
 import WreckingBall, { WreckingBallProps, WreckingBallRef } from "../../components/WreckingBall/WreckingBall";
 import { playSound } from "../../utils/audioUtils";
+import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper";
+import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 
 interface InteractiveSurfaceProps {
   boardProps: VerticalSurfaceProps;

@@ -33,7 +33,11 @@ const AppRoutes = () => {
     }
   };
 
-  useEffect(() => {}, [state]);
+  useEffect(() => {
+
+    // In your app entry point (e.g., index.tsx)
+
+  }, [state]);
   return (
     <>
       <div className="header">

@@ -1,9 +1,10 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Html, Text } from '@react-three/drei';
+import { Html, Text, useVideoTexture } from '@react-three/drei';
 import * as THREE from 'three';
-import './InteractiveSurfaceDisplay.scss'
+import './InteractiveSurfaceDisplay.scss';
 import { useGlobal } from '../../providers/DarkModeProvider/DarkModeProvider';
+
 export interface InteractiveSurfaceDisplayProps {
   position?: [number, number, number];
   rotation?: [number, number, number];
@@ -28,6 +29,7 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
   const meshRef = useRef<THREE.Mesh>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const { state } = useGlobal();
+
   // Create video element if videoSrc is provided.
   const video = useMemo(() => {
     if (videoSrc) {
@@ -36,8 +38,8 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
       vid.crossOrigin = 'Anonymous';
       vid.loop = true;
       vid.muted = true;
-vid.width = 640;
-vid.height = 480;
+      vid.width = 640;
+      vid.height = 480;
       // Set autoplay properties instead of calling play() immediately.
       vid.autoplay = true;
       vid.playsInline = true;
@@ -56,18 +58,15 @@ vid.height = 480;
   const videoTexture = useMemo(() => {
     if (video) {
       const texture = new THREE.VideoTexture(video);
-  
       // Mirror the texture horizontally:
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
       texture.repeat.x = -1; // negative repeat flips horizontally
-  
       return texture;
     }
     return null;
   }, [video]);
-  
-  
+
   // Create and setup the canvas (for when no videoSrc is provided)
   const canvas = useMemo(() => {
     const c = document.createElement('canvas');
@@ -111,18 +110,23 @@ vid.height = 480;
       setIsPlaying(false);
     }
   };
-
+  function VideoMaterial(props : any) {
+    const { url } = props;
+    const texture = useVideoTexture(url)
+    return <meshBasicMaterial map={texture} toneMapped={true} />
+  }
   return (
     <mesh ref={meshRef} position={position} rotation={rotation} receiveShadow>
-      <planeGeometry args={[width, height]}   />
+      <planeGeometry args={[width, height]}  />
       <meshBasicMaterial map={usedTexture} side={THREE.DoubleSide} />
-      
+      {/* <VideoMaterial position={[position[0], position[1]+ 1,position[2]]} url={videoSrc}/> */}
+
       {text && (
         <Text
-        position={[0,20,0]}
-        rotation={[0, Math.PI, 0]}
+          position={[0, 20, 0]}
+          rotation={[0, Math.PI, 0]}
           fontSize={0.9}
-          color={!state?.darkMode ? '#000': '#fff'}
+          color={!state?.darkMode ? '#000' : '#fff'}
           anchorX="center"
           anchorY="top"
           font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
@@ -135,10 +139,10 @@ vid.height = 480;
           strokeOpacity={shorten ? 1 : 0}
           outlineOpacity={shorten ? 1 : 0}
           fillOpacity={shorten ? 1 : 0}
-          position={[0,15,0]}
+          position={[0, 15, 0]}
           rotation={[0, Math.PI, 0]}
           fontSize={0.7}
-          color={!state?.darkMode ? '#000': '#fff'}
+          color={!state?.darkMode ? '#000' : '#fff'}
           anchorX="center"
           anchorY="middle"
           maxWidth={17}
@@ -148,15 +152,14 @@ vid.height = 480;
           {subtext}
         </Text>
       )}
-      
+
       {videoSrc && (
         <Html
           receiveShadow
-          position={[0,10,0]}
+          position={[0, 10, 0]}
           center
           style={{ pointerEvents: 'auto', opacity: shorten ? 1 : 0 }}
         >
-          {/* Outer container toggles the "active" class based on isPlaying */}
           <div
             className={`botón ${isPlaying ? "active" : ""}`}
             onClick={togglePlayPause}

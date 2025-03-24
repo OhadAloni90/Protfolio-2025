@@ -17,7 +17,7 @@ import Social3DModel from "../../components/Social3DModel/Social3DModel";
 import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 import KeyboardExplaining from "../../components/KeyboardExplaining/KeyboardExplaining";
 import { Autofocus, EffectComposer } from "@react-three/postprocessing";
-import { Html } from "@react-three/drei";
+import { Html, Sky, SpotLight } from "@react-three/drei";
 import BackgroundMusic from "../../components/BackgroundMusic/BackgroundMusic";
 
 interface MainSceneProps {
@@ -26,52 +26,51 @@ interface MainSceneProps {
   headRef: React.MutableRefObject<PhysicsCartoonHeadHandle | null>;
 }
 interface SocialMediaModel {
-  modelUrl: string, // URL or path to your GLB or FBX model.
+  modelUrl: string; // URL or path to your GLB or FBX model.
   textureUrl: string;
   linkUrl: string;
-  modelType: 'fbx' | 'glb',
-  position: [number, number, number],
-  rotation:[number, number, number],
+  modelType: "fbx" | "glb";
+  position: [number, number, number];
+  rotation: [number, number, number];
   mass: number;
-  scale: number                       // Scale the model uniformly.
+  scale: number; // Scale the model uniformly.
 }
 
 const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRef }) => {
   const location = useLocation();
-  const {state} = useGlobal();
+  const { state } = useGlobal();
   const socialMediaModels: SocialMediaModel[] = [
     {
-      modelUrl: `${process.env.PUBLIC_URL}/models/social/facebook.FBX` , // URL or path to your GLB or FBX model.
-      modelType: "fbx",                       // 'glb' or 'fbx'
-      position: [29, 2, 7],                  // Set model position in the scene.
+      modelUrl: `${process.env.PUBLIC_URL}/models/social/facebook.FBX`, // URL or path to your GLB or FBX model.
+      modelType: "fbx", // 'glb' or 'fbx'
+      position: [29, 2, 7], // Set model position in the scene.
       mass: 10,
-      rotation: [0,Math.PI / 3, 0],      // Rotate the model (in radians).
-      scale: 0.008,                           // Scale the model uniformly.
+      rotation: [0, Math.PI / 3, 0], // Rotate the model (in radians).
+      scale: 0.008, // Scale the model uniformly.
       textureUrl: `${process.env.PUBLIC_URL}/models/social/facebook.jpg`, // Optional texture URL.
-      linkUrl: 'https://www.facebook.com/AloniOhad/'
+      linkUrl: "https://www.facebook.com/AloniOhad/",
     },
     {
-      modelUrl: `${process.env.PUBLIC_URL}/models/social/linkedin.fbx` , // URL or path to your GLB or FBX model.
-      modelType: "fbx",                       // 'glb' or 'fbx'
-      position: [31, 1, -7],                  // Set model position in the scene.
+      modelUrl: `${process.env.PUBLIC_URL}/models/social/linkedin.fbx`, // URL or path to your GLB or FBX model.
+      modelType: "fbx", // 'glb' or 'fbx'
+      position: [31, 1, -7], // Set model position in the scene.
       mass: 10,
-      rotation: [0,-Math.PI / 2, 0],      // Rotate the model (in radians).
-      scale: 0.065,                           // Scale the model uniformly.
-      textureUrl: "",// Optional texture URL.
-      linkUrl: 'https://www.linkedin.com/in/ohad-aloni-a23630175/'
+      rotation: [0, -Math.PI / 2, 0], // Rotate the model (in radians).
+      scale: 0.065, // Scale the model uniformly.
+      textureUrl: "", // Optional texture URL.
+      linkUrl: "https://www.linkedin.com/in/ohad-aloni-a23630175/",
     },
     {
-      modelUrl: `${process.env.PUBLIC_URL}/models/social/github.glb` , // URL or path to your GLB or FBX model.
-      modelType: "glb",                       // 'glb' or 'fbx'
-      position: [29, 0, -16],                  // Set model position in the scene.
+      modelUrl: `${process.env.PUBLIC_URL}/models/social/github.glb`, // URL or path to your GLB or FBX model.
+      modelType: "glb", // 'glb' or 'fbx'
+      position: [29, 0, -16], // Set model position in the scene.
       mass: 10,
-      rotation: [0,-Math.PI / 4 , 0],      // Rotate the model (in radians).
-      scale: 0.7,                           // Scale the model uniformly.
+      rotation: [0, -Math.PI / 4, 0], // Rotate the model (in radians).
+      scale: 0.7, // Scale the model uniformly.
       textureUrl: `${process.env.PUBLIC_URL}/models/social/github.jpeg`, // Optional texture URL.
-      linkUrl: 'https://github.com/OhadAloni90'
+      linkUrl: "https://github.com/OhadAloni90",
     },
-
-  ]
+  ];
   const shorten = location.pathname !== "/";
   const [headTargetPosition, setHeadTargetPosition] = useState<THREE.Vector3 | null>(null);
   const [scrollHovered, setScrollHovered] = useState(false);
@@ -126,19 +125,22 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
     }, 1500);
   };
   const socialMedia = () => {
-   return socialMediaModels && socialMediaModels.map((social: SocialMediaModel) => (
-      <Social3DModel
-      modelUrl={social.modelUrl}// URL or path to your GLB or FBX model.
-      modelType={social.modelType}      
-      textureUrl={social.textureUrl}     
-      position={social.position}                      // Set model position in the scene.
-      mass={social.mass}     
-      rotation={social.rotation}            // Rotate the model (in radians).
-      scale={social.scale}                            // Scale the model uniformly.
-      linkUrl={social.linkUrl}
-    />
-    ))
-  }
+    return (
+      socialMediaModels &&
+      socialMediaModels.map((social: SocialMediaModel) => (
+        <Social3DModel
+          modelUrl={social.modelUrl} // URL or path to your GLB or FBX model.
+          modelType={social.modelType}
+          textureUrl={social.textureUrl}
+          position={social.position} // Set model position in the scene.
+          mass={social.mass}
+          rotation={social.rotation} // Rotate the model (in radians).
+          scale={social.scale} // Scale the model uniformly.
+          linkUrl={social.linkUrl}
+        />
+      ))
+    );
+  };
   const woodenArrows = () => (
     <>
       <WoodenArrow
@@ -171,26 +173,29 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
   return (
     <>
       <group>
-      {state?.gameStarted &&       <BackgroundMusic path={`${process.env.PUBLIC_URL}/music/main_scene_sound.mp3`} />
-    }
+        {state?.gameStarted && <BackgroundMusic path={`${process.env.PUBLIC_URL}/music/main_scene_sound.mp3`} />}
         <FloorWithGrid onFloorClick={handleScrollClick} />
       </group>
       {/* <EffectComposer enableNormalPass={false}>
       <Autofocus />
         </EffectComposer>; */}
-      <MarioTube position={[11, 0, 10]} onEnter={onMarioEnter} />
+
+        <MarioTube position={[11, 0, 10]} onEnter={onMarioEnter} />
+
       <PhysicsCartoonHead
         ref={headRef}
         onHoverChange={onHeadHover}
         onCollide={handleHeadCollide}
         position={[0, 0, 0]}
       />
+      <Sky distance={450000} sunPosition={[0, 5, -100]} inclination={0} azimuth={0.2} />
+
       {/**
        * Top and bottom
        *  */}
       <BoundaryWall position={[0, 0, 20]} scale={[10000, 15, 2]} transparent />
       <BoundaryWall position={[0, 0, -70]} scale={[10000, 15, 2]} transparent />
-       {/**
+      {/**
        * left and right
        *  */}
       <BoundaryWall position={[50, 0, 0]} scale={[15, 2, 1000]} propRotation={[0, 0, Math.PI / 2]} transparent />
@@ -201,21 +206,21 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
       )}
       <HeadController headRef={headRef} speed={0.1} />
       <Mouth position={[0, -1.5, 8]} scale={[0.02, 0.02, 0.02]} rotation={[Math.PI / 10, Math.PI, 0]} />
-        {
-          state?.darkMode ? (
-            <PushButton
-            text="Bio - Jump to activate!"
-            position={[-8, -1.8, -4]}
-            rotation={[0, 0, 2 * Math.PI]}
-            scale={[20, 20, 20]}
-            dialogOpen={dialogOpen}
-            onCloseDialog={() => {
-              setDialogOpen(false);
-            }}
-            dialogContent={<BioTemplate darkMode={true} />}
-            dialog={{ width: "40rem", height: "40rem" }}
-          />
-          ) :    <PushButton
+      {state?.darkMode ? (
+        <PushButton
+          text="Bio - Jump to activate!"
+          position={[-8, -1.8, -4]}
+          rotation={[0, 0, 2 * Math.PI]}
+          scale={[20, 20, 20]}
+          dialogOpen={dialogOpen}
+          onCloseDialog={() => {
+            setDialogOpen(false);
+          }}
+          dialogContent={<BioTemplate darkMode={true} />}
+          dialog={{ width: "40rem", height: "40rem" }}
+        />
+      ) : (
+        <PushButton
           text="Bio - Jump to activate"
           position={[-8, -1.8, -4]}
           rotation={[0, 0, 2 * Math.PI]}
@@ -227,11 +232,11 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
           dialogContent={<BioTemplate darkMode={false} />}
           dialog={{ width: "40rem", height: "35rem" }}
         />
-        }
+      )}
+            <fog attach="fog" args={[state?.darkMode ? '#0000000' : '#  ', 50, 60]} />
+
       {woodenArrows()}
-      {
-        socialMedia()
-      }
+      {socialMedia()}
       <Skills headRef={headRef} position-z={-0.1} />
       <Experience headRef={headRef} shorten={shorten} />
     </>
