@@ -1,9 +1,9 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Html, Text, useVideoTexture } from '@react-three/drei';
-import * as THREE from 'three';
-import './InteractiveSurfaceDisplay.scss';
-import { useGlobal } from '../../providers/DarkModeProvider/DarkModeProvider';
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import { useFrame } from "@react-three/fiber";
+import { Html, Text, useVideoTexture, } from "@react-three/drei";
+import * as THREE from "three";
+import "./InteractiveSurfaceDisplay.scss";
+import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 export interface InteractiveSurfaceDisplayProps {
   position?: [number, number, number];
@@ -14,6 +14,13 @@ export interface InteractiveSurfaceDisplayProps {
   subtext?: string;
   videoSrc?: string;
   shorten?: boolean;
+}
+
+// Custom hook that always calls useVideoTexture.
+function useMaybeVideoTexture(src: string | undefined, options: any) {
+  // Always call useVideoTexture (with an empty string if src is undefined)
+  const texture = useVideoTexture(src || "", options);
+  return src ? texture : null;
 }
 
 const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
@@ -27,57 +34,49 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
   shorten,
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const { state } = useGlobal();
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  // Create video element if videoSrc is provided.
-  const video = useMemo(() => {
-    if (videoSrc) {
-      const vid = document.createElement('video');
-      vid.src = videoSrc;
-      vid.crossOrigin = 'Anonymous';
-      vid.loop = true;
-      vid.muted = true;
-      vid.width = 640;
-      vid.height = 480;
-      // Set autoplay properties instead of calling play() immediately.
-      vid.autoplay = true;
-      vid.playsInline = true;
-      // Listen for events to update our state.
-      vid.addEventListener('playing', () => {
-        setIsPlaying(true);
-      });
-      vid.addEventListener('pause', () => {
-        setIsPlaying(false);
-      });
-      return vid;
+  // Use our custom hook so that useVideoTexture is always called.
+  const videoTexture = useMaybeVideoTexture(videoSrc, {
+    crossOrigin: "Anonymous",
+    loop: true,
+    muted: true,
+    start: false,
+  });
+
+  // Set up event listeners when a video texture is available.
+  useEffect(() => {
+    if (videoTexture && videoTexture.image) {
+      const vid = videoTexture.image as HTMLVideoElement;
+      const handlePlaying = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
+      vid.addEventListener("playing", handlePlaying);
+      vid.addEventListener("pause", handlePause);
+        // Make sure wrapping is enabled
+        videoTexture.wrapS = THREE.RepeatWrapping
+        // Set the pivot to the center
+        videoTexture.center.set(0.5, 0.5)
+        // Flip horizontally
+        videoTexture.repeat.x = -1
+          return () => {
+        vid.removeEventListener("playing", handlePlaying);
+        vid.removeEventListener("pause", handlePause);
+      };
     }
-    return null;
-  }, [videoSrc]);
+  }, [videoTexture]);
 
-  const videoTexture = useMemo(() => {
-    if (video) {
-      const texture = new THREE.VideoTexture(video);
-      // Mirror the texture horizontally:
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.x = -1; // negative repeat flips horizontally
-      return texture;
-    }
-    return null;
-  }, [video]);
-
-  // Create and setup the canvas (for when no videoSrc is provided)
+  // Fallback: Create a canvas texture when no videoSrc is provided.
   const canvas = useMemo(() => {
-    const c = document.createElement('canvas');
+    const c = document.createElement("canvas");
     c.width = 10;
     c.height = 10;
     return c;
   }, []);
-  const context = useMemo(() => canvas.getContext('2d'), [canvas]);
+  const context = useMemo(() => canvas.getContext("2d"), [canvas]);
   const canvasTexture = useMemo(() => new THREE.CanvasTexture(canvas), [canvas]);
 
-  // Update the canvas each frame (if no video is used)
+  // Update the canvas each frame.
   useFrame(() => {
     if (!videoSrc && context) {
       context.clearRect(0, 0, canvas.width, canvas.height);
@@ -92,41 +91,42 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
     }
   });
 
-  // Choose which texture to use: videoTexture if available; otherwise, canvasTexture.
+  // Choose which texture to use.
   const usedTexture = videoTexture || canvasTexture;
 
-  // Toggle play/pause for the video
+  // Toggle play/pause for the video.
   const togglePlayPause = async () => {
-    if (!video) return;
-    if (video.paused) {
+    if (!videoTexture || !videoTexture.image) return;
+    const vid = videoTexture.image as HTMLVideoElement;
+    if (vid.paused) {
       try {
-        await video.play();
+        await vid.play();
         setIsPlaying(true);
       } catch (error) {
         console.error("Error playing video:", error);
       }
     } else {
-      video.pause();
+      vid.pause();
       setIsPlaying(false);
     }
   };
-  function VideoMaterial(props : any) {
-    const { url } = props;
-    const texture = useVideoTexture(url)
-    return <meshBasicMaterial map={texture} toneMapped={true} />
-  }
+
   return (
     <mesh ref={meshRef} position={position} rotation={rotation} receiveShadow>
-      <planeGeometry args={[width, height]}  />
-      <meshBasicMaterial map={usedTexture} side={THREE.DoubleSide} />
-      {/* <VideoMaterial position={[position[0], position[1]+ 1,position[2]]} url={videoSrc}/> */}
+      <planeGeometry args={[width, height]} />
+      <meshBasicMaterial
+        map={usedTexture}
+
+        toneMapped={false} 
+        side={THREE.DoubleSide}
+      />
 
       {text && (
         <Text
           position={[0, 20, 0]}
           rotation={[0, Math.PI, 0]}
           fontSize={0.9}
-          color={!state?.darkMode ? '#000' : '#fff'}
+          color={!state?.darkMode ? "#000" : "#fff"}
           anchorX="center"
           anchorY="top"
           font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
@@ -142,7 +142,7 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
           position={[0, 15, 0]}
           rotation={[0, Math.PI, 0]}
           fontSize={0.7}
-          color={!state?.darkMode ? '#000' : '#fff'}
+          color={!state?.darkMode ? "#000" : "#fff"}
           anchorX="center"
           anchorY="middle"
           maxWidth={17}
@@ -154,16 +154,8 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
       )}
 
       {videoSrc && (
-        <Html
-          receiveShadow
-          position={[0, 10, 0]}
-          center
-          style={{ pointerEvents: 'auto', opacity: shorten ? 1 : 0 }}
-        >
-          <div
-            className={`botón ${isPlaying ? "active" : ""}`}
-            onClick={togglePlayPause}
-          >
+        <Html receiveShadow position={[0, 10, 0]} center style={{ pointerEvents: "auto", opacity: shorten ? 1 : 0 }}>
+          <div className={`botón ${isPlaying ? "active" : ""}`} onClick={togglePlayPause}>
             <div className="fondo"></div>
             <div className="icono">
               <div className="parte izquierda"></div>
