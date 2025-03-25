@@ -30,7 +30,7 @@ const About = ({ isHovered }: AboutProps) => {
 
   return (
     <>
-
+  
     </>
   );
 };

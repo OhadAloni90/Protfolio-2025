@@ -4,7 +4,7 @@ import "./Loader.scss"; // Import your SCSS styles
 import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
 
 const ProfolioLoader = () => {
-  const { progress } = useProgress();
+  const { progress,loaded } = useProgress();
   const { dispatch } = useGlobal();
 const one = 'Loading'
   // Define circle parameters.
@@ -13,11 +13,12 @@ const one = 'Loading'
   // Calculate offset so that when progress=0 offset = circumference and when progress=100 offset=0.
   const offset = circumference * (1 - progress / 100);
   useEffect(() => {
-    if (progress >= 98) {
+    console.log('load', loaded)
+    if (progress >= 97) {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   }, [progress, dispatch]);
-  
+
   return (
     <Html center>
       <div className="loading-screen">

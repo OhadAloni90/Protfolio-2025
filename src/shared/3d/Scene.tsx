@@ -114,8 +114,10 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
         </Canvas>
       </div>
       <div className={`glass-blur ${!state.loading && !state.gameStarted ? "started" : ""}`}></div>
-      <div className="welcome-text text text_title_big"> Ohad Aloni
-      </div>
+      {
+        !state?.gameStarted && !state?.loading && (<div className="welcome-text   text text_title_big"> Ohad Aloni
+      </div>)
+      }
     </>
   );
 };
