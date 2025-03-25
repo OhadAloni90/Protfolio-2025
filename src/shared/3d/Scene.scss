@@ -31,11 +31,22 @@ $size: 2rem;
   }
   @import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap');
 
+.cloud {
+  height: 15rem;
+  aspect-ratio: 1.8;
+  --g: radial-gradient(50% 50%, #000 98%, #0000) no-repeat;
+  mask: var(--g) 100% 100% / 30% 60%, var(--g) 70% 0 / 50% 100%, var(--g) 0 100% / 36% 68%, var(--g) 27% 18% / 26% 40%, linear-gradient(#000 0 0) bottom / 67% 58% no-repeat;
+  background: #9ab3c9a3;
+  position: absolute;
+  z-index: 1;
+  top: 10%;
+}
   .welcome-text {
     pointer-events: none;
     position: absolute;
-    top: 20%;
+    top: 25%;
     z-index: 2;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,22 +55,22 @@ $size: 2rem;
     font-weight: normal;
     width: 100%;
     text-align: center;
-    font-size: 7rem;
+    font-size: 3.2rem;
     background: linear-gradient(
       -40deg, 
-      #4bc0c8 25%, 
-      #4b86e0 25%, 
-      #4b86e0 50%, 
-      #4bc0c8 50%, 
-      #4bc0c8 75%, 
-      #4b86e0 75%, 
-      #4b86e0);
+      #327f85 25%, 
+      #000000 25%, 
+      #000000 50%, 
+      #327f85 50%, 
+      #327f85 75%, 
+      #000000 75%, 
+      #000000);
     -webkit-background-clip: text;
     font-family: 'Bungee Shade', cursive;
     -webkit-text-fill-color: transparent;
     background-size: $size $size;
     background-position: 0 0;
-    animation: stripes 1s linear infinite;
+    animation: stripes 3s linear infinite;
   }
   @keyframes stripes {
     100% { 
