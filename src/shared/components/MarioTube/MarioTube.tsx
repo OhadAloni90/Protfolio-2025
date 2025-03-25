@@ -87,7 +87,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
 
       {/* 3D model of the tube */}
       <SpotLight
-        position={[position[0], position[1] + 5, position[2] + 1.5]} // 3 units above the tube
+        position={[position[0], position[1] + 5, position[2] ]} // 3 units above the tube
         angle={0.3}
         penumbra={1}
         radiusTop={0.1}
@@ -95,7 +95,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
         intensity={2}
         castShadow
         volumetric
-        distance={7}  attenuation={5} anglePower={4}
+        distance={7}  attenuation={5.5}anglePower={4}
         target={fbxModel}
       >
         <object3D
@@ -104,7 +104,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
         />
       </SpotLight>
       <SpotLight
-        position={[position[0] - 4, position[1] + 5, position[2] + 1.5]} // 3 units above the tube
+        position={[position[0] - 4, position[1] + 5, position[2] ]} // 3 units above the tube
         angle={0.3}
         penumbra={1}
         radiusTop={0.1}
@@ -112,7 +112,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
         intensity={2}
         castShadow
         volumetric
-        distance={7}  attenuation={5} anglePower={8}
+        distance={7}  attenuation={5.5}anglePower={8}
         target={fbxModel}
       >
         <object3D
@@ -121,7 +121,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
         />
       </SpotLight>
       <SpotLight
-        position={[position[0] + 4, position[1] + 5, position[2] + 1.5]} // 3 units above the tube
+        position={[position[0] + 4, position[1] + 5, position[2] ]} // 3 units above the tube
         angle={0.3}
         penumbra={1}
         radiusTop={0.1}
@@ -129,7 +129,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
         intensity={2}
         castShadow
         volumetric
-        distance={7}  attenuation={5} anglePower={8}
+        distance={7}  attenuation={5.5}anglePower={10}
         target={fbxModel}
       >
         <object3D

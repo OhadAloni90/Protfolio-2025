@@ -23,7 +23,9 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
   const [inTube, setInTube] = useState(false);
   const [items, setItems] = useState<Array<{ id: number; x: number; y: number; z: number }>>([]);
   const { dispatch, state } = useGlobal();
-  const light = useRef(null)
+  const fullText = "Hi, I am Ohad, a Frontend Developer and Architect.";
+  const [displayText, setDisplayText] = useState<string[]>([]);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     if (sceneRef.current) {
@@ -32,7 +34,6 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
     if (rendererRef.current) {
       // rendererRef.current.toneMapping = THREE.NoToneMapping;
     }
-    
   }, [state.darkMode]);
   const handleTubeEnter = () => {
     // Trigger a transition, e.g., fade to black
@@ -45,7 +46,6 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
   const setMarioIn = () => {
     dispatch({ type: "SET_MARIO_MODE" });
   };
-  
 
   return (
     <>
@@ -75,14 +75,14 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
               intensity={9}
               scale={[1, 1, 3]}
               castShadow
-              shadow-mapSize-width={1024  * 8}
-              shadow-mapSize-height={1024  * 8}
+              shadow-mapSize-width={1024 * 8}
+              shadow-mapSize-height={1024 * 8}
               shadow-camera-left={-200}
               shadow-camera-right={200}
               shadow-camera-top={200}
               shadow-camera-bottom={-200}
             />
-                  {/* <directionalLight
+            {/* <directionalLight
               position={[11, 2, 10]}
               intensity={2}
               scale={[1, 1, 1]}
@@ -95,16 +95,14 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
               shadow-camera-bottom={-200}
             /> */}
 
-
-
             <Physics iterations={10} gravity={[0, -9.8, 0]}>
               {/* <Debug> */}
-<CameraController
-  shorten={shorten}
-  headRef={headRef}
-  tubeActive={state?.marioMode}
-  lockCamera={state?.lockCameraOnHead}
-/>
+              <CameraController
+                shorten={shorten}
+                headRef={headRef}
+                tubeActive={state?.marioMode}
+                lockCamera={state?.lockCameraOnHead}
+              />
               {state?.marioMode ? (
                 <MarioScene headRef={headRef} />
               ) : (
@@ -116,7 +114,8 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
         </Canvas>
       </div>
       <div className={`glass-blur ${!state.loading && !state.gameStarted ? "started" : ""}`}></div>
-      
+      <div className="welcome-text text text_title_big"> Ohad Aloni
+      </div>
     </>
   );
 };

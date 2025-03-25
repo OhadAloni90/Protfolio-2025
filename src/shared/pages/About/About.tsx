@@ -30,19 +30,7 @@ const About = ({ isHovered }: AboutProps) => {
 
   return (
     <>
-    {state.gameStarted &&  (
-          <div className={`main-container ${state.darkMode ? "dark" : "light"}`}>
-          <div className={`container ${state.darkMode ? "" : "light"}`}>
-            <div className="text text_bold text_extra_big typing-text">
-              {displayText.map((letter, i) => (
-                <span key={i} className="wave-letter" style={{ animationDelay: `${i * 0.05}s` }}>
-                  {letter === " " ? "\u00A0" : letter} {/* Fix spaces */}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-    )}
+
     </>
   );
 };
