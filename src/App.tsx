@@ -15,7 +15,6 @@ const AppRoutes = () => {
   const navigate = useNavigate();
   const [isHeadHovered, setIsHeadHovered] = useState(false); // Track hover state
   const onMenuItemClicked = (route: string) => {
-    console.log(route)
     if(route === 'back' && !state?.marioMode) route = '';
     if(route === 'about') route = '';
     navigate(`/${route.toLowerCase()}`);

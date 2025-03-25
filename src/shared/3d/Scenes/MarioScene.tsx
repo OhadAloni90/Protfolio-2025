@@ -109,12 +109,12 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   const fireFlowerModel = useFBX(`${process.env.PUBLIC_URL}/models/mario-mini/FireFlower.fbx`) as THREE.Group;
   const [fireballs, setFireballs] = useState<Array<{ id: number; pos: THREE.Vector3; velocity: THREE.Vector3 }>>([]);
   const nextFireballId = useRef(0);
-
+  const hitCooldown = useRef(false); // ← new cooldown ref
   const [fireFlowerData, setFireFlowerData] = useState<{ active: boolean; pos: THREE.Vector3 }>({
     active: false,
     pos: new THREE.Vector3(0, -1000, 0),
   });
-
+  const collectedShrooms = useRef<Set<number>>(new Set());
   const [isOnBrick, setIsOnBrick] = useState(false);
   const [showLimitReached, setShowLimitReached] = useState(false);
   const [lives, setLives] = useState<number>(0);
@@ -172,24 +172,32 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
     });
   };
 
+  useEffect(() => {
+    collectedShrooms.current.clear(); // 🧼 Clean slate when scene re-renders
+  }, []);
+  
   const handleShroomCollected = (id: number) => {
-    // Mark the shroom as inactive.
+    console.log(id)
+    console.log(collectedShrooms.current)
+    if (collectedShrooms.current.has(id)) return; // ✅ Already collected, do nothing
+    collectedShrooms.current.add(id); // ✅ Mark as collected
+  
     setPool((prev) =>
       prev.map((s) => (s.id === id ? { ...s, active: false, pos: new THREE.Vector3(0, -1000, 0) } : s))
     );
-    // Otherwise, this is Mario's first power-up.
+  
     setLives((prevLives) => {
       const newLives = prevLives + 1;
       if (newLives === 1) {
         animateScale(true);
         setIsEnlarge(true);
-                  state?.playMusic &&  playSound(`${process.env.PUBLIC_URL}/music/mario_shroom.mp3`, 0.6);
-        
+        state?.playMusic && playSound(`${process.env.PUBLIC_URL}/music/mario_shroom.mp3`, 0.6);
       }
       return newLives;
     });
   };
-
+  
+  
   const spawnFireFlower = (pos: THREE.Vector3) => {
     setFireFlowerData({ active: true, pos });
   };
@@ -271,15 +279,24 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
     }, 1500);
   };
   const onHeadHit = () => {
+    if (hitCooldown.current) return; // ← skip if in cooldown
+    hitCooldown.current = true;
     setLives((prevLives: number) => {
       const newLives = prevLives - 1;
+      console.log('newLives', newLives);
       if (newLives === 0) {
         animateScale(false);
         setIsEnlarge(false);
       } else if (newLives === 1) setHasFireFlower(false);
       return newLives;
     });
+    // Reset cooldown after 1 second
+    setTimeout(() => {
+      hitCooldown.current = false;
+    }, 3000);
   };
+  
+  
   useEffect(() => {
     if (headRef.current) {
       headRef.current.traverse((child) => {
