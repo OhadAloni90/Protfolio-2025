@@ -12,6 +12,7 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
   const [didClickStart, setDidClickStart] = useState(false);
 
   const onMenuItemClick = (title: string) => {
+    if(state?.loading) return;
     if(title?.toLocaleLowerCase() === 'cv') return dispatch({type: 'ON_SHOW_CV'})
     setDidClickStart(!didClickStart);
       onMenuItemClicked(title);
