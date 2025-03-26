@@ -23,13 +23,15 @@ const CameraController: React.FC<CameraControllerProps> = ({
   const cameraOffsetX = useRef(0);
   const cameraOffsetZ = useRef(0);
   const cameraOffsetY = useRef(0);
-  const fixedDistance = 5; // distance behind the head
-
+  const fixedDistance = 10; // Distance behind the head
+  const tempBox = new THREE.Box3();  // Reusable bounding box
+  const tempCenter = new THREE.Vector3(); // Reusable center vector
+  const tempQuat = new THREE.Quaternion(); // Reusable quaternion
+  
   // Refs for the lerp transition.
   const lockedLerpStartRef = useRef<THREE.Vector3 | null>(null);
   const lockedLerpTargetRef = useRef<THREE.Vector3 | null>(null);
   const lerpProgressRef = useRef(0);
-  const lerpSpeed = 0.5; // Adjust speed of the lerp
 
   // When lockCamera becomes true, capture the starting and target positions.
   useEffect(() => {
@@ -148,28 +150,29 @@ const CameraController: React.FC<CameraControllerProps> = ({
 
   // Smoothly interpolate from the starting position to the target.
   const lockedCameraLogic = (delta: number) => {
-    if (
-      lockedLerpStartRef.current &&
-      lockedLerpTargetRef.current &&
-      headRef.current
-    ) {
-      // Increase progress over time.
-      lerpProgressRef.current = Math.min(
-        lerpProgressRef.current + delta * lerpSpeed,
-        1
-      );
-      // Compute the interpolated position.
-      camera.position.lerpVectors(
-        lockedLerpStartRef.current,
-        lockedLerpTargetRef.current,
-        lerpProgressRef.current
-      );
-      // Always have the camera look at the head.
-      const headWorldPos = new THREE.Vector3();
-      headRef.current.getWorldPosition(headWorldPos);
-      camera.lookAt(headWorldPos);
-    }
+    if (!headRef.current) return;
+    // 1. Calculate the bounding box of the head object
+    //    (this will include all children’s geometry)
+    tempBox.setFromObject(headRef.current);
+    // 2. Get the center of that bounding box in local coordinates
+    tempBox.getCenter(tempCenter);
+    // 3. Convert that center into world coordinates
+    headRef.current.localToWorld(tempCenter);
+    // 4. (Optional) If you want to position the camera directly
+    //    “behind” the head relative to the head’s rotation, get
+    //    the head’s world quaternion:
+    headRef.current.getWorldQuaternion(tempQuat);
+    // 5. Create an offset vector behind the head and rotate it
+    //    by the head’s orientation
+    const offset = new THREE.Vector3(0, 0, -fixedDistance).applyQuaternion(tempQuat);
+    // 6. Desired camera position is bounding-box-center + offset
+    const desiredPosition = tempCenter.clone().add(offset);
+    // 7. Smoothly lerp the camera to the desired position
+    camera.position.lerp(desiredPosition, 0.1); // 0.1 => how fast it follows
+    // 8. Make the camera look at the bounding box center of the head
+    camera.lookAt(tempCenter);
   };
+  
 
   useFrame((_, delta) => {
     if (lockCamera) {

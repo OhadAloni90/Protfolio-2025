@@ -12,8 +12,18 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
   const [didClickStart, setDidClickStart] = useState(false);
 
   const onMenuItemClick = (title: string) => {
+    if(title?.toLocaleLowerCase() === 'cv') return downloadCV();
     setDidClickStart(!didClickStart);
       onMenuItemClicked(title);
+  }
+  const downloadCV = () => {
+    const pdfUrl = `${process.env.PUBLIC_URL}/OhadAloni-CV-2025.pdf`;
+    const link = document.createElement("a");
+    link.href = pdfUrl;
+    link.setAttribute("download", "CV.pdf"); // Sets the suggested filename
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
  const titleToShow = (title: string) => {
   if(state?.gameStarted && !state?.marioMode) {

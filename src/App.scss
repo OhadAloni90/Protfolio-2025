@@ -11,6 +11,27 @@
   flex-direction: column;
   z-index: 2;
 }
+.mobile-warning {
+  height: 100vh;
+  width: 100vw;
+  padding: 1rem;
+  background-color: #eae3d1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  .text-container {
+    padding: 4rem 1rem;
+    display: flex;
+        flex-direction: column;
+        align-items: center;
+  }
+  img {
+    width: 100%;
+    height: auto;
+    position: flex-end;
+  }
+}
 .scene {
   z-index: 1;
   top: 0;

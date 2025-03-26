@@ -15,7 +15,7 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
   // 1) Outer Collider: This will block the head from entering.
   const [outerColliderRef] = useCylinder(() => ({
     type: "Static",
-    args: [1.2, 1.2, 5, 32], // radiusTop, radiusBottom, height, segments
+    args: [1, 1, 5, 32], // radiusTop, radiusBottom, height, segments
     position: [position[0], position[1] - 1, position[2]],
     rotation: [0, 0, 0],
     userData: { type: "tubeOuter" },
@@ -26,8 +26,8 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
   // but will trigger onCollide when the head touches it.
   const [innerTriggerRef] = useCylinder(() => ({
     type: "Static",
-    args: [1, 1, 0.2, 32], // a smaller radius and thin height creates a ring-like collider
-    position: [position[0], position[1] + 3, position[2]], // same center as tube
+    args: [1.2, 1.2, 0.3, 32], // a smaller radius and thin height creates a ring-like collider
+    position: [position[0], position[1] + 2.5 , position[2]], // same center as tube
     rotation: [0, 0, 0],
     userData: { type: "tubeTrigger" },
     collisionResponse: false,

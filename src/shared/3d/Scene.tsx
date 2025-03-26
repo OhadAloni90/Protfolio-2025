@@ -14,8 +14,12 @@ import KeyboardExplaining from "../components/KeyboardExplaining/KeyboardExplain
 import { SpotLight, useProgress } from "@react-three/drei";
 
 const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) => {
+
+
   let sceneRef = useRef<THREE.Scene>(null);
   let rendererRef = useRef<THREE.WebGLRenderer>(null);
+  let camera = useRef<THREE.Camera>(null);
+  let size = useRef<any>(null);
   const location = useLocation();
   const shorten = location.pathname !== "/";
   // For the head jump
@@ -27,6 +31,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
   const [displayText, setDisplayText] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
   const {progress} = useProgress();
+
   useEffect(() => {
     if (sceneRef.current) {
       sceneRef.current.background = new THREE.Color(state.darkMode ? "#001F24" : "#fff");
@@ -47,18 +52,33 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
     setItems((prev) => [...prev, { id: Math.random(), x: pos.x, y: pos.y, z: pos.z }]);
   };
   const setMarioIn = () => {
+    dispatch({type: 'SET_LOADING', payload: true });
     dispatch({ type: "SET_MARIO_MODE" });
   };
 
+  function UpdateCameraOnResize() {
+    const { camera, size } = useThree();
+    useEffect(() => {
+      const pCamera = camera as THREE.PerspectiveCamera;
+      pCamera.aspect = size.width / size.height;
+      pCamera.updateProjectionMatrix();
+    }, [size, camera]);
+  
+    return null;
+  }
+
+  // If mobile, show a simple message instead of the full scene
+  
   return (
     <>
       <div className="canvas">
         <Canvas
           dpr={[1, 2]} // Clamp the pixel ratio between 1 and 2
-          onCreated={({ scene, gl }) => {
+          onCreated={({ scene, gl, camera, size }) => {
             sceneRef.current = scene;
             rendererRef.current = gl;
           }}
+          
           linear
           camera={{
             fov: 75,
@@ -70,6 +90,8 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
           shadows
           color="blue"
         >
+            <UpdateCameraOnResize />
+
           <Suspense fallback={null}>
             {/* Global lights */}
             <ambientLight intensity={2.2} />
@@ -103,7 +125,6 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
             </Physics>
           </Suspense>
         </Canvas>
-     
       </div>
       {state.loading &&           <ProfolioLoader progress={progress}/>
           }

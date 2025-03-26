@@ -45,7 +45,7 @@ const PhysicsCartoonHead = forwardRef<PhysicsCartoonHeadHandle, PhysicsCartoonHe
       () => ({
         type: "Dynamic",
         mass: 100,
-        args: scale ?? [1, 2.2, 1],
+        args: scale ?? [1, 2.1, 1],
         position,
         friction: 1,
         collisionFilterGroup: 3,
