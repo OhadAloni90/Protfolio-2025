@@ -90,7 +90,7 @@ const BioTemplate = (props: BioTemplateProps) => {
                 product teams and ensure thoughtful, user-centric solutions.
               </p>
               <div className="self-drawing">
-                <img src={`${process.env.PUBLIC_URL}/self-drawing.jpg`} alt="Self drawing" />
+              <img src={`${process.env.PUBLIC_URL}/self-drawing.jpg`} alt="Self drawing" />
               </div>
             </div>
           </>

@@ -10,14 +10,14 @@ interface ExperienceProps {
   headRef: React.RefObject<THREE.Group | null>;
   shorten: boolean;
 }
-interface ExpereinceItem {
+export interface ExpereinceItem {
   name: string;
   period: string;
   job_title: string;
   description: string;
   tech: string;
 }
-const exprienceTypes: ExpereinceItem[] = [
+export const exprienceTypes: ExpereinceItem[] = [
   {
     name: "Infront Lab",
     period: "December - 2022 - Present",

@@ -177,8 +177,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
   }, []);
   
   const handleShroomCollected = (id: number) => {
-    console.log(id)
-    console.log(collectedShrooms.current)
     if (collectedShrooms.current.has(id)) return; // ✅ Already collected, do nothing
     collectedShrooms.current.add(id); // ✅ Mark as collected
   
@@ -283,7 +281,6 @@ const MarioScene: React.FC<MarioSceneProps> = ({ headRef }) => {
     hitCooldown.current = true;
     setLives((prevLives: number) => {
       const newLives = prevLives - 1;
-      console.log('newLives', newLives);
       if (newLives === 0) {
         animateScale(false);
         setIsEnlarge(false);
