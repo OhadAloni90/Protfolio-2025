@@ -33,28 +33,28 @@ code {
   background-color: #000
 }
 .text_big {
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 .disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Lunasima:wght@400;700&family=Noto+Sans+Hebrew:wght@100..900&family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 * {
-  font-family: "Amatic SC", sans-serif;
+  font-family: "Space Mono", sans-serif;
 }
 .text_extra_big {
-  font-size: 2rem;
+  font-size: 0.5rem;
 }
 .text_bold {
   font-weight: 900;
 }
 .text_title_med {
-  font-size: 1.5rem;
+  font-size: 0.2;
 }
 
 .text_title_big {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
 }
 
 .scene {

@@ -123,13 +123,13 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
 
       {text && (
         <Text
-          position={[0, 20, 0]}
+          position={[0, 19, 0]}
           rotation={[0, Math.PI, 0]}
-          fontSize={0.9}
+          fontSize={0.6}
           color={!state?.darkMode ? "#000" : "#fff"}
           anchorX="center"
           anchorY="top"
-          font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+          font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
         >
           {text}
         </Text>
@@ -139,22 +139,22 @@ const InteractiveSurfaceDisplay: React.FC<InteractiveSurfaceDisplayProps> = ({
           strokeOpacity={shorten ? 1 : 0}
           outlineOpacity={shorten ? 1 : 0}
           fillOpacity={shorten ? 1 : 0}
-          position={[0, 15, 0]}
+          position={[0, 13, 0]}
           rotation={[0, Math.PI, 0]}
-          fontSize={0.7}
+          fontSize={0.5}
           color={!state?.darkMode ? "#000" : "#fff"}
           anchorX="center"
           anchorY="middle"
           maxWidth={17}
           fontStyle="normal"
-          font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Regular.ttf`}
+          font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Regular.ttf`}
         >
           {subtext}
         </Text>
       )}
 
       {videoSrc && (
-        <Html receiveShadow position={[0, 10, 0]} center style={{ pointerEvents: "auto", opacity: shorten ? 1 : 0 }}>
+        <Html receiveShadow position={[0, -10, 0]} center style={{ pointerEvents: "auto", opacity: shorten ? 1 : 0 }}>
           <div className={`botón ${isPlaying ? "active" : ""}`} onClick={togglePlayPause}>
             <div className="fondo"></div>
             <div className="icono">

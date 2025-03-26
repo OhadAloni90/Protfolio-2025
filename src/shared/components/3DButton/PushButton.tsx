@@ -87,8 +87,8 @@ const PhysicsPushButton = forwardRef<THREE.Group, PhysicsPushButtonProps>(
           castShadow
           rotation={[Math.PI / 2, Math.PI, 0]}
           position={[-0.01, 0.05, 0.05]}
-          fontSize={0.05}
-          font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+          fontSize={0.02}
+          font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
           color={!state?.darkMode ?  '#000' : '#fff'}
           anchorX="center"
           anchorY="middle"

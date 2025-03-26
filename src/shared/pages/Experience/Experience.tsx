@@ -89,80 +89,80 @@ const Experience = ({ headRef, shorten }: ExperienceProps) => {
       <Text
         position={[0, -1.8, -9]}
         rotation={[Math.PI / 2, Math.PI, 0]}
-        fontSize={3}
+        fontSize={2}
         color={!state?.darkMode ? '#000' : '#fff'}
         anchorX="center"
         anchorY="middle"
-        font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+        font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
       >
         Jobs
       </Text>
       <Text
-        position={[0, -1.8, -23]}
+        position={[0, -1.8, -24.5]}
         rotation={[Math.PI / 2, Math.PI, 0]}
-        fontSize={3}
+        fontSize={2}
         color={!state?.darkMode ? '#000' : '#fff'}
         anchorX="center"
         anchorY="middle"
-        font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+        font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
       >
         Key Features
       </Text>
       {exprienceTypes?.map((experience: ExpereinceItem, index: number) => (
         <>
           <Text
-            position={[4.8 - index * 18, -1.8, -12]}
+            position={[4.3 - index * 23, -1.8, -12]}
             rotation={[Math.PI / 2, Math.PI, 0]}
-            fontSize={1.2}
+            fontSize={1}
             color={!state?.darkMode ? '#000' : '#fff'}
             anchorX="center"
             anchorY="middle"
-            font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+            font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
           >
             {experience.name} -{" "}
           </Text>
           <Text
-            position={[0 + index * (-16), -1.8, -13]}
+            position={[ 3.5+ index * (-15.5), -1.8, -15]}
             rotation={[Math.PI / 2, Math.PI, 0]}
-            fontSize={0.7}
+            fontSize={0.6}
             color={!state?.darkMode ? '#000' : '#fff'}
             anchorX="center"
             anchorY="middle"
-            font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+            font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
           >
             {experience.period}
           </Text>
           <Text
-            position={[5 - index * 13.8, -1.8, -13]}
+            position={[4.3 - index * 15.7, -1.8, -13]}
             rotation={[Math.PI / 2, Math.PI, 0]}
             fontSize={0.7}
             color={!state?.darkMode ? '#000' : '#fff'}
             anchorX="center"
             anchorY="middle"
-            font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+            font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
           >
             {experience.job_title} 
           </Text>
           <Text
-            position={[3 - index * 10.2, -1.8, -14]}
+            position={[2.5 - index * 10.2, -1.8, -14]}
             rotation={[Math.PI / 2, Math.PI, 0]}
-            fontSize={0.7}
+            fontSize={0.5}
             color={!state?.darkMode ? '#000' : '#fff'}
             anchorX="center"
             anchorY="middle"
-            font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+            font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
           >
             {experience.tech} 
           </Text>
           <Text
-            position={[2 - index * 13, -1.8, -16 - (index * 1.5) ]}
+            position={[3 - index * 14, -1.8, -18 - (index * 1.5) ]}
             rotation={[Math.PI / 2, Math.PI, 0]}
-            fontSize={0.5}
+            fontSize={0.35}
             color={!state?.darkMode ? '#000' : '#fff'}
             maxWidth={10}
             anchorX="center"
             anchorY="middle"
-            font={`${process.env.PUBLIC_URL}/fonts/AmaticSC-Bold.ttf`}
+            font={`${process.env.PUBLIC_URL}/fonts/SpaceMono-Bold.ttf`}
           >
             {experience.description} 
           </Text>
