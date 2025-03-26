@@ -50,7 +50,7 @@ code {
   font-weight: 900;
 }
 .text_title_med {
-  font-size: 0.2;
+  font-size: 0.8rem;
 }
 
 .text_title_big {
@@ -166,8 +166,9 @@ code {
       margin: 0.5rem 0rem 1rem 0rem;
       .item-box {
         height: 2rem;
-        width: 6rem;
+        width: auto;
         margin: 0rem 0.6rem 0rem 0rem;
+        font-size: 0.8rem;
         cursor: pointer;
         border: 1px solid black;
         background-color: gray;
