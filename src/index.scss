@@ -56,7 +56,11 @@ code {
 .text_title_big {
   font-size: 1.5rem;
 }
-
+.disabled {
+  background-color: rgb(206, 206, 206);
+  color: rgb(56, 56, 56);
+  cursor:not-allowed;
+}
 .scene {
   position: absolute;
   width: 100%;

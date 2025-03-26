@@ -9,10 +9,40 @@
       border-color: white;
     }
     .menu-items {
-        display: flex;
+        outline: 0;
+        grid-gap: 8px;
+        align-items: center;
+        cursor: pointer;
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 16px;
+        gap: 8px;
+        justify-content: center;
+        line-height: 1.5;
+        overflow: hidden;
+        padding: 12px 16px;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        transition: all .14s ease-out;
+        white-space: nowrap;
+        :hover {
+            box-shadow: 4px 4px 0 #000;
+            transform: translate(-4px,-4px);
+        }
+        :focus-visible{
+            outline-offset: 1px;
+        }
+  
+    
       .text {
         padding: 1rem;
         border: 1px solid black;
+        &.gamenotstarted {
+          -moz-animation: shakeme 3s infinite;
+          -o-animation: shakeme 3s infinite;    
+          -webkit-animation: shakeme 3s infinite;
+          animation: shakeme 3s infinite;
+        }
         &:hover {
           transition: background-color 1s ease;
           background-color: rgba(59, 170, 255, 0.792);
@@ -24,6 +54,7 @@
             background-color: rgb(85, 85, 85);
           }
         }
+        
       }
       .btn {
         margin: 0rem 5rem 0rem 0rem;
@@ -164,6 +195,26 @@
       &:hover {
         cursor: pointer;
       }
+    }
+  }
+  @keyframes shakeme {
+    0% {
+      scale: 1
+    }
+    5% {
+      scale: 0.7
+    }
+    10% {
+     scale: 1.5
+    }
+    15% {
+     scale: 1.1
+    }
+    20% {
+     scale: 1.4
+    }
+    30% {
+     scale: 1.1
     }
   }
   

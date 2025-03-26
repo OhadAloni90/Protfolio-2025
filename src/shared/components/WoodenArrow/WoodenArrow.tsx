@@ -46,7 +46,7 @@ const WoodenArrow = forwardRef<THREE.Group, WoodenArrowProps>(
     return (
       <group  ref={mergeRefs(physicsRef, ref)} position={position} rotation={rotation} scale={scale}>
         <primitive object={clonedScene} />
-        <Html transform center position={[1.4, 0.2, 0]} rotation={[0,flipText ? -Math.PI : 0 ,0]}>
+        <Html transform center position={[2, 0.2, 0]} rotation={[0,flipText ? -Math.PI : 0 ,0]} zIndexRange={[0]}>
           <div
           className="text text_bold text_med"
             style={{

@@ -34,7 +34,7 @@ const KeyboardHtml: React.FC = () => {
           <div className="key">0</div>
           <div className="key">-</div>
           <div className="key">=</div>
-          <div className="key key-wide">Backspace</div>
+          <div className="key key-wide">BKSpace</div>
         </div>
         <div className="row">
           <div className="key key-wide">Tab</div>

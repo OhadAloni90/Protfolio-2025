@@ -28,7 +28,7 @@ const Header = ({ onMenuItemClicked }: HeaderInterface) => {
         {titles.map((title: string) => (
           <div
             key={title}
-            className={`text text_big btn ${state.darkMode ? "dark" : "light"} ${state?.loading ? 'disabled' : ''}`}
+            className={`text text_big btn ${state.darkMode ? "dark" : "light"} ${state?.loading ? 'disabled' : ''} ${(!state?.gameStarted && !state?.loading) && title?.toLocaleLowerCase() == 'start' ? 'gamenotstarted' : ''}`}
             onClick={() =>  onMenuItemClick(didClickStart && title === 'start' ? 'back' : title)}
           >
             {titleToShow(title)}
