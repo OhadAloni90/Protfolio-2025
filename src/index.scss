@@ -59,7 +59,7 @@ code {
 .disabled {
   background-color: rgb(206, 206, 206);
   color: rgb(56, 56, 56);
-  cursor:not-allowed;
+  cursor:not-allowed !important;
 }
 .scene {
   position: absolute;
