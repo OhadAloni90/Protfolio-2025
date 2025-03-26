@@ -11,7 +11,7 @@ import MarioScene from "./Scenes/MarioScene";
 import MainScene from "./Scenes/MainScene";
 import { PhysicsCartoonHeadHandle } from "./Physics/PhysicsCartoonHead";
 import KeyboardExplaining from "../components/KeyboardExplaining/KeyboardExplaining";
-import { SpotLight } from "@react-three/drei";
+import { SpotLight, useProgress } from "@react-three/drei";
 
 const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) => {
   let sceneRef = useRef<THREE.Scene>(null);
@@ -26,7 +26,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
   const fullText = "Hi, I am Ohad, a Frontend Developer and Architect.";
   const [displayText, setDisplayText] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
-
+  const {progress} = useProgress();
   useEffect(() => {
     if (sceneRef.current) {
       sceneRef.current.background = new THREE.Color(state.darkMode ? "#001F24" : "#fff");
@@ -35,6 +35,9 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
       // rendererRef.current.toneMapping = THREE.NoToneMapping;
     }
   }, [state.darkMode]);
+  useEffect(() => {
+
+  },[state?.loading])
   const handleTubeEnter = () => {
     // Trigger a transition, e.g., fade to black
     setInTube(true);
@@ -67,7 +70,7 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
           shadows
           color="blue"
         >
-          <Suspense fallback={<ProfolioLoader />}>
+          <Suspense fallback={null}>
             {/* Global lights */}
             <ambientLight intensity={2.2} />
             <directionalLight
@@ -82,18 +85,6 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
               shadow-camera-top={200}
               shadow-camera-bottom={-200}
             />
-            {/* <directionalLight
-              position={[11, 2, 10]}
-              intensity={2}
-              scale={[1, 1, 1]}
-              castShadow
-              shadow-mapSize-width={1024 * 4}
-              shadow-mapSize-height={1024 * 4}
-              shadow-camera-left={-200}
-              shadow-camera-right={200}
-              shadow-camera-top={200}
-              shadow-camera-bottom={-200}
-            /> */}
 
             <Physics iterations={10} gravity={[0, -9.8, 0]}>
               {/* <Debug> */}
@@ -112,7 +103,10 @@ const Scene = ({ onHeadHover }: { onHeadHover: (hovering: boolean) => void }) =>
             </Physics>
           </Suspense>
         </Canvas>
+     
       </div>
+      {state.loading &&           <ProfolioLoader progress={progress}/>
+          }
       <div className={`glass-blur ${!state.loading && !state.gameStarted ? "started" : ""}`}></div>
       {
         !state?.gameStarted && !state?.loading && (<>

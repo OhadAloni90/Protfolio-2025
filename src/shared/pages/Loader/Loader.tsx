@@ -2,9 +2,10 @@ import { Html, useProgress } from "@react-three/drei";
 import React, { useEffect } from "react";
 import "./Loader.scss"; // Import your SCSS styles
 import { useGlobal } from "../../providers/DarkModeProvider/DarkModeProvider";
-
-const ProfolioLoader = () => {
-  const { progress,loaded } = useProgress();
+interface LoaderProps  {
+  progress: number;
+}
+const ProfolioLoader = ({ progress }: LoaderProps) => {
   const { dispatch } = useGlobal();
 const one = 'Loading'
   // Define circle parameters.
@@ -19,7 +20,6 @@ const one = 'Loading'
   }, [progress, dispatch]);
 
   return (
-    <Html center>
       <div className="loading-screen">
         <svg
           className="progress-svg"
@@ -68,7 +68,6 @@ const one = 'Loading'
           </div>
         </svg>
       </div>
-    </Html>
   );
 };
 
