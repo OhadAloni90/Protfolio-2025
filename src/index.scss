@@ -75,6 +75,15 @@ code {
 }
 .mobile_title_big{ 
   font-size: 4rem;
+
+}
+@media screen and (max-height: 850px) {
+  .mobile_title_big{
+    font-size: 2rem;
+   }
+   .text_title_big {
+    font-size: 1.4rem;
+   }
 }
 .stop-sign-wrapper {
   top: -10rem;
