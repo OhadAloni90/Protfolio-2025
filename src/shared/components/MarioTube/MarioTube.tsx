@@ -46,8 +46,6 @@ const MarioTube: React.FC<MarioTubeProps> = ({ position = [5, 0, 0], onEnter }) 
   const [diffuseMap, metalnessMap, roughnessMap, normalMap, displacementMap] = useTexture([
     `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Diffuse.png`,
     `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Metalness.png`,
-    `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Roughness.png`,
-    `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Normal.png`,
     `${process.env.PUBLIC_URL}/textures/mini-game/MSteel_Pipe_4K_Displacement.png`,
   ]);
 

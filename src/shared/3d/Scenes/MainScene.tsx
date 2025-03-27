@@ -65,7 +65,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
       modelType: "glb", // 'glb' or 'fbx'
       position: [29, 0, -16], // Set model position in the scene.
       mass: 10,
-      rotation: [0, -Math.PI / 4, 0], // Rotate the model (in radians).
+      rotation: [0, -Math.PI / 4, Math.PI], // Rotate the model (in radians).
       scale: 0.7, // Scale the model uniformly.
       textureUrl: `${process.env.PUBLIC_URL}/models/social/github.jpeg`, // Optional texture URL.
       linkUrl: "https://github.com/OhadAloni90",
@@ -155,7 +155,7 @@ const MainScene: React.FC<MainSceneProps> = ({ onMarioEnter, onHeadHover, headRe
         key={"experience"}
         text="Experience"
         position={[1, 0, -5]}
-        rotation={[0, Math.PI / 9 + 0.7, 0]}
+        rotation={[0, Math.PI / 8, 0]}
         scale={[2, 4, 6]}
         flipText={true}
       />
